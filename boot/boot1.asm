@@ -104,8 +104,10 @@ gdb_null:
 ; Base - 0x0
 ; Limit - 0xFFFFF
 gdb_code:
-  dw 0xFFFF
-  dw 0x0000
+  dw 0xFFFF    ; Limit (0-15)
+  dw 0x0000    ; Base (0-15)
+  db 0x00      ; Base (16-23)
+  db 10011010b ; Accses byte
 
 gdb_end
 
