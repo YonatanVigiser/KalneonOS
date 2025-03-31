@@ -1,7 +1,10 @@
-org 0x500
-bits 16
+[BITS 16]
+[ORG 0x500]
 
-main:
+; The zero-stage bootloader will jump here.
+; Will print another booting message, enable A20,
+; and enter 32-bit protected mode:
+main16:
   ; Set the page number to 1
   mov ah, 0x03
   mov bh, 0x01
@@ -17,7 +20,10 @@ main:
   call enable_a20
   jc .a20_error
 
-  hlt ; TEMP!
+  ; Enter 32-bit protected mode: 
+  call enter_p32_mode
+
+  jmp .hlt
 
 .a20_error:
   lea si, .a20_error_message
@@ -89,9 +95,51 @@ enable_a20:
   pop ax
   ret
 
+; Enters 32-bit protected mode.
+; will setup a new stack, reload segments
+; and jumps to the 32-bit mode code
+enter_32p_mode:
+  ; Load a GDT
+  lgdt [gdt_desc]
+
+  ; Enable 32-bit protected mode in control register
+  mov eax, cr0
+  or eax, 1
+  mov cr0, eax 
+
+  ; Reload the segments
+  xor ax, ax
+  mov ds, ax
+  mov es, ax
+  mov fs, ax 
+  mov gs, ax
+
+  ; Setup protected mode stack
+  mov sp, 0
+
+  jmp 0x8:main32 ; Jumps to the 32-bit mode and reload cs
+
+; This should be called once unreal mode have been entered.
+; It will load the kernel from disk to memory, and return to protected mode.
+load_kernel:
+
+.ret:
+  ; Return to 32-bit protected mode
+
+  
+
+; 32-bit protected mode code
+[BITS 32]
+
+main32:
+  
+
+
+  
+
 ; Data:
 
-; Text
+; Text:
 .boot_message: db "First-stage booting, please wait...", 0x0
 .a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 
@@ -107,10 +155,23 @@ gdb_code:
   dw 0xFFFF    ; Limit (0-15)
   dw 0x0000    ; Base (0-15)
   db 0x00      ; Base (16-23)
-  db 10011010b ; Accses byte
+  db 10011011b ; Accses byte
+  db 11001111b ; Limit (16-19) + Flags
+  db 0x00      ; Limit (24-31)
+
+; Base - 0x0
+; Limit - 0xFFFFF
+gdb_data:
+  dw 0xFFFF    ; Limit (0-15)
+  dw 0x0000    ; Base (0-15)
+  db 0x00      ; Base (16-23)
+  db 10010011b ; Accses byte
+  db 11001111b ; Limit (16-19) + Flags
+  db 0x00      ; Limit (24-31)
 
 gdb_end
 
 gdb_desc:
   dw gdb_end - gdb - 1
   dd gdb
+
