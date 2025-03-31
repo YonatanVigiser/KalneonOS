@@ -20,8 +20,11 @@ main16:
   call enable_a20
   jc .a20_error
 
-  ; Enter 32-bit protected mode: 
-  call enter_p32_mode
+  ; Enter unreal mode
+  call enter_unreal_mode
+
+  ; Load the kernel
+  call load_kernel
 
   jmp .hlt
 
@@ -95,10 +98,12 @@ enable_a20:
   pop ax
   ret
 
-; Enters 32-bit protected mode.
-; will setup a new stack, reload segments
-; and jumps to the 32-bit mode code
-enter_32p_mode:
+; Enters unreal mode. Will enter 32-bit protected mode and then return
+; to real mode without reloading the segment selectors,
+; which causes the proccessor to enter "unreal mode"
+enter_unreal_mode:
+  ; Enter 32-bit protected mode:
+
   ; Load a GDT
   lgdt [gdt_desc]
 
@@ -114,28 +119,31 @@ enter_32p_mode:
   mov fs, ax 
   mov gs, ax
 
-  ; Setup protected mode stack
-  mov sp, 0
+  jmp 0x8:.unreal_mode ; reload cs
 
-  jmp 0x8:main32 ; Jumps to the 32-bit mode and reload cs
-
-; This should be called once unreal mode have been entered.
-; It will load the kernel from disk to memory, and return to protected mode.
-load_kernel:
-
-.ret:
-  ; Return to 32-bit protected mode
+.unreal_mode:
+  ; Returns to unreal mode
   mov eax, cr0
   and eax, 0xFFFFFFFE
   mov cr0, eax
   
+  jmp 0x0:.ret ; reload cs  
+
+.ret:
+  ret
+
+; Will load the kernel image from disk to memory (at 100000 - 1FFFFF).
+; Need to be called after unreal mode has been enabled
+load_kernel:
+  
+
+.ret:
   
 
 ; 32-bit protected mode code
 [BITS 32]
 
 main32:
-  mov ax, ip ; In order to call the load_kernel, as they do not share a stack
 
 ; Data:
 
