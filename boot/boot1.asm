@@ -125,17 +125,17 @@ load_kernel:
 
 .ret:
   ; Return to 32-bit protected mode
-
+  mov eax, cr0
+  and eax, 0xFFFFFFFE
+  mov cr0, eax
+  
   
 
 ; 32-bit protected mode code
 [BITS 32]
 
 main32:
-  
-
-
-  
+  mov ax, ip ; In order to call the load_kernel, as they do not share a stack
 
 ; Data:
 
