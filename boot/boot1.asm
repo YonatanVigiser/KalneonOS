@@ -11,7 +11,7 @@ main16:
   int 0x10
 
   ; Print booting message:
-  lea si, .boot_message
+  lea si, boot_message
   mov ah, 0x00 ; row 0
   mov al, 0x0F ; white
   call print_line
@@ -29,7 +29,7 @@ main16:
   jmp .hlt
 
 .a20_error:
-  lea si, .a20_error_message
+  lea si, a20_error_message
   mov ah, 0x01 ; row 1
   mov al, 0x0F ; white
   call print_line
@@ -102,6 +102,9 @@ enable_a20:
 ; to real mode without reloading the segment selectors,
 ; which causes the proccessor to enter "unreal mode"
 enter_unreal_mode:
+  ; Save ds real mode value
+  push ds
+
   ; Enter 32-bit protected mode:
 
   ; Load a GDT
@@ -130,14 +133,33 @@ enter_unreal_mode:
   jmp 0x0:.ret ; reload cs  
 
 .ret:
+  pop ds
   ret
 
-; Will load the kernel image from disk to memory (at 100000 - 1FFFFF).
-; Need to be called after unreal mode has been enabled
+; This will load the kernel from disk to memory (100000-1FFFFF).
+; It should be called only in unreal mode.
+; Will return carry if failed, else carry clear
 load_kernel:
+  clc ; clear carry
   
+  mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5=1024K)
+  mov ah, 0x42 ; Function code
+  lea si, dpa  ; load DPA
+.copy_loop
+  int 0x13
+  jc .ret ; If error, return
+  mov 
 
-.ret:
+  ; Add the reading starting address 
+  ; 0x8000 (64*512=32,768)
+  mov ebx, [si+8]
+  add ebx, 0x8000
+  mov word [si+8], ebx
+
+  loop .copy_loop
+
+.ret 
+  ret
   
 
 ; 32-bit protected mode code
@@ -148,8 +170,8 @@ main32:
 ; Data:
 
 ; Text:
-.boot_message: db "First-stage booting, please wait...", 0x0
-.a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
+boot_message: db "First-stage booting, please wait...", 0x0
+a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 
 ; GDB table (temporary - for entering protected mode):
 gdb:
@@ -182,4 +204,14 @@ gdb_end
 gdb_desc:
   dw gdb_end - gdb - 1
   dd gdb
+
+; DPA - (disk address packet)
+dpa:
+  db 0x10      ; Size of DPA (16-bytes)
+  db 0x0       ; Reserved
+  dw 0x40      ; Read 64 sectors
+  dw 0x8000    ; Buffer offset
+  dw 0x7000    ; Buffer segment
+  dd 0x2400    ; Starting read address LBA lower 32-bits
+  dd 0x0       ; Starting read address LBA upper 16-bits (16-bits unused)
 
