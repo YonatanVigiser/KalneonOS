@@ -6,8 +6,8 @@
 ; and enter 32-bit protected mode:
 main16:
   ; Set the page number to 1
-  mov ah, 0x03
-  mov bh, 0x01
+  mov ah, 0x05
+  mov al, 0x01
   int 0x10
 
   ; Set background color
@@ -52,6 +52,7 @@ main16:
   jmp .hlt
 
 .hlt:
+  hlt ; For debugging
   jmp .hlt
 
 ; Print a message to the screen
