@@ -148,13 +148,20 @@ load_kernel:
 .copy_loop
   int 0x13
   jc .ret ; If error, return
-  mov 
+
+  push cx
+  mov cx, 0xFF ; 256 bytes
+.copy_from_buffer_loop
+  
+  loop .copy_from_buffer_loop
+  pop cx
 
   ; Add the reading starting address 
-  ; 0x8000 (64*512=32,768)
+  ; 0x8000 (64*512=32,768):
+
   mov ebx, [si+8]
   add ebx, 0x8000
-  mov word [si+8], ebx
+  mov [si+8], ebx
 
   loop .copy_loop
 
