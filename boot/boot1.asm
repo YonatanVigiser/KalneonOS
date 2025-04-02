@@ -163,7 +163,10 @@ load_kernel:
   mov ah, 0x42 ; Function code
   lea si, dpa  ; load DPA
   mov edi, 0x100000
-  mov es, 0x16 ; Data segment offset
+  mov bx, 0x16
+  mov es, bx ; Data segment offset
+  mov bx, 0x7000
+  mov gs, bx
 .copy_loop:
   int 0x13
   jc .ret ; If error, return
@@ -171,7 +174,7 @@ load_kernel:
   mov bx, 0x0
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
-  mov dx, [0x7000:0x8000+bx]
+  mov dx, [gs:0x8000+bx]
   mov [es:edi], dx
 
   ; Loop:
@@ -189,7 +192,7 @@ load_kernel:
 
   loop .copy_loop
 
-.ret 
+.ret: 
   ret
   
 
@@ -205,15 +208,15 @@ boot_message: db "First-stage booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
 
-; GDB table (temporary - for entering protected mode):
-gdb:
+; GDT table (temporary - for entering protected mode):
+gdt:
 
-gdb_null:
+gdt_null:
   dq 0x0
 
 ; Base - 0x0
 ; Limit - 0xFFFFF
-gdb_code:
+gdt_code:
   dw 0xFFFF    ; Limit (0-15)
   dw 0x0000    ; Base (0-15)
   db 0x00      ; Base (16-23)
@@ -223,7 +226,7 @@ gdb_code:
 
 ; Base - 0x0
 ; Limit - 0xFFFFF
-gdb_data:
+gdt_data:
   dw 0xFFFF    ; Limit (0-15)
   dw 0x0000    ; Base (0-15)
   db 0x00      ; Base (16-23)
@@ -231,11 +234,11 @@ gdb_data:
   db 11001111b ; Limit (16-19) + Flags
   db 0x00      ; Limit (24-31)
 
-gdb_end
+gdt_end:
 
-gdb_desc:
-  dw gdb_end - gdb - 1
-  dd gdb
+gdt_desc:
+  dw gdt_end - gdt - 1
+  dd gdt
 
 ; DPA - (disk address packet)
 dpa:
