@@ -10,11 +10,19 @@ main16:
   mov bh, 0x01
   int 0x10
 
+  ; Set background color
+  mov ah, 0x0B
+  mov bh, 0x00
+  mov bl, 0x40 ; Background color red, border color black
+  int 0x10
+
   ; Print booting message:
   lea si, boot_message
   mov ah, 0x00 ; row 0
   mov al, 0x0F ; white
   call print_line
+
+  jmp .hlt
 
   ; Enable A20 line
   call enable_a20
@@ -25,14 +33,23 @@ main16:
 
   ; Load the kernel
   call load_kernel
+  jc .memcpy_error
 
   jmp .hlt
 
 .a20_error:
   lea si, a20_error_message
   mov ah, 0x01 ; row 1
-  mov al, 0x0F ; white
+  mov al, 0x40 ; red back, white text
   call print_line
+  jmp .hlt
+
+.memcpy_error:
+  lea si, memcpy_error_message
+  mov ah, 0x01 ; row 1
+  mov al, 0x40 ; red back, white text
+  call print_line
+  jmp .hlt
 
 .hlt:
   jmp .hlt
@@ -145,16 +162,23 @@ load_kernel:
   mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; load DPA
-.copy_loop
+  mov edi, 0x100000
+  mov es, 0x16 ; Data segment offset
+.copy_loop:
   int 0x13
   jc .ret ; If error, return
 
-  push cx
-  mov cx, 0xFF ; 256 bytes
-.copy_from_buffer_loop
-  
-  loop .copy_from_buffer_loop
-  pop cx
+  mov bx, 0x0
+.copy_from_buffer_loop:
+  ; Copy the memory from buffer to new location:
+  mov dx, [0x7000:0x8000+bx]
+  mov [es:edi], dx
+
+  ; Loop:
+  add edi, 1
+  add bx, 1
+  test bx, 0xFF ; 256*2=512 bytes
+  jne .copy_from_buffer_loop
 
   ; Add the reading starting address 
   ; 0x8000 (64*512=32,768):
@@ -179,6 +203,7 @@ main32:
 ; Text:
 boot_message: db "First-stage booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
+memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
 
 ; GDB table (temporary - for entering protected mode):
 gdb:
