@@ -36,7 +36,7 @@ boot:
 
   ; Load the second stage:
   mov ah, 2
-  mov al, 16 ; Read the 2-18 sectors
+  mov al, 17 ; Read the 2-18 sectors
   mov ch, 0 ; Cylinder 0
   mov cl, 2 ; Start from sector 2
   mov dh, 0 ; Head number 0

@@ -5,21 +5,11 @@
 ; Will print another booting message, enable A20,
 ; and enter 32-bit protected mode:
 main16:
-  ; Set the page number to 1
-  mov ah, 0x05
-  mov al, 0x01
-  int 0x10
-
-  ; Set background color
-  mov ah, 0x0B
-  mov bh, 0x00
-  mov bl, 0x40 ; Background color red, border color black
-  int 0x10
+  mov [boot_disk], dl
 
   ; Print booting message:
   lea si, boot_message
-  mov ah, 0x00 ; row 0
-  mov al, 0x0F ; white
+  mov ah, 0x0F ; White
   call print_line
 
   jmp .hlt
@@ -39,15 +29,13 @@ main16:
 
 .a20_error:
   lea si, a20_error_message
-  mov ah, 0x01 ; row 1
-  mov al, 0x40 ; red back, white text
+  mov ah, 0x40 ; red back, white text
   call print_line
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
-  mov ah, 0x01 ; row 1
-  mov al, 0x40 ; red back, white text
+  mov ah, 0x40 ; red back, white text
   call print_line
   jmp .hlt
 
@@ -55,11 +43,32 @@ main16:
   hlt ; For debugging
   jmp .hlt
 
+; Set video mode, clear the screen, sets a background color (Magenta)
+init_screen:
+  ; Set the video mode to 0x03
+  mov ah, 0x00
+  mov al, 0x03
+  int 0x10
+
+  ; Clear the screen and set background color
+  mov ah, 0x06
+  mov al, 0x00 ; Clear all
+  mov bh, 0xDD ; Magenta color
+  mov ch, 0x00 ; y=0
+  mov cl, 0x00 ; x=0
+  mov dh, 0x19 ; y=25
+  mov dl, 0x50 ; x=80
+  int 0x10
+  
+
+
+.ret:
+  ret
+
 ; Print a message to the screen
 ; Params:
 ;   Pointer to string at ds:si
-;   ah - row
-;   al - color
+;   ah - color
 print_line:
   push ax
   push bx
@@ -76,7 +85,7 @@ print_line:
   mov bl, al
   
   ; Set the rows and columns
-  mov dh, ah
+  mov dh, [screen_line]
   mov dl, 0
   
 .print_loop:
@@ -100,6 +109,9 @@ print_line:
   jmp .print_loop
 
 .ret:
+  mov ah, [screen_line]
+  add ah, 1
+  mov [screen_line], ah
   pop dx
   pop cx
   pop bx
@@ -163,11 +175,16 @@ load_kernel:
   mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; load DPA
+  mov dl, [boot_disk] ; Boot disk
+  ; Kernel offset:
   mov edi, 0x100000
+  ; Data unreal segment:
   mov bx, 0x16
-  mov es, bx ; Data segment offset
+  mov es, bx
+  ; Buffer real segment:
   mov bx, 0x7000
   mov gs, bx
+
 .copy_loop:
   int 0x13
   jc .ret ; If error, return
@@ -251,3 +268,8 @@ dpa:
   dd 0x2400    ; Starting read address LBA lower 32-bits
   dd 0x0       ; Starting read address LBA upper 16-bits (16-bits unused)
 
+; Boot disk:
+boot_disk: db 0x00
+
+; Current line:
+screen_line: db 0x00
