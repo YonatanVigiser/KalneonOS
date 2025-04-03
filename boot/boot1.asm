@@ -128,16 +128,20 @@ print_line:
 ; Clear carry flag on success, set it on error
 enable_a20:
   clc ; Clears the carry flag
+  jmp .keyboard_controller
 
   ; First, test if A20 is already enabled
   call test_a20
   cmp ax, 1
   je .ret
 
+  xor bl, bl ; Clear bl
+
   ; Check support via bios:
   mov ax, 0x2403
   int 0x15
   jc .keyboard_controller ; BIOS int 0x15 function isn't supported, so we will skip it
+  mov bl, al
 
 .bios:
   mov ax, 0x2401
@@ -148,6 +152,14 @@ enable_a20:
   call test_a20
   test ax, ax
   jnz .ret
+
+  ; test if keyboard controller is supported 
+  test bl, 1
+  jnz .keyboard_controller
+
+  ; test if fast gate is supported
+  test bl, 2
+  jnz .fast_gate
 
 .keyboard_controller:
   ; Disable keyboard
@@ -186,6 +198,12 @@ enable_a20:
   call test_a20
   test al, al
   jnz .ret
+
+  ; Test if the fast gate is supported
+  test bl, 2
+  jnz .fast_gate
+
+  jmp .fail  
 
 .fast_gate:
   ; Test if we need to use the fast gate method
