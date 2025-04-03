@@ -128,7 +128,6 @@ print_line:
 ; Clear carry flag on success, set it on error
 enable_a20:
   clc ; Clears the carry flag
-  jmp .keyboard_controller
 
   ; First, test if A20 is already enabled
   call test_a20
