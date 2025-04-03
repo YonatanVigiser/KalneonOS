@@ -375,6 +375,11 @@ enter_p_mode_from_unreal_mode:
   or eax, 1
   mov cr0, eax 
 
+  ; Notify BIOS of target processor mode
+  mov ax, 0xEC00
+  mov bl, 1
+  int 0x15
+
   ; Jump to 32-bit code
   jmp 0x08:main32
 
