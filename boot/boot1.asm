@@ -146,40 +146,40 @@ enable_a20:
 
 .keyboard_controller:
   ; Disable keyboard
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
   mov al, 0xAD
   out 0x64, al
 
   ; Read from input
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
   mov al, 0xD0
   out 0x64, al
 
-  call keyboard_wait_bit_0
+  call .keyboard_wait_bit_0
   in al, 0x60
   push ax
 
   ; Write to output
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
   mov al, 0xD1   
   out 0x64, al
 
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
   pop ax
   or al, 2
   out 0x60, al
   
   ; Re-enable keyboard controller
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
   mov al, 0xAE
   out 0x64, al
 
   ; Wait for controller
-  call keyboard_wait_bit_1
+  call .keyboard_wait_bit_1
 
   ; Check if the a20 line was enabled
   call test_a20
-  test al, ax
+  test al, al
   jnz .ret
 
 .fast_gate:
@@ -197,7 +197,7 @@ enable_a20:
   test ax, ax
   jnz .ret
 
-.fail
+.fail:
   stc ; Sets the carry flag - failed to enable a20
 
 .ret:
