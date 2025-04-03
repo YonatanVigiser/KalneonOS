@@ -5,14 +5,11 @@
 ; Will print another booting message, enable A20,
 ; and enter 32-bit protected mode:
 main16:
-  mov [boot_disk], dl
+  mov [boot_disk], dl ; Save the boot disk number
 
-  ; Print booting message:
-  lea si, boot_message
-  mov ah, 0x0F ; White
-  call print_line
+  call init_screen
 
-  jmp .hlt
+  jmp .hlt ; Temp!!!
 
   ; Enable A20 line
   call enable_a20
@@ -29,13 +26,13 @@ main16:
 
 .a20_error:
   lea si, a20_error_message
-  mov ah, 0x40 ; red back, white text
+  mov ah, 0x4F ; red back, white text
   call print_line
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
-  mov ah, 0x40 ; red back, white text
+  mov ah, 0x4F ; red back, white text
   call print_line
   jmp .hlt
 
@@ -43,7 +40,8 @@ main16:
   hlt ; For debugging
   jmp .hlt
 
-; Set video mode, clear the screen, sets a background color (Magenta)
+; Set video mode, clear the screen, sets a background color (Magenta),
+; and print boot message
 init_screen:
   ; Set the video mode to 0x03
   mov ah, 0x00
@@ -53,14 +51,17 @@ init_screen:
   ; Clear the screen and set background color
   mov ah, 0x06
   mov al, 0x00 ; Clear all
-  mov bh, 0xDD ; Magenta color
+  mov bh, 0xD0 ; Magenta color
   mov ch, 0x00 ; y=0
   mov cl, 0x00 ; x=0
   mov dh, 0x19 ; y=25
   mov dl, 0x50 ; x=80
   int 0x10
-  
 
+  ; Print booting message:
+  lea si, boot_message
+  mov ah, 0xD0 ; Black text 
+  call print_line
 
 .ret:
   ret
@@ -79,10 +80,10 @@ print_line:
   mov cx, 1
   
   ; Page num is 1
-  mov bh, 1
+  mov bh, 0
 
   ; Set the text color
-  mov bl, al
+  mov bl, ah
   
   ; Set the rows and columns
   mov dh, [screen_line]
