@@ -15,7 +15,7 @@ build_dir:
 boot: build_dir
 	make -C $(BOOT_DIR)
 
-floppy: boot
+floppy: clean boot
 	dd if=/dev/zero of=$(FLOPPY_DISK) bs=512 count=2880
 	dd conv=notrunc if=$(BOOT_0) of=$(FLOPPY_DISK) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(BOOT_1) of=$(FLOPPY_DISK) bs=512 count=17 seek=1

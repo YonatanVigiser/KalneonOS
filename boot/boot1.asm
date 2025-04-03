@@ -15,29 +15,33 @@ main16:
 
   ; Print A20 enabled message
   lea si, a20_enabled_message
-  mov ah, 0xD0
+  mov ah, 0x90 ; Black
   call print_line
-
-  jmp .hlt ; Temp!!!
 
   ; Enter unreal mode
   call enter_unreal_mode
+
+
+  jmp .hlt ; Temp!!!
 
   ; Load the kernel
   call load_kernel
   jc .memcpy_error
 
-  jmp .hlt
+  ; Print kernel copy message
+  lea si, memcpy_success_message
+  mov ah, 0x90 ; Black
+  call print_line
 
 .a20_error:
   lea si, a20_error_message
-  mov ah, 0x4F ; Red background, white text
+  mov ah, 0x40 ; Red background, black text
   call print_line
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
-  mov ah, 0x4F ; Red background, white text
+  mov ah, 0x40 ; Red background, black text
   call print_line
   jmp .hlt
 
@@ -56,7 +60,7 @@ init_screen:
   ; Clear the screen and set background color
   mov ah, 0x06
   mov al, 0x00 ; Clear all
-  mov bh, 0xD0 ; Magenta color
+  mov bh, 0x90 ; Purple blue color
   mov ch, 0x00 ; y=0
   mov cl, 0x00 ; x=0
   mov dh, 0x19 ; y=25
@@ -65,7 +69,7 @@ init_screen:
 
   ; Print booting message:
   lea si, boot_message
-  mov ah, 0xD0 ; Black text 
+  mov ah, 0x90 ; Black text 
   call print_line
 
 .ret:
@@ -308,6 +312,10 @@ enter_unreal_mode:
   mov eax, cr0
   and eax, 0xFFFFFFFE
   mov cr0, eax
+  ; Unreal mode entered print message
+  lea si, enter_unreal_mode_message
+  mov ah, 0x90 ; Black
+  call print_line 
   
   jmp 0x0:.ret ; reload cs
 
@@ -370,15 +378,25 @@ load_kernel:
 ; Note: This function will NOT reload the segment selectors or GDT, as it
 ; assumes that unreal mode has already set them
 enter_p_mode_from_unreal_mode:
-  ; Enable 32-bit protected mode in control register
-  mov eax, cr0
-  or eax, 1
-  mov cr0, eax 
-
   ; Notify BIOS of target processor mode
   mov ax, 0xEC00
   mov bl, 1
   int 0x15
+
+  ; Go down a line
+  lea si, new_line
+  call print_line
+  
+  ; Print loading kernel
+  lea si, kernel_loaded_message
+  mov ah, 0xD0 ; Black
+  call print_line
+  
+  ; Enable 32-bit protected mode in control register
+  mov eax, cr0
+  or eax, 1
+  mov cr0, eax
+
 
   ; Jump to 32-bit code
   jmp 0x08:main32
@@ -387,12 +405,16 @@ enter_p_mode_from_unreal_mode:
 ; 32-bit protected mode code
 [BITS 32]
 
-; This will setup a kernel stack (not ready yet), and jump to the kernel
+; This will setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
 main32:
-  ; TODO: setup a kernel stacl
+  ; Setup kernel stack
+  mov eax, 0x400000
+  mov sp, ax
+  mov bp, ax
 
-  ; Jump to the kernel:
-  jmp 0x08:kernel_start
+  ; Jump to the kernel
+  mov eax, [kernel_start]
+  jmp eax
 
 ; Data:
 
@@ -400,8 +422,10 @@ main32:
 boot_message: db "First-stage booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 a20_enabled_message: db "A20 line was successfuly enabled!", 0x0
+enter_unreal_mode_message: db "Entered into unreal mode", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
 memcpy_success_message: db "Kernel copied from disk successfuly!", 0x0
+kernel_loaded_message: db "Kernel loading, please wait...", 0x0
 
 ; GDT table (temporary - for entering protected mode):
 gdt:
@@ -458,3 +482,6 @@ kernel_start: dq 0x00000000
 
 ; Compare byte for testing if A20 line is enabled:
 compare_byte: db 0x00
+
+; Print new line :
+new_line: db 0x0
