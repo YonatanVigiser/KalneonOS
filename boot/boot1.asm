@@ -9,11 +9,16 @@ main16:
 
   call init_screen
 
-  jmp .hlt ; Temp!!!
-
   ; Enable A20 line
   call enable_a20
   jc .a20_error
+
+  ; Print A20 enabled message
+  lea si, a20_enabled_message
+  mov ah, 0xD0
+  call print_line
+
+  jmp .hlt ; Temp!!!
 
   ; Enter unreal mode
   call enter_unreal_mode
@@ -123,8 +128,134 @@ print_line:
 ; Clear carry flag on success, set it on error
 enable_a20:
   clc ; Clears the carry flag
+
+  ; First, test if A20 is already enabled
+  call test_a20
+  cmp ax, 1
+  je .ret
+
+.bios:
+  mov ax, 0x2401
+  int 0x15
+  jc .keyboard_controller  ; int 0x15 not supported
+  test ah, ah
+  jne .keyboard_controller ; int 0x15 not supported
+  call test_a20
+  test ax, ax
+  jnz .ret
+
+.keyboard_controller:
+  ; Disable keyboard
+  call keyboard_wait_bit_1
+  mov al, 0xAD
+  out 0x64, al
+
+  ; Read from input
+  call keyboard_wait_bit_1
+  mov al, 0xD0
+  out 0x64, al
+
+  call keyboard_wait_bit_0
+  in al, 0x60
+  push ax
+
+  ; Write to output
+  call keyboard_wait_bit_1
+  mov al, 0xD1   
+  out 0x64, al
+
+  call keyboard_wait_bit_1
+  pop ax
+  or al, 2
+  out 0x60, al
   
+  ; Re-enable keyboard controller
+  call keyboard_wait_bit_1
+  mov al, 0xAE
+  out 0x64, al
+
+  ; Wait for controller
+  call keyboard_wait_bit_1
+
+  ; Check if the a20 line was enabled
+  call test_a20
+  test al, ax
+  jnz .ret
+
+.fast_gate:
+  ; Test if we need to use the fast gate method
+  in al, 0x92
+  test al, 0x02
+  jnz .fail
+
+  ; Enable using the fast gate
+  or al, 0x02  ; Set the second bit
+  and al, 0xFE ; Clear the first bit=
+  out 0x92, al
+ 
+  call test_a20
+  test ax, ax
+  jnz .ret
+
+.fail
+  stc ; Sets the carry flag - failed to enable a20
+
 .ret:
+  ret
+
+.keyboard_wait_bit_0:
+  in al, 0x64
+  test al, 1
+  jnz .keyboard_wait_bit_0
+  ret
+
+.keyboard_wait_bit_1:
+  in al, 0x64
+  test al, 2
+  jnz .keyboard_wait_bit_1
+  ret
+
+
+; Test if the A20 line is enabled. It should be only called in REAL mode!
+; Returns:
+;   ax is 1 if enabled
+;   ax is 0 if disabled
+test_a20:
+  pushf
+  push si
+  push di
+  push ds
+  push es
+
+  ; Sets the source offset to the compare byte offset, and the destination offset to that plus 0x10
+  mov ax, compare_byte
+  mov si, ax
+  mov di, ax
+  add di, 0x10
+
+  ; Sets ds to 0x0000 and es to 0xFFFF
+  xor ax, ax
+  mov ds, ax
+  
+  not ax 
+  mov es, ax
+
+  xor ax, ax ; Clear ax for return if A20 is enabled
+  
+  mov byte [es:di], 0x00
+  mov byte [ds:si], 0xFF 
+
+  cmp byte [es:di], 0xFF
+  je .ret
+
+  mov ax, 1
+
+.ret:
+  pop es
+  pop ds
+  pop di
+  pop si
+  popf
   ret
 
 ; Enters unreal mode. Will enter 32-bit protected mode and then return
@@ -222,7 +353,7 @@ enter_p_mode_from_unreal_mode:
   or eax, 1
   mov cr0, eax 
 
-  ; Jump to 32-bit code:
+  ; Jump to 32-bit code
   jmp 0x08:main32
 
 
@@ -241,7 +372,9 @@ main32:
 ; Text:
 boot_message: db "First-stage booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
+a20_enabled_message: db "A20 line was successfuly enabled!", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
+memcpy_success_message: db "Kernel copied from disk successfuly!", 0x0
 
 ; GDT table (temporary - for entering protected mode):
 gdt:
@@ -295,3 +428,6 @@ screen_line: db 0x00
 
 ; Kernel starting address pointer (pointed by the elf header):
 kernel_start: dq 0x00000000
+
+; Compare byte for testing if A20 line is enabled:
+compare_byte: db 0x00
