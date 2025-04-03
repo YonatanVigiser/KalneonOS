@@ -37,12 +37,13 @@ boot:
   ; Load the second stage:
   mov ah, 2
   mov al, 17 ; Read the 2-18 sectors
-  mov ch, 0 ; Cylinder 0
-  mov cl, 2 ; Start from sector 2
-  mov dh, 0 ; Head number 0
-  mov bx, 0x500 ; The buffer for the code (0x500 - 0x2500)
+  mov ch, 0  ; Cylinder 0
+  mov cl, 2  ; Start from sector 2
+  mov dh, 0  ; Head number 0
+; The buffer for the code (0x500 - 0x2500)
+  mov bx, 0x500
   ; dl should already be the drive the computer booted from
-  ; (They BIOS sets it to be)
+  ; (The BIOS sets it to be)
   int 0x13 ; Call the intterupt
   
   ; If there was an error
@@ -55,8 +56,8 @@ boot:
 
 .error:
   lea si, .boot_failed_message
-  mov ah, 0x0D ; row 13
-  mov al, 0x0F ; white color
+  mov ah, 0x0D ; Row 13
+  mov al, 0x4F ; Red background white color
   call print_line
 
 ; Halt the machine
@@ -64,7 +65,7 @@ boot:
   jmp .hlt
 
 .boot_message: db "Zero-Stage Booting...", 0x0
-.boot_failed_message: db "An error occurred while trying to copy the first-stage bootloader from disk, machine halted!", 0x0
+.boot_failed_message: db "CRITICAL ERROR: An error occurred while trying to copy the first-stage bootloader from disk, machine halted!", 0x0
 
 ; Print a message to the screen
 ; Params:

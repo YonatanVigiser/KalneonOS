@@ -26,13 +26,13 @@ main16:
 
 .a20_error:
   lea si, a20_error_message
-  mov ah, 0x4F ; Red background, white text
+  mov ah, 0x4F ; red background, white text
   call print_line
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
-  mov ah, 0x4F ; Red background, white text
+  mov ah, 0x4F ; red background, white text
   call print_line
   jmp .hlt
 
@@ -79,7 +79,7 @@ print_line:
   ; Print only one char at a time
   mov cx, 1
   
-  ; Page num is 0
+  ; Page num is 1
   mov bh, 0
 
   ; Set the text color
@@ -123,6 +123,7 @@ print_line:
 ; Clear carry flag on success, set it on error
 enable_a20:
   clc ; Clears the carry flag
+
   
 .ret:
   ret
@@ -162,7 +163,8 @@ enter_unreal_mode:
   ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
-; It should be called only in unreal mode.
+; It should be called only in unreal mode. It will also save the
+; kernel entry pointer
 ; Returns:
 ;   Carry if failed, else carry clear
 load_kernel:
@@ -207,34 +209,35 @@ load_kernel:
   loop .copy_loop
 
 .ret:
- ; Sets ax to the program offset pointed by the elf header (at bytes 24-27 of kernel):
+ ; Saves the kernel start offset pointed by the elf header (at bytes 24-27 of kernel):
   mov eax, [es:edi+24]
+  add eax, 0x100000
   mov [kernel_start], eax
   ret
 
-; This will enter 32-bit mode from protected mode. This should be called
-; from unreal mode. It will jump to main32
-; Note: This function will NOT reload the segment selectors or GDT, as it
-; assumes that unreal mode has already set them
+; This will switch the proccessor mode back to 32-bit protected mode.
+; This should be called in unreal mode. It will jump to the 32-bit
+; code.
 enter_p_mode_from_unreal_mode:
   ; Enable 32-bit protected mode in control register
   mov eax, cr0
   or eax, 1
   mov cr0, eax 
 
-  ; Jump to 32-bit code:
+  ; Note: The segments should already be loaded, so no need to reload them.
   jmp 0x08:main32
-
 
 ; 32-bit protected mode code
 [BITS 32]
 
-; This will setup a kernel stack (not ready yet), and jump to the kernel
+; This will setup kernel stack and jump to the kernel
 main32:
-  ; TODO: setup a kernel stacl
+  mov eax, 0x00 ; TEMP, should be the the kernel stack location
+  mov esp, eax
+  mov ebp, eax
 
-  ; Jump to the kernel:
-  jmp 0x08:kernel_start
+  mov ebx, [kernel_start]
+  jmp 0x08:ebx
 
 ; Data:
 
@@ -287,11 +290,11 @@ dpa:
 
 ; Variables:
 
-; Boot disk:
+; Boot disk number:
 boot_disk: db 0x00
 
 ; Current line on screen:
 screen_line: db 0x00
 
-; Kernel starting address pointer (pointed by the elf header):
+; Kernel starting offset (the pointer to the kernel code):
 kernel_start: dq 0x00000000
