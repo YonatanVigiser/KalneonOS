@@ -134,6 +134,11 @@ enable_a20:
   cmp ax, 1
   je .ret
 
+  ; Check support via bios:
+  mov ax, 0x2403
+  int 0x15
+  jc .keyboard_controller ; BIOS int 0x15 function isn't supported, so we will skip it
+
 .bios:
   mov ax, 0x2401
   int 0x15
@@ -186,7 +191,7 @@ enable_a20:
   ; Test if we need to use the fast gate method
   in al, 0x92
   test al, 0x02
-  jnz .fail
+  jnz .ret
 
   ; Enable using the fast gate
   or al, 0x02  ; Set the second bit
