@@ -21,17 +21,15 @@ main16:
   ; Enter unreal mode
   call enter_unreal_mode
 
-
-  jmp .hlt ; Temp!!!
-
   ; Load the kernel
-  call load_kernel
-  jc .memcpy_error
+;  call load_kernel
+;  jc .memcpy_error
 
   ; Print kernel copy message
-  lea si, memcpy_success_message
-  mov ah, 0x90 ; Black
-  call print_line
+;  lea si, memcpy_success_message
+;  mov ah, 0x90 ; Black
+;  call print_line
+  jmp .hlt
 
 .a20_error:
   lea si, a20_error_message
@@ -313,14 +311,18 @@ enter_unreal_mode:
   and eax, 0xFFFFFFFE
   mov cr0, eax
   ; Unreal mode entered print message
-  lea si, enter_unreal_mode_message
-  mov ah, 0x90 ; Black
-  call print_line 
+;  lea si, enter_unreal_mode_message
+;  mov ah, 0x90 ; Black
+;  call print_line 
   
-  jmp 0x0:.ret ; reload cs
+  xor ax, ax
+  mov ss, ax ; Reload ss (for stack usage)
+  
+  jmp 0x0:.ret ; Reload cs
 
 .ret:
-  ret
+  hlt
+  jmp .ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
 ; It should be called only in unreal mode.
