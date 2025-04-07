@@ -297,32 +297,24 @@ enter_unreal_mode:
   mov cr0, eax 
 
   ; Reload the segments
-  xor ax, ax
+  mov ax, 2
   mov ds, ax
   mov es, ax
   mov fs, ax 
   mov gs, ax
-
-  jmp 0x8:.unreal_mode ; reload cs
 
 .unreal_mode:
   ; Returns to unreal mode
   mov eax, cr0
   and eax, 0xFFFFFFFE
   mov cr0, eax
-  ; Unreal mode entered print message
-;  lea si, enter_unreal_mode_message
-;  mov ah, 0x90 ; Black
-;  call print_line 
-  
-  xor ax, ax
-  mov ss, ax ; Reload ss (for stack usage)
-  
-  jmp 0x0:.ret ; Reload cs
+  jmp 0x0:.ret ; reload cs
 
 .ret:
-  hlt
-  jmp .ret
+  ret
+
+.unreal_mode_jump_pointer:
+  dw .ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
 ; It should be called only in unreal mode.
