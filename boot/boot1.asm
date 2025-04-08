@@ -221,7 +221,7 @@ enable_a20:
 
   ; Enable using the fast gate
   or al, 0x02  ; Set the second bit
-  and al, 0xFE ; Clear the first bit=
+  and al, 0xFE ; Clear the first bit
   out 0x92, al
  
   call test_a20
@@ -230,8 +230,10 @@ enable_a20:
 
 .fail:
   stc ; Sets the carry flag - failed to enable a20
+  ret
 
 .ret:
+  clc
   ret
 
 ; Wait loop for the 0 bit of the keyboard controller to set
@@ -358,10 +360,10 @@ enter_unreal_mode:
 load_kernel:
   clc ; clear carry
   
-  mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5=1024K)
+  mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5K=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; load DPA
-  mov dl, [boot_disk] ; Boot disk
+  mov dl, [boot_disk] ; Disk to read from (boot disk)
   ; Kernel offset:
   mov edi, 0x100000
   ; Data unreal segment:
