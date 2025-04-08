@@ -15,7 +15,7 @@ main16:
 
   ; Print A20 enabled message
   lea si, a20_enabled_message
-  mov ah, 0x90 ; Black
+  mov al, 0x90 ; Black
   call print_line
 
   ; Enter unreal mode
@@ -27,19 +27,19 @@ main16:
 
   ; Print kernel copy message
 ;  lea si, memcpy_success_message
-;  mov ah, 0x90 ; Black
+;  mov al, 0x90 ; Black
 ;  call print_line
   jmp .hlt
 
 .a20_error:
   lea si, a20_error_message
-  mov ah, 0x40 ; Red background, black text
+  mov al, 0x40 ; Red background, black text
   call print_line
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
-  mov ah, 0x40 ; Red background, black text
+  mov al, 0x40 ; Red background, black text
   call print_line
   jmp .hlt
 
@@ -67,7 +67,7 @@ init_screen:
 
   ; Print booting message:
   lea si, boot_message
-  mov ah, 0x90 ; Black text 
+  mov al, 0x90 ; Black text 
   call print_line
 
 .ret:
@@ -76,7 +76,7 @@ init_screen:
 ; Print a message to the screen
 ; Params:
 ;   Pointer to string at ds:si
-;   ah - color
+;   al - color
 print_line:
   push ax
   push bx
@@ -90,7 +90,7 @@ print_line:
   mov bh, 0
 
   ; Set the text color
-  mov bl, ah
+  mov bl, al
   
   ; Set the rows and columns
   mov dh, [screen_line]
@@ -129,19 +129,18 @@ print_line:
 ; Enables the A20 line
 ; Clear carry flag on success, set it on error
 enable_a20:
-  clc ; Clears the carry flag
-
   ; First, test if A20 is already enabled
   call test_a20
   cmp ax, 1
   je .ret
 
-  xor bl, bl ; Clear bl
+  mov bl, 0x03 ; If BIOS support check fails, we assume both are supported
 
   ; Check support via bios:
   mov ax, 0x2403
   int 0x15
-  jc .keyboard_controller ; BIOS int 0x15 function isn't supported, so we will skip it
+  ; BIOS int 0x15 function isn't supported, so we will skip the call to the BIOS method:
+  jc .keyboard_controller 
   mov bl, al
 
 .bios:
@@ -164,42 +163,50 @@ enable_a20:
 
 .keyboard_controller:
   ; Disable keyboard
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
   mov al, 0xAD
   out 0x64, al
 
   ; Read from input
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
   mov al, 0xD0
   out 0x64, al
 
-  call .keyboard_wait_bit_0
+  call keyboard_wait_bit_0
+  jc .controller_end
   in al, 0x60
   push ax
 
   ; Write to output
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
   mov al, 0xD1   
   out 0x64, al
 
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
   pop ax
   or al, 2
   out 0x60, al
   
   ; Re-enable keyboard controller
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
   mov al, 0xAE
   out 0x64, al
 
   ; Wait for controller
-  call .keyboard_wait_bit_1
+  call keyboard_wait_bit_1
+  jc .controller_end
 
   ; Check if the a20 line was enabled
   call test_a20
   test al, al
   jnz .ret
 
+.controller_end:
   ; Test if the fast gate is supported
   test bl, 2
   jnz .fast_gate
@@ -227,18 +234,41 @@ enable_a20:
 .ret:
   ret
 
-.keyboard_wait_bit_0:
+; Wait loop for the 0 bit of the keyboard controller to set
+; Returns carry when timeout, else clear
+keyboard_wait_bit_0:
+  clc
+  ; Set a timeout
+  push cx
+  mov cx, 0xFFFFF
+.loop:
   in al, 0x64
   test al, 1
-  jnz .keyboard_wait_bit_0
+  jnz .ret
+  loop .loop
+.fail:
+  stc
+.ret
+  pop cx
   ret
 
-.keyboard_wait_bit_1:
+; Wait loop for the 1 bit of the keyboard controller to clear
+; Returns carry when timeout, else clear
+keyboard_wait_bit_1:
+  clc
+  ; Set a timeout
+  push cx
+  mov cx, 0xFFFFF
+.loop:
   in al, 0x64
   test al, 2
-  jnz .keyboard_wait_bit_1
+  jz .ret
+  loop .loop
+.fail:
+  stc
+.ret
+  pop cx
   ret
-
 
 ; Test if the A20 line is enabled. It should be only called in REAL mode!
 ; Returns:
@@ -250,6 +280,7 @@ test_a20:
   push di
   push ds
   push es
+  push bx
 
   ; Sets the source offset to the compare byte offset, and the destination offset to that plus 0x10
   mov ax, compare_byte
@@ -264,6 +295,8 @@ test_a20:
   not ax 
   mov es, ax
 
+  mov bl, byte [es:si] ; Save the byte at es:si
+
   xor ax, ax ; Clear ax for return if A20 is enabled
   
   mov byte [es:di], 0x00
@@ -275,6 +308,8 @@ test_a20:
   mov ax, 1
 
 .ret:
+  mov byte [es:si], bl ; Restore the byte at es:si
+  pop bx
   pop es
   pop ds
   pop di
@@ -297,13 +332,12 @@ enter_unreal_mode:
   mov cr0, eax 
 
   ; Reload the segments
-  mov ax, 2
+  xor ax, ax ; Need to check that works!
   mov ds, ax
   mov es, ax
   mov fs, ax 
   mov gs, ax
 
-.unreal_mode:
   ; Returns to unreal mode
   mov eax, cr0
   and eax, 0xFFFFFFFE
@@ -311,10 +345,11 @@ enter_unreal_mode:
   jmp 0x0:.ret ; reload cs
 
 .ret:
+  ; Print unreal-mode entered message
+  lea si, enter_unreal_mode_message
+  mov al, 0x90 ; Black
+  call print_line
   ret
-
-.unreal_mode_jump_pointer:
-  dw .ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
 ; It should be called only in unreal mode.
@@ -383,7 +418,7 @@ enter_p_mode_from_unreal_mode:
   
   ; Print loading kernel
   lea si, kernel_loaded_message
-  mov ah, 0xD0 ; Black
+  mov al, 0xD0 ; Black
   call print_line
   
   ; Enable 32-bit protected mode in control register
