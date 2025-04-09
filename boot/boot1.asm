@@ -242,7 +242,7 @@ keyboard_wait_bit_0:
   clc
   ; Set a timeout
   push cx
-  mov cx, 0xFFFFF
+  mov cx, 0xFFFF
 .loop:
   in al, 0x64
   test al, 1
@@ -250,7 +250,7 @@ keyboard_wait_bit_0:
   loop .loop
 .fail:
   stc
-.ret
+.ret:
   pop cx
   ret
 
@@ -260,7 +260,7 @@ keyboard_wait_bit_1:
   clc
   ; Set a timeout
   push cx
-  mov cx, 0xFFFFF
+  mov cx, 0xFFFF
 .loop:
   in al, 0x64
   test al, 2
@@ -268,7 +268,7 @@ keyboard_wait_bit_1:
   loop .loop
 .fail:
   stc
-.ret
+.ret:
   pop cx
   ret
 
