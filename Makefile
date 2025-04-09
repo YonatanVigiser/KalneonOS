@@ -21,7 +21,7 @@ floppy: boot
 	dd if=/dev/zero of=$(FLOPPY_DISK) bs=512 count=2880
 	dd conv=notrunc if=$(BOOT_0) of=$(FLOPPY_DISK) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(BOOT_1) of=$(FLOPPY_DISK) bs=512 count=17 seek=1
-	dd conv=notrunc if=$(KERNEL) of=$(FLOPPY_DISK) bs=512 count=2048 seek=2
+	dd conv=notrunc if=$(KERNEL) of=$(FLOPPY_DISK) bs=512 count=2048 seek=18
 
 clean:
 	rm -rf $(BUILD_DIR)

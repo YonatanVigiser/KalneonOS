@@ -22,8 +22,8 @@ main16:
   call enter_unreal_mode
 
   ; Load the kernel
-;  call load_kernel
-;  jc .memcpy_error
+  call load_kernel
+  jc .memcpy_error
 
   ; Print kernel copy message
 ;  lea si, memcpy_success_message
@@ -514,5 +514,5 @@ kernel_start: dq 0x00000000
 ; Compare byte for testing if A20 line is enabled:
 compare_byte: db 0x00
 
-; Print new line :
+; Print new line:
 new_line: db 0x0
