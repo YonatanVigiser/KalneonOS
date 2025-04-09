@@ -5,7 +5,7 @@
 ; Will print another booting message, enable A20,
 ; and enter 32-bit protected mode:
 main16:
-  mov [boot_disk], dl ; Save the boot disk number
+  mov byte [boot_disk], dl ; Save the boot disk number
 
   call init_screen
 
@@ -360,28 +360,23 @@ enter_unreal_mode:
 load_kernel:
   clc ; clear carry
   
-  mov cx, 0x20 ; Read 64 segments and copy 32 times (64*32*0.5K=1024K)
+  mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
   mov ah, 0x42 ; Function code
-  lea si, dpa  ; load DPA
-  mov dl, [boot_disk] ; Disk to read from (boot disk)
+  lea si, dpa  ; Load DPA
+  mov dl, byte [boot_disk] ; Disk to read from (boot disk)
   ; Kernel offset:
   mov edi, 0x100000
-  ; Data unreal segment:
-  mov bx, 0x16
-  mov es, bx
-  ; Buffer real segment:
-  mov bx, 0x7000
-  mov gs, bx
 
 .copy_loop:
   int 0x13
   jc .ret ; If error, return
+  
+  mov ebx, 0x8000
 
-  mov bx, 0x0
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
-  mov dx, [gs:0x8000+bx]
-  mov [es:edi], dx
+  mov dx, [ebx]
+  mov [ds:edi], dx
 
   ; Loop:
   add edi, 1
