@@ -8,14 +8,13 @@ main16:
   mov byte [boot_disk], dl ; Save the boot disk number
 
   call init_screen
-
+ 
   ; Enable A20 line
   call enable_a20
   jc .a20_error
 
   ; Print A20 enabled message
   lea si, a20_enabled_message
-  mov al, 0x90 ; Black
   call print_line
 
   ; Enter unreal mode
@@ -27,27 +26,26 @@ main16:
 
   ; Print kernel copy message
 ;  lea si, memcpy_success_message
-;  mov al, 0x90 ; Black
 ;  call print_line
   jmp .hlt
 
 .a20_error:
   lea si, a20_error_message
   mov al, 0x40 ; Red background, black text
-  call print_line
+  call print_line_color
   jmp .hlt
 
 .memcpy_error:
   lea si, memcpy_error_message
   mov al, 0x40 ; Red background, black text
-  call print_line
+  call print_line_color
   jmp .hlt
 
 .hlt:
   hlt ; For debugging
   jmp .hlt
 
-; Set video mode, clear the screen, sets a background color (Magenta),
+; Set video mode, clear the screen, sets a background color,
 ; and print boot message
 init_screen:
   ; Set the video mode to 0x03
@@ -57,31 +55,56 @@ init_screen:
 
   ; Clear the screen and set background color
   mov ah, 0x06
-  mov al, 0x00 ; Clear all
-  mov bh, 0x90 ; Purple blue color
-  mov ch, 0x00 ; y=0
-  mov cl, 0x00 ; x=0
-  mov dh, 0x19 ; y=25
-  mov dl, 0x50 ; x=80
+  mov al, 0x00              ; Clear all
+  mov bh, byte [text_color] ; Background color
+  and bh, 0xf0              ; Foreground color (unused)
+  mov ch, 0x00              ; y=0
+  mov cl, 0x00              ; x=0
+  mov dh, 0x19              ; y=25
+  mov dl, 0x50              ; x=80
   int 0x10
+
+  ; Print welcome message:
+  lea si, welcome_message
+  call print_line
+
+  ; Print new line:
+  lea si, new_line
+  call print_line
 
   ; Print booting message:
   lea si, boot_message
-  mov al, 0x90 ; Black text 
   call print_line
 
 .ret:
   ret
 
-; Print a message to the screen
+; Print a line in the default color to the screen
+; Params:
+;   Pointer to string at ds:si
+print_line:
+  push ax
+
+  mov al, byte [text_color]
+  call print_line_color
+
+.ret:
+  pop ax
+  ret
+
+; Print a line in a specific color to the screen
 ; Params:
 ;   Pointer to string at ds:si
 ;   al - color
-print_line:
-  push ax
+print_line_color:
   push bx
   push cx
   push dx
+
+  ; Check if printing is enabled
+  mov bl, byte [print_enable]
+  test bl, bl
+  jz .ret
 
   ; Print only one char at a time
   mov cx, 1
@@ -123,7 +146,6 @@ print_line:
   pop dx
   pop cx
   pop bx
-  pop ax
   ret
 
 ; Enables the A20 line
@@ -349,7 +371,6 @@ enter_unreal_mode:
 .ret:
   ; Print unreal-mode entered message
   lea si, enter_unreal_mode_message
-  mov al, 0x90 ; Black
   call print_line
   ret
 
@@ -415,7 +436,6 @@ enter_p_mode_from_unreal_mode:
   
   ; Print loading kernel
   lea si, kernel_loaded_message
-  mov al, 0xD0 ; Black
   call print_line
   
   ; Enable 32-bit protected mode in control register
@@ -445,12 +465,13 @@ main32:
 ; Data:
 
 ; Text:
-boot_message: db "First-stage booting, please wait...", 0x0
+welcome_message: db "Welcome to KalneonOS!", 0x0
+boot_message: db "Booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
-a20_enabled_message: db "A20 line was successfuly enabled!", 0x0
+a20_enabled_message: db "A20 line was successfuly enabled", 0x0
 enter_unreal_mode_message: db "Entered into unreal mode", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
-memcpy_success_message: db "Kernel copied from disk successfuly!", 0x0
+memcpy_success_message: db "Kernel copied from disk successfuly", 0x0
 kernel_loaded_message: db "Kernel loading, please wait...", 0x0
 
 ; GDT table (temporary - for entering protected mode):
@@ -509,5 +530,20 @@ kernel_start: dq 0x00000000
 ; Compare byte for testing if A20 line is enabled:
 compare_byte: db 0x00
 
-; Print new line:
+; New line:
 new_line: db 0x0
+
+; Settings:
+
+; Settings padding (max 64 bytes)
+times 0x2200 - 0x40 - ($-$$) db 0
+
+print_enable: db 0x1
+
+print_extra: db 0x1 ; For debugging - should be defaulted to zero
+
+text_color: db 0x90 ; Background color (default: light-blue), text color (default: black)
+
+; File padding:
+times 0x2200 - ($-$$) db 0
+
