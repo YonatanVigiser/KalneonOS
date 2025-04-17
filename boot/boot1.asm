@@ -25,9 +25,11 @@ main16:
   jc .memcpy_error
 
   ; Print kernel copy message
-;  lea si, memcpy_success_message
-;  call print_line
-  jmp .hlt
+  lea si, memcpy_success_message
+  call print_line
+
+  ; Enter protected mode
+  jmp enter_p_mode_from_unreal_mode
 
 .a20_error:
   lea si, a20_error_message
@@ -341,6 +343,7 @@ test_a20:
   popf
   ret
 
+
 ; Enters unreal mode. Will enter 32-bit protected mode and then return
 ; to real mode without reloading the segment selectors,
 ; which causes the proccessor to enter "unreal mode"
@@ -356,7 +359,7 @@ enter_unreal_mode:
   mov cr0, eax 
 
   ; Reload the segments
-  xor ax, ax ; Need to check that works!
+  xor ax, ax
   mov ds, ax
   mov es, ax
   mov fs, ax 
@@ -385,25 +388,24 @@ load_kernel:
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
   mov dl, byte [boot_disk] ; Disk to read from (boot disk)
-  ; Kernel offset:
-  mov edi, 0x100000
+  mov edi, 0x100000 ; Kernel offset
 
 .copy_loop:
   int 0x13
   jc .ret ; If error, return
   
-  mov ebx, 0x8000
+  mov bx, 0x8000 ; Buffer starting address
 
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
-  mov dx, [ebx]
-  mov [ds:edi], dx
+  mov dh, byte [bx]
+  mov byte [edi], dh
 
   ; Loop:
   add edi, 1
-  add bx, 1
-  test bx, 0xFF ; 256*2=512 bytes
-  jne .copy_from_buffer_loop
+  dec bx
+  test bx, bx
+  jnz .copy_from_buffer_loop
 
   ; Add the reading starting address 
   ; 0x8000 (64*512=32,768):
@@ -443,6 +445,17 @@ enter_p_mode_from_unreal_mode:
   or eax, 1
   mov cr0, eax
 
+  ; Reload segments
+  mov ax, 0x10
+  mov ds, ax
+  mov es, ax
+  mov fs, ax 
+  mov gs, ax
+
+  ; Setup protected mode stack
+  mov eax, 0x90000
+  mov esp, eax
+  mov ebp, eax
 
   ; Jump to 32-bit code
   jmp 0x08:main32
@@ -451,8 +464,11 @@ enter_p_mode_from_unreal_mode:
 ; 32-bit protected mode code
 [BITS 32]
 
-; This will setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
+; This will generate boot info, setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
 main32:
+  ; Generate boot information
+  ;call gen_info
+  
   ; Setup kernel stack
   mov eax, 0x400000
   mov sp, ax
@@ -461,6 +477,27 @@ main32:
   ; Jump to the kernel
   mov eax, [kernel_start]
   jmp eax
+
+; This function gather information about the machine and generate the
+; bootloader info section, used to pass info from the bootloader to the kernel.
+; Note: this function doesn't take anything and doesn't return anything
+gen_info:
+
+.cpuid:
+  pushfd ; Save EFLAGS
+  pushfd ; Store EFLAGS
+  xor dword [esp], 0x00200000 ; Invert the ID bit in the stored EFLAGS
+  popfd ; Load the modified EFLGAS
+  pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
+  pop eax ; Load EFLAGS to eax
+  xor eax, [esp] ; Store whichever bits where changed in eax
+  popdf ; Restore EFLAGS
+  and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
+  jz .ret
+  mov byte [0x2700], 1
+
+.ret:
+  ret
 
 ; Data:
 
