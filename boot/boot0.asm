@@ -40,7 +40,7 @@ boot:
   mov ch, 0  ; Cylinder 0
   mov cl, 2  ; Start from sector 2
   mov dh, 0  ; Head number 0
-; The buffer for the code (0x500 - 0x2500)
+  ; The buffer for the code (0x500 - 0x2700)
   mov bx, 0x500
   ; dl should already be the drive the computer booted from
   ; (The BIOS sets it to be)
@@ -50,9 +50,6 @@ boot:
   jc .error
 
   jmp 0x500 ; Jumps to the first-stage bootloader
-  
-  ; In case the first-stage bootloader returns
-  jmp .hlt
 
 .error:
   lea si, .boot_failed_message
