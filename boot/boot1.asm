@@ -383,7 +383,11 @@ enter_unreal_mode:
 ;   Carry if failed, else carry clear
 load_kernel:
   clc ; clear carry
-  
+
+  ; Real-mode segment 
+  mov ax, 0x7000
+  mov gs, ax
+
   mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
@@ -392,14 +396,15 @@ load_kernel:
 
 .copy_loop:
   int 0x13
+  mov ah, 0x42
   jc .ret ; If error, return
   
   mov bx, 0x8000 ; Buffer starting address
 
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
-  mov dh, byte [bx]
-  mov byte [edi], dh
+  mov dh, byte [0x2700]
+  ;mov byte [edi], dh
 
   ; Loop:
   add edi, 1
@@ -413,12 +418,13 @@ load_kernel:
   mov ebx, [si+8]
   add ebx, 0x8000
   mov [si+8], ebx
+  mov ebx, [si+8]
 
   loop .copy_loop
 
 .ret:
  ; Sets ax to the program offset pointed by the elf header (at bytes 24-27 of kernel):
-  mov eax, [es:edi+24]
+  mov eax, [edi+24]
   mov [kernel_start], eax
   ret
 
@@ -476,7 +482,7 @@ main32:
 
   ; Jump to the kernel
   mov eax, [kernel_start]
-  jmp eax
+  call eax
 
 ; This function gather information about the machine and generate the
 ; bootloader info section, used to pass info from the bootloader to the kernel.
@@ -491,7 +497,7 @@ gen_info:
   pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
   pop eax ; Load EFLAGS to eax
   xor eax, [esp] ; Store whichever bits where changed in eax
-  popdf ; Restore EFLAGS
+  popfd ; Restore EFLAGS
   and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
   jz .ret
   mov byte [0x2700], 1
