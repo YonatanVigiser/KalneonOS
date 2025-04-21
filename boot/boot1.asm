@@ -403,13 +403,13 @@ load_kernel:
 
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
-  mov dh, byte [0x2700]
-  ;mov byte [edi], dh
+  mov dh, byte [gs:bx]
+  mov byte [edi], dh
 
   ; Loop:
   add edi, 1
-  dec bx
-  test bx, bx
+  inc bx
+  test bx, bx ; bx will overflow to zero at the end
   jnz .copy_from_buffer_loop
 
   ; Add the reading starting address 
@@ -556,8 +556,7 @@ dpa:
   dw 0x40      ; Read 64 sectors
   dw 0x8000    ; Buffer offset
   dw 0x7000    ; Buffer segment
-  dd 0x2400    ; Starting read address LBA lower 32-bits
-  dd 0x0       ; Starting read address LBA upper 16-bits (16-bits unused)
+  dq 0x12      ; Start reading from LBA sector num. 0x13 (the 19 sector)
 
 ; Variables:
 
