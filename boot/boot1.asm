@@ -395,6 +395,7 @@ load_kernel:
   mov edi, 0x100000 ; Kernel offset
 
 .copy_loop:
+  clc ; Clears the overflow flag
   int 0x13
   mov ah, 0x42
   jc .ret ; If error, return
@@ -416,7 +417,7 @@ load_kernel:
   ; 0x8000 (64*512=32,768):
 
   mov ebx, [si+8]
-  add ebx, 0x8000
+  add ebx, 0x42
   mov [si+8], ebx
   mov ebx, [si+8]
 
