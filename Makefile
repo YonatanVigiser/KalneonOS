@@ -3,11 +3,10 @@ BOOT_DIR=boot
 KERNEL_DIR=kernel
 BOOT_0=$(BUILD_DIR)/$(BOOT_DIR)/boot0.o
 BOOT_1=$(BUILD_DIR)/$(BOOT_DIR)/boot1.o
-KERNEL=$(BUILD_DIR)/$(KERNEL_DIR)/kernel.o
-CROSS_COMPILER=~/opt/cross/bin/i686-elf-gcc 
-LINKER=linker.ld
+#CROSS_COMPILER=~/opt/cross/bin/i686-elf-gcc 
 OS_NAME=kalneonos
-DISK_SEGMENTS=3000
+KERNEL=$(BUILD_DIR)/$(KERNEL_DIR)/$(OS_NAME).bin
+DISK_SIZE=3000
 IMAGE_NAME=$(BUILD_DIR)/disk.img
 
 all: clean image
@@ -25,14 +24,14 @@ boot: build_dir
 .PHONY:
 kernel: build_dir
 	make -C $(KERNEL_DIR)
-	$(CROSS_COMPILER) -T $(LINKER) -o $(OS_NAME).bin -ffreestanding -O2 -nostdlib $(KERNEL)
+	#$(CROSS_COMPILER) -T $(LINKER) -o $(KERNEL) -ffreestanding -m32 -nostdlib $(KERNEL_OBJ)/* -lgcc
 
 .PHONY:
 image: boot kernel
-	dd if=/dev/zero of=$(IMAGE_NAME) bs=512 count=$(DISK_SEGMENTS)
+	dd if=/dev/zero of=$(IMAGE_NAME) bs=512 count=$(DISK_SIZE)
 	dd conv=notrunc if=$(BOOT_0) of=$(IMAGE_NAME) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(BOOT_1) of=$(IMAGE_NAME) bs=512 count=17 seek=1
-	dd conv=notrunc if=$(OS_NAME).bin of=$(IMAGE_NAME) bs=512 count=2048 seek=18
+	dd conv=notrunc if=$(KERNEL) of=$(IMAGE_NAME) bs=512 count=2048 seek=18
 
 .PHONY:
 clean:

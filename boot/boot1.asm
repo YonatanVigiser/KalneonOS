@@ -424,9 +424,6 @@ load_kernel:
   loop .copy_loop
 
 .ret:
- ; Sets ax to the program offset pointed by the elf header (at bytes 24-27 of kernel):
-  mov eax, [edi+24]
-  mov [kernel_start], eax
   ret
 
 ; This will enter 32-bit mode from protected mode. This should be called
@@ -482,8 +479,13 @@ main32:
   mov bp, ax
 
   ; Jump to the kernel
-  mov eax, [kernel_start]
+  mov eax, 0x100000
   call eax
+
+; In case the kernel returns, halt the machine:
+.hlt:
+  hlt
+  jmp .hlt
 
 ; This function gather information about the machine and generate the
 ; bootloader info section, used to pass info from the bootloader to the kernel.
@@ -566,9 +568,6 @@ boot_disk: db 0x00
 
 ; Current line on screen:
 screen_line: db 0x00
-
-; Kernel starting address pointer (pointed by the elf header):
-kernel_start: dq 0x00000000
 
 ; Compare byte for testing if A20 line is enabled:
 compare_byte: db 0x00
