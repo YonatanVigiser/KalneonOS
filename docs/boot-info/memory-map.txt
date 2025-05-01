@@ -1,0 +1,19 @@
+The memory map struct. See also: https://wiki.osdev.org/Detecting_Memory_(x86)#Detecting_Upper_Memory
+
+struct mem_map_entry {
+  uint64_t base_address;
+  uint64_t length; # If zero, ignore this entry
+  uint32_t type; # types 1-5, only 1 is usable
+  # Extended Attributes bitfield (EAB):
+  uint32_t ignore : 1; # Ignore this entry if zero
+  uint32_t non_volatile : 1; # Set if the entry is non-volatile
+  uint32_t undefined : 30;
+}
+
+struct mem_map {
+  uint_8_t valid # Indicates if the memory map is valid (0 if non-valid) 
+  uint_8_t eab_supported # Indicates if the Extended Attributes bitfield is supported 
+  uint32_t size; # Indicate the size of the struct in bytes
+  struct mem_map_entry entry_list[]; # Entries array
+}
+

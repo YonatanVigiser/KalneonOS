@@ -19,6 +19,9 @@ main16:
 
   ; Enter unreal mode
   call enter_unreal_mode
+  
+  ; Generate boot info
+  call gen_info
 
   ; Load the kernel
   call load_kernel
@@ -377,6 +380,65 @@ enter_unreal_mode:
   call print_line
   ret
 
+; This function gather information about the machine and generate the
+; boot info section, used to pass info from the bootloader to the kernel.
+; See: docs/boot-info/general for more info about the boot info section.
+gen_info:
+  mov cx, BOOT_INFO_POINTER 
+
+; Detects CPUID suppport:
+.cpuid:
+  pushfd ; Save EFLAGS
+  pushfd ; Store EFLAGS
+  xor dword [esp], 0x00200000 ; Invert the ID bit in the stored EFLAGS
+  popfd ; Load the modified EFLGAS
+  pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
+  pop eax ; Load EFLAGS to eax
+  xor eax, [esp] ; Store whichever bits where changed in eax
+  popfd ; Restore EFLAGS
+  and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
+  jz .detect_mem
+  mov byte [cx], 1 ; Store the result
+  inc cx
+
+; Detects memory and build a memory map (See: docs/boot-info/memory-map for more info)
+.detect_mem:
+  push cx ; Save cx
+  ; Set the first entry pointer:
+  add cx, 0x02
+  mov di, cx
+  xor ebx, ebx
+  mov edx, 0x534D4150 ; Magic value
+  xor eax, eax
+  mov cx, 0x24 ; Length of the entry
+  mov ax, 0xE820 ; Function code
+  int 0x15 ; Call the first int
+  jc .ret
+  test eax, edx ; Test if eax contains the magic value
+  jne .ret
+  pop cx ; Restore cx
+  mov byte [cx], 0x1 ; Indicate that the memory map is supported
+  test cx, 0x24 ; Test if EAB is supported
+  jne .mem_detection_loop
+  mov byte [cx+8], 0x1
+.mem_detection_loop:
+  add di, 0x24 ; Increament pointer
+  xor eax, eax
+  mov ax, 0xE820 ; Function code
+  mov cx, 0x24 ; Length of the entry
+  int 0x15
+  jc .ret ; The end of the list was reached 
+  test ebx, ebx
+  jz .ret ; The end of the list was reached
+  jmp .mem_detection_loop
+
+.ret:
+  ; Restore cx:
+  mov cx, di
+  add cx, 0x24
+  clc ; Clears the carry flag from previous detection
+  ret
+
 ; This will load the kernel from disk to memory (100000-1FFFFF).
 ; It should be called only in unreal mode.
 ; Returns:
@@ -392,7 +454,7 @@ load_kernel:
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
   mov dl, byte [boot_disk] ; Disk to read from (boot disk)
-  mov edi, 0x100000 ; Kernel offset
+  mov edi, KERNEL_POINTER ; Kernel offset
 
 .copy_loop:
   clc ; Clears the overflow flag
@@ -468,45 +530,21 @@ enter_p_mode_from_unreal_mode:
 ; 32-bit protected mode code
 [BITS 32]
 
-; This will generate boot info, setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
+; setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
 main32:
-  ; Generate boot information
-  ;call gen_info
-  
   ; Setup kernel stack
   mov eax, 0x400000
   mov sp, ax
   mov bp, ax
 
   ; Jump to the kernel
-  mov eax, 0x100000
+  mov eax, KERNEL_POINTER
   call eax
 
 ; In case the kernel returns, halt the machine:
 .hlt:
   hlt
   jmp .hlt
-
-; This function gather information about the machine and generate the
-; bootloader info section, used to pass info from the bootloader to the kernel.
-; Note: this function doesn't take anything and doesn't return anything
-gen_info:
-
-.cpuid:
-  pushfd ; Save EFLAGS
-  pushfd ; Store EFLAGS
-  xor dword [esp], 0x00200000 ; Invert the ID bit in the stored EFLAGS
-  popfd ; Load the modified EFLGAS
-  pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
-  pop eax ; Load EFLAGS to eax
-  xor eax, [esp] ; Store whichever bits where changed in eax
-  popfd ; Restore EFLAGS
-  and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
-  jz .ret
-  mov byte [0x2700], 1
-
-.ret:
-  ret
 
 ; Data:
 
@@ -580,12 +618,19 @@ new_line: db 0x0
 ; Settings padding (max 64 bytes)
 times 0x2200 - 0x40 - ($-$$) db 0
 
-print_enable: db 0x1
+print_enable: db 0x1 ; Zero disabled, else enabled 
 
-print_extra: db 0x1 ; For debugging - should be defaulted to zero
+print_extra: db 0x1  ; For debugging - should be defaulted to zero
 
-text_color: db 0x90 ; Background color (default: light-blue), text color (default: black)
+text_color: db 0x90  ; Background color (default: light-blue), text color (default: black)
 
 ; File padding:
 times 0x2200 - ($-$$) db 0
 
+; Constants:
+
+; Pointer to the boot info section location in memory:
+BOOT_INFO_POINTER equ 0x2700
+
+; Pointer to the kernel copy destination in memory:
+KERNEL_POINTER equ 0x100000
