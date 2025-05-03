@@ -11,9 +11,9 @@ struct mem_map_entry {
 }
 
 struct mem_map {
-  uint_8_t valid # Indicates if the memory map is valid (0 if non-valid) 
-  uint_8_t eab_supported # Indicates if the Extended Attributes bitfield is supported 
-  uint32_t size; # Indicate the size of the struct in bytes
+  uint16_t size; # Indicate the size of the struct in bytes
+  uint8_t valid # Indicates if the memory map is valid (0 if non-valid) 
+  uint8_t eab_supported # Indicates if the Extended Attributes bitfield is supported 
   struct mem_map_entry entry_list[]; # Entries array
 }
 

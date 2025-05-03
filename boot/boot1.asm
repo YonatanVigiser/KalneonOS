@@ -384,7 +384,7 @@ enter_unreal_mode:
 ; boot info section, used to pass info from the bootloader to the kernel.
 ; See: docs/boot-info/general for more info about the boot info section.
 gen_info:
-  mov cx, BOOT_INFO_POINTER 
+  lea si, BOOT_INFO_POINTER 
 
 ; Detects CPUID suppport:
 .cpuid:
@@ -398,45 +398,48 @@ gen_info:
   popfd ; Restore EFLAGS
   and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
   jz .detect_mem
-  mov byte [cx], 1 ; Store the result
-  inc cx
+  mov byte [si], 1 ; Store the result
 
 ; Detects memory and build a memory map (See: docs/boot-info/memory-map for more info)
 .detect_mem:
-  push cx ; Save cx
+  inc si ; Increament si
+  xor eax, eax
   ; Set the first entry pointer:
-  add cx, 0x02
-  mov di, cx
+  mov ax, si
+  add ax, 0x04
+  mov di, ax
   xor ebx, ebx
   mov edx, 0x534D4150 ; Magic value
-  xor eax, eax
-  mov cx, 0x24 ; Length of the entry
+  mov cx, 0x18 ; Length of the entry
   mov ax, 0xE820 ; Function code
   int 0x15 ; Call the first int
   jc .ret
-  test eax, edx ; Test if eax contains the magic value
+  cmp eax, edx ; Test if eax contains the magic value
   jne .ret
-  pop cx ; Restore cx
-  mov byte [cx], 0x1 ; Indicate that the memory map is supported
-  test cx, 0x24 ; Test if EAB is supported
+  mov byte [si+0x2], 0x1 ; Indicate that the memory map is supported
+  test cx, 0x18 ; Test if EAB is supported
   jne .mem_detection_loop
-  mov byte [cx+8], 0x1
+  mov byte [si+0x3], 0x1
 .mem_detection_loop:
-  add di, 0x24 ; Increament pointer
+  add di, 0x18 ; Increament pointer
   xor eax, eax
   mov ax, 0xE820 ; Function code
-  mov cx, 0x24 ; Length of the entry
+  mov cx, 0x18 ; Length of the entry
   int 0x15
-  jc .ret ; The end of the list was reached 
-  test ebx, ebx
-  jz .ret ; The end of the list was reached
+  jc .detect_mem_end ; The end of the list was reached 
+  test bx, bx
+  jz .detect_mem_end ; The end of the list was reached
   jmp .mem_detection_loop
-
-.ret:
-  ; Restore cx:
-  mov cx, di
-  add cx, 0x24
+.detect_mem_end:
   clc ; Clears the carry flag from previous detection
+  add di, 0x18
+  ; Save map size in bytes:
+  mov ax, di
+  sub ax, si
+  mov word [si], ax
+  mov si, di ; Increament si
+  inc si
+.ret:
   ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
