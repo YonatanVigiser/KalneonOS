@@ -438,7 +438,6 @@ gen_info:
   sub ax, si
   mov word [si], ax
   mov si, di ; Increament si
-  inc si
 .ret:
   ret
 
@@ -450,7 +449,7 @@ load_kernel:
   clc ; clear carry
 
   ; Real-mode segment 
-  mov ax, 0x7000
+  mov ax, 0x0000
   mov gs, ax
 
   mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
@@ -522,7 +521,7 @@ enter_p_mode_from_unreal_mode:
   mov gs, ax
 
   ; Setup protected mode stack
-  mov eax, 0x90000
+  mov eax, 0x20000
   mov esp, eax
   mov ebp, eax
 
@@ -599,7 +598,7 @@ dpa:
   db 0x0       ; Reserved
   dw 0x40      ; Read 64 sectors
   dw 0x8000    ; Buffer offset
-  dw 0x7000    ; Buffer segment
+  dw 0x0000    ; Buffer segment
   dq 0x12      ; Start reading from LBA sector num. 0x13 (the 19 sector)
 
 ; Variables:
