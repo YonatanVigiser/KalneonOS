@@ -1,0 +1,30 @@
+#include <stdint.h>
+#ifndef H_VIDOE
+#define H_VIDOE
+
+enum video_type {
+  VIDOE_TYPE_NONE = 0x00,
+  VIDOE_TYPE_COLOR = 0x20,
+  VIDOE_TYPE_MONOCHROME = 0x30
+};
+
+enum vga_color {
+  VGA_BLACK,
+  VGA_BLUE,
+  VGA_GREEN,
+  VGA_CYAN,
+  VGA_RED,
+  VGA_MAGENTA,
+  VGA_BROWN,
+  VGA_LIGHT_GRAY,
+  VGA_DARK_GRAY,
+  VGA_LIGHT_BLUE,
+  VGA_LIGHT_GREEN,
+  VGA_LIGHT_CYAN,
+  VGA_LIGHT_RED,
+  VGA_LIGHT_MAGENTA,
+  VGA_YELLOW,
+  VGA_WHITE
+}
+
+#endif
