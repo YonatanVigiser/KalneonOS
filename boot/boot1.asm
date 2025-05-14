@@ -362,7 +362,7 @@ enter_unreal_mode:
   mov cr0, eax 
 
   ; Reload the segments
-  xor ax, ax
+  mov ax, 0x10
   mov ds, ax
   mov es, ax
   mov fs, ax 
@@ -372,9 +372,17 @@ enter_unreal_mode:
   mov eax, cr0
   and eax, 0xFFFFFFFE
   mov cr0, eax
+
   jmp 0x0:.ret ; reload cs
 
 .ret:
+  ; Reload the segments
+  xor ax, ax
+  mov ds, ax
+  mov es, ax
+  mov fs, ax 
+  mov gs, ax
+
   ; Print unreal-mode entered message
   lea si, enter_unreal_mode_message
   call print_line
@@ -624,7 +632,7 @@ print_enable: db 0x1 ; Zero disabled, else enabled
 
 print_extra: db 0x1  ; For debugging - should be defaulted to zero
 
-text_color: db 0x90  ; Background color (default: light-blue), text color (default: black)
+text_color: db 0x10  ; Background color (default: light-blue), text color (default: black)
 
 ; File padding:
 times 0x2200 - ($-$$) db 0

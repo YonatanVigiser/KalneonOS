@@ -7,6 +7,7 @@ BOOT_1=$(BUILD_DIR)/$(BOOT_DIR)/boot1.o
 OS_NAME=kalneonos
 KERNEL=$(BUILD_DIR)/$(KERNEL_DIR)/$(OS_NAME).bin
 DISK_SIZE=3000
+DISK_NAME=/dev/zero
 IMAGE_NAME=$(BUILD_DIR)/disk.img
 
 all: clean image
@@ -28,7 +29,7 @@ kernel: build_dir
 
 .PHONY:
 image: boot kernel
-	dd if=/dev/zero of=$(IMAGE_NAME) bs=512 count=$(DISK_SIZE)
+	dd if=$(DISK_NAME) of=$(IMAGE_NAME) bs=512 count=$(DISK_SIZE)
 	dd conv=notrunc if=$(BOOT_0) of=$(IMAGE_NAME) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(BOOT_1) of=$(IMAGE_NAME) bs=512 count=17 seek=1
 	dd conv=notrunc if=$(KERNEL) of=$(IMAGE_NAME) bs=512 count=2048 seek=18

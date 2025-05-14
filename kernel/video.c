@@ -1,3 +1,4 @@
+/*
 #include <stdint.h>
 #include "video.h"
 
@@ -42,4 +43,4 @@ void terminal_put_string(uint8_t x, uint8_t y, const char *string,
 
 }
 
-
+*/

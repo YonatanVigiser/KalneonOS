@@ -1,6 +1,7 @@
 BUILD_DIR=../build/kernel
 TARGET_ARCH=i686
-BINUTILS=~/opt/cross/bin/$(TARGET_ARCH)
+HOME_DIR=/home/yonatan42
+BINUTILS=$(HOME_DIR)/opt/cross/bin/$(TARGET_ARCH)
 LINKER=linker.ld
 ELF=$(BUILD_DIR)/kalneonos.elf
 BIN=$(BUILD_DIR)/kalneonos.bin
