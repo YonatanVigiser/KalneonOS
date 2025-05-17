@@ -1,7 +1,5 @@
 [BITS 16]
 
-db 0x51
-
 start:
   cli
   ; Load data segments
