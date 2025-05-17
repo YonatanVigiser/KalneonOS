@@ -1,4 +1,5 @@
 [BITS 16]
+[ORG 0x600]
 
 start:
   cli
@@ -14,39 +15,34 @@ start:
   mov ax, 0x7c00
   mov sp, ax
   
-  push dx ; Save dl
-
   ; Relocate code to 0x600
   mov cx, 0x200
   lea si, 0x7c00
   lea di, 0x600
 .copy_loop:
   mov al, byte [si]
+  ; Set si to point to the active partition table entry
   mov byte [di], al
-  inc bx
-  inc dx
-  inc cx
+  inc si
+  inc di
   loop .copy_loop
 
-  pop dx ; Restore dl
-
   ; Far jump to the relocated code (and enforce cs) 
-  jmp 0x0:0x600 + after_reloc
+  jmp 0x0:after_reloc
 
 after_reloc:
   mov cx, 0x04
-  mov bx, PTE1
+  mov bx, PTE1 - 0x10
 .detect_active_partition:
+  add bx, 0x10
   ; Test if partition is unused
   mov al, byte [bx + 0x04]
-  test al, 0x00
+  cmp al, 0x0
   je .detect_active_partition
   ; Test if partition is active
-  mov al, byte [bx + 0x10]
-  test al, 0x80
+  mov al, byte [bx]
+  cmp al, 0x80
   je .load_active_partition
-  ; Loop:
-  add bx, 0x10
   loop .detect_active_partition
 
 ; If no active partition found, print error message
@@ -57,14 +53,17 @@ after_reloc:
 
 .load_active_partition:
   ; Set si to point to the active partition table entry
-  mov ax, 0x6be
-  shl cx, 4
-  add ax, cx
+  mov ax, 0x04
+  sub ax, cx
+  shl ax, 4
+  add ax, PTE1
   mov si, ax
 
   push si ; Save si
-  lea di, dap
+
   ; Set the dpa LBA values using values form the partition table entry
+  add si, 0x08
+  lea di, dap + 0x08
   mov cx, 0x04
 .copy_lba_to_dap:
   mov al, byte [si]
@@ -87,7 +86,7 @@ after_reloc:
 
 .test_vbr:
   ; Test if VBR contains a boot signature
-  test word [0x7DFE], 0xAA55
+  cmp word [0x7DFE], 0xAA55
   je .jump_to_vbr
 
   lea si, active_partition_vbr_not_bootable_messgae
@@ -146,21 +145,20 @@ print_error:
 .ret:
   ret
 
-dap:
-  db 0x18
-  db 0x00
-  dw 0x01
-  dw 0x7c00
-  dw 0x0
-  dq 0x0
-  dq 0x0
-
 ; Error Messages:
 active_partition_not_found_message: db "MBR: Active partition was not found on disk! Machine halted!", 0x0
-active_partition_vbr_not_bootable_messgae: db "MBR: Active partition VBR is not bootable! Machine halted!", 0x0
+active_partition_vbr_not_bootable_messgae: db "MBR: Active partition's VBR is not bootable! Machine halted!", 0x0
 vbr_copy_error_message: db "MBR: An error occurred while coping VBR from the disk! Machine halted!", 0x0
 
-times 440 - ($-$$) db 0
+times 424 - ($-$$) db 0
+
+dap:
+  db 0x10
+  db 0x00
+  dw 0x01
+  dd 0x00007c00
+  dq 0x0
+
 UDID dd 0x0 ; Unique Disk ID
 dw 0x0 ; Reserved
 
