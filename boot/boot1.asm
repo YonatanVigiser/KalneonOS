@@ -121,7 +121,7 @@ print_line_color:
   mov bl, al
   
   ; Set the rows and columns
-  mov dh, [screen_line]
+  mov dh, byte [screen_line]
   mov dl, 0
   
 .print_loop:
@@ -141,13 +141,13 @@ print_line_color:
   int 0x10
 
   ; Loop
-  add dl, 1
+  inc dl
   jmp .print_loop
 
 .ret:
-  mov ah, [screen_line]
+  mov ah, byte [screen_line]
   add ah, 1
-  mov [screen_line], ah
+  mov byte [screen_line], ah
   pop dx
   pop cx
   pop bx

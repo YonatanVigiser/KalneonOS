@@ -1,8 +1,8 @@
 BUILD_DIR=build
 BOOT_DIR=boot
 KERNEL_DIR=kernel
-BOOT_0=$(BUILD_DIR)/$(BOOT_DIR)/boot0.o
-BOOT_1=$(BUILD_DIR)/$(BOOT_DIR)/boot1.o
+BOOT_0=$(BUILD_DIR)/$(BOOT_DIR)/boot0.bin
+BOOT_1=$(BUILD_DIR)/$(BOOT_DIR)/boot1.bin
 #CROSS_COMPILER=~/opt/cross/bin/i686-elf-gcc 
 OS_NAME=kalneonos
 KERNEL=$(BUILD_DIR)/$(KERNEL_DIR)/$(OS_NAME).bin
