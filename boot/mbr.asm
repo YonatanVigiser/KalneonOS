@@ -153,11 +153,12 @@ vbr_copy_error_message: db "MBR: An error occurred while coping VBR from the dis
 times 424 - ($-$$) db 0
 
 dap:
-  db 0x10
-  db 0x00
-  dw 0x01
-  dd 0x00007c00
-  dq 0x0
+  db 0x10   ; Size of DAP (16 bytes)
+  db 0x00   ; Reserved
+  dw 0x01   ; Read 1 sector
+  dw 0x7c00 ; Buffer offset
+  dw 0x0000 ; Buffer segment
+  dq 0x0    ; LBA address (fill dynamically)
 
 UDID dd 0x0 ; Unique Disk ID
 dw 0x0 ; Reserved

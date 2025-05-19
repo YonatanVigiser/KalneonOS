@@ -1,5 +1,5 @@
 [BITS 16]
-[ORG 0x500]
+[ORG 0x1000]
 
 ; The zero-stage bootloader will jump here.
 ; Will print another booting message, enable A20,
@@ -47,10 +47,10 @@ main16:
   jmp .hlt
 
 .hlt:
-  hlt ; For debugging
+  hlt
   jmp .hlt
 
-; Set video mode, clear the screen, sets a background color,
+; Clear the screen, sets a background color,
 ; and print boot message
 init_screen:
   ; Set the video mode to 0x03
@@ -392,7 +392,7 @@ enter_unreal_mode:
 ; boot info section, used to pass info from the bootloader to the kernel.
 ; See: docs/boot-info/general for more info about the boot info section.
 gen_info:
-  lea si, BOOT_INFO_POINTER 
+  lea si, BOOT_INFO_BLOCK_P
 
 ; Detects CPUID suppport:
 .cpuid:
@@ -457,14 +457,14 @@ load_kernel:
   clc ; clear carry
 
   ; Real-mode segment 
-  mov ax, 0x0000
+  xor ax, ax
   mov gs, ax
 
   mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
   mov dl, byte [boot_disk] ; Disk to read from (boot disk)
-  mov edi, KERNEL_POINTER ; Kernel offset
+  mov edi, KERNEL_P ; Kernel offset
 
 .copy_loop:
   clc ; Clears the overflow flag
@@ -472,7 +472,7 @@ load_kernel:
   mov ah, 0x42
   jc .ret ; If error, return
   
-  mov bx, 0x8000 ; Buffer starting address
+  mov bx, KERNEL_COPY_BUFF_P ; Buffer starting address
 
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
@@ -529,7 +529,7 @@ enter_p_mode_from_unreal_mode:
   mov gs, ax
 
   ; Setup protected mode stack
-  mov eax, 0x20000
+  mov eax, PROTECTED_MODE_STACK_P 
   mov esp, eax
   mov ebp, eax
 
@@ -540,15 +540,15 @@ enter_p_mode_from_unreal_mode:
 ; 32-bit protected mode code
 [BITS 32]
 
-; setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
+; setup a kernel stack (0x200000:0x2FFFFF), and jump to the kernel
 main32:
   ; Setup kernel stack
-  mov eax, 0x400000
+  mov eax, KERNEL_STACK_P
   mov sp, ax
   mov bp, ax
 
   ; Jump to the kernel
-  mov eax, KERNEL_POINTER
+  mov eax, KERNEL_P
   call eax
 
 ; In case the kernel returns, halt the machine:
@@ -605,7 +605,7 @@ dpa:
   db 0x10      ; Size of DPA (16-bytes)
   db 0x0       ; Reserved
   dw 0x40      ; Read 64 sectors
-  dw 0x8000    ; Buffer offset
+  dw KERNEL_COPY_BUFF_P ; Buffer offset
   dw 0x0000    ; Buffer segment
   dq 0x12      ; Start reading from LBA sector num. 0x13 (the 19 sector)
 
@@ -630,8 +630,6 @@ times 0x2200 - 0x40 - ($-$$) db 0
 
 print_enable: db 0x1 ; Zero disabled, else enabled 
 
-print_extra: db 0x1  ; For debugging - should be defaulted to zero
-
 text_color: db 0x10  ; Background color (default: light-blue), text color (default: black)
 
 ; File padding:
@@ -639,8 +637,17 @@ times 0x2200 - ($-$$) db 0
 
 ; Constants:
 
-; Pointer to the boot info section location in memory:
-BOOT_INFO_POINTER equ 0x2700
+; Pointer to the boot info block location in memory:
+BOOT_INFO_BLOCK_P equ 0x800
+
+; Pointer to a 64K buffer for copying the kernel
+KERNEL_COPY_BUFF_P equ 0x8000
 
 ; Pointer to the kernel copy destination in memory:
-KERNEL_POINTER equ 0x100000
+KERNEL_P equ 0x100000
+
+; Pointer to the kernek stack in memory:
+KERNEL_STACK_P equ 0x400000
+
+; Poiner to the protected mode stack:
+PROTECTED_MODE_STACK_P equ 0x20000
