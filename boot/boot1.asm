@@ -527,6 +527,7 @@ enter_p_mode_from_unreal_mode:
   mov es, ax
   mov fs, ax 
   mov gs, ax
+  mov ss, ax
 
   ; Setup protected mode stack
   mov eax, PROTECTED_MODE_STACK_P 
@@ -544,8 +545,8 @@ enter_p_mode_from_unreal_mode:
 main32:
   ; Setup kernel stack
   mov eax, KERNEL_STACK_P
-  mov sp, ax
-  mov bp, ax
+  mov esp, eax
+  mov ebp, eax
 
   ; Jump to the kernel
   mov eax, KERNEL_P
