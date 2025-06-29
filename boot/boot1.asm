@@ -69,6 +69,11 @@ init_screen:
   mov dl, 0x50              ; x=80
   int 0x10
 
+  ; Disable cursor
+  mov ah, 0x01
+  mov ch, 0x3F
+  int 0x10
+
   ; Print welcome message:
   lea si, welcome_message
   call print_line
