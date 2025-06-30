@@ -68,27 +68,31 @@ struct vga_cell terminal_get_cell(uint8_t x, uint8_t y) {
 }
 
 void terminal_write_char(char c) {
+  uint8_t new_cx = cx;
+  uint8_t new_cy = cy;
   if (c == '\0') return;
   if(c == '\n') {
     // This will then reset cx, and inc cy
-    cx = TERM_WIDTH;
+    new_cx = TERM_WIDTH;
   } else if(c == '\t') {
     struct vga_cell cell = {' ', bg_color, fg_color};
+    cell_under_cursor = cell;
     for(int i = 0; i < TAB_WIDTH; ++i)
-      terminal_put_cell(cx++, cy, cell);
+      terminal_put_cell(new_cx++, new_cy, cell);
   } else {
     struct vga_cell cell = {c, bg_color, fg_color};
-    terminal_put_cell(cx++, cy, cell);
+    cell_under_cursor = cell;
+    terminal_put_cell(new_cx++, new_cy, cell);
   }
-  if(cx >= TERM_WIDTH) {
-    cx = 0;
-    ++cy;
+  if(new_cx >= TERM_WIDTH) {
+    new_cx = 0;
+    ++new_cy;
   }
-  terminal_move_cursor(cx, cy);
+  terminal_move_cursor(new_cx, new_cy);
 }
 
-void terminal_write(char *string) {
-  for(char *c = string; *c; ++c)
+void terminal_write(const char *string) {
+  for(const char *c = string; *c; ++c)
     terminal_write_char(*c);
 }
 
@@ -97,6 +101,7 @@ void terminal_set_color(enum vga_color bg, enum vga_color fg) {
   if(fg == VGA_DEFAULT) fg = VGA_FG_DEFAULT;
   bg_color = bg;
   fg_color = fg;
+  terminal_set_cursor_color(bg, fg);
 }
 
 enum vga_color terminal_get_bg_color(void) {
@@ -113,6 +118,7 @@ void terminal_clear_screen(enum vga_color bg, enum vga_color fg) {
   for(int x = 0; x < TERM_WIDTH; ++x)
     for(int y = 0; y < TERM_HEIGHT; ++y)
       terminal_put_cell(x, y, empty_cell);
+  terminal_move_cursor(0, 0);
 }
 
 void terminal_move_cursor(uint8_t x, uint8_t y) {
@@ -126,6 +132,7 @@ void terminal_move_cursor(uint8_t x, uint8_t y) {
 
 void terminal_set_cursor_char(char c) {
   cursor_cell.c = c;
+  terminal_move_cursor(cx, cy);
 }
 
 void terminal_set_cursor_color(enum vga_color bg, enum vga_color fg) {
@@ -133,10 +140,12 @@ void terminal_set_cursor_color(enum vga_color bg, enum vga_color fg) {
   if(fg == VGA_DEFAULT) fg = VGA_FG_DEFAULT;
   cursor_cell.bg = bg;
   cursor_cell.fg = fg;
+  terminal_move_cursor(cx, cy);
 }
 
 void terminal_set_cursor_visibility(bool visible) {
   cursor_visible = visible;
+  terminal_move_cursor(cx, cy);
 }
 
 uint8_t terminal_get_cursor_x(void) {

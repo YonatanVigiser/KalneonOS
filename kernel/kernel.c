@@ -13,6 +13,4 @@ void _start(void) {
 }
 
 void kernel_main(void) {
-  terminal_init();
-  terminal_write("hello patak!");
 }

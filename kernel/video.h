@@ -50,7 +50,7 @@ void terminal_put_cell(uint8_t x, uint8_t y, struct vga_cell cell);
 struct vga_cell terminal_get_cell(uint8_t x, uint8_t y);
 
 void terminal_write_char(char c);
-void terminal_write(char *string);
+void terminal_write(const char *string);
 
 void terminal_set_color(enum vga_color bg, enum vga_color fg);
 enum vga_color terminal_get_bg_color(void);
@@ -59,6 +59,7 @@ enum vga_color terminal_get_fg_color(void);
 void terminal_clear_screen(enum vga_color bg, enum vga_color fg); 
 
 void terminal_move_cursor(uint8_t x, uint8_t y);
+void terminal_update_cursor(void);
 void terminal_set_cursor_char(char c);
 void terminal_set_cursor_color(enum vga_color bg, enum vga_color fg);
 void terminal_set_cursor_visibility(bool visible);
