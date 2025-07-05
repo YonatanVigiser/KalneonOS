@@ -91,8 +91,8 @@ void terminal_write_char(char c) {
   terminal_move_cursor(new_cx, new_cy);
 }
 
-void terminal_write(const char *string) {
-  for(const char *c = string; *c; ++c)
+void terminal_write(const char *str) {
+  for(const char *c = str; *c; ++c)
     terminal_write_char(*c);
 }
 
@@ -118,6 +118,9 @@ void terminal_clear_screen(enum vga_color bg, enum vga_color fg) {
   for(int x = 0; x < TERM_WIDTH; ++x)
     for(int y = 0; y < TERM_HEIGHT; ++y)
       terminal_put_cell(x, y, empty_cell);
+  cell_under_cursor.bg = bg;
+  cell_under_cursor.fg = fg;
+  terminal_set_cursor_color(bg, fg);
   terminal_move_cursor(0, 0);
 }
 
