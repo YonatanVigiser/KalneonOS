@@ -7,6 +7,3 @@ all: $(BOOT_OBJ)
 
 $(BUILD_DIR)/%.bin: %.asm
 	nasm -f bin $< -o $@
-
-clean:
-	rm $(BUILD_DIR)/*

@@ -555,7 +555,7 @@ main32:
 
   ; Jump to the kernel
   mov eax, KERNEL_P
-  call eax
+  jmp eax
 
 ; In case the kernel returns, halt the machine:
 .hlt:
