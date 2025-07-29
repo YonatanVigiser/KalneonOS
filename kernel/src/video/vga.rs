@@ -327,7 +327,7 @@ fn get_video_type() -> VideoType {
 fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
   match video_type {
     VideoType::Color => 0xB8000 as *mut u16,
-    VideoType::Monochrome => 0xB8000 as *mut u16,
+    VideoType::Monochrome => 0xB0000 as *mut u16,
     VideoType::None => 0xB8000 as *mut u16, // Fake vmem
   }
 }
