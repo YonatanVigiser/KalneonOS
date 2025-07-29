@@ -11,9 +11,9 @@ all: clean image
 
 .PHONY:
 build_dir:
-	mkdir $(BUILD_DIR)
-	mkdir $(BUILD_DIR)/$(BOOT_DIR)
-	mkdir $(BUILD_DIR)/$(KERNEL_DIR)
+	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/$(BOOT_DIR)
+	mkdir -p $(BUILD_DIR)/$(KERNEL_DIR)
 
 .PHONY:
 boot: build_dir
@@ -32,4 +32,4 @@ image: boot kernel
 
 .PHONY:
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)/$(BOOT_DIR)
