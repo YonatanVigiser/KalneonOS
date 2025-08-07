@@ -1,18 +1,16 @@
 #![no_std]
 #![no_main]
+#![feature(fmt_internals)]
 
 mod video;
-mod types;
 
-use crate::video::vga::{ VGA, VgaColor, VgaCell };
-use crate::types::{ SimpleMutex, SimpleOnce };
+use crate::video::vga::{ VGA, VgaColor };
 use core::panic::PanicInfo;
-use core::fmt::Write;
+//use core::fmt::Write;
+use core::fmt::{Arguments, Write};
 
 pub const TERMINAL_WIDTH: u8 = 80;
 pub const TERMINAL_HEIGHT: u8 = 25;
-
-static VGA: SimpleOnce<SimpleMutex<VGA>> = SimpleOnce::<SimpleMutex<VGA>>::new();
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -21,19 +19,9 @@ fn panic(info: &PanicInfo) -> ! {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-  init_vga();
-  let test = 5;
-  let mut vga = get_vga();
-  //write!(&mut *vga, "hello, {}", test).unwrap();
+  let mut vga = VGA::new(TERMINAL_WIDTH, TERMINAL_HEIGHT);
+  vga.set_colors(VgaColor::Black, VgaColor::White).clear();
+  let val = 5;
+  write!(&mut vga, "kernel paniced {}", val);
   loop {}
-}
-
-pub fn get_vga() -> &'static mut VGA {
-  VGA.get().expect("VGA isn't initialized").lock()
-}
-
-fn init_vga() {
-    VGA.call_once(|| {
-        SimpleMutex::new(VGA::new(TERMINAL_WIDTH, TERMINAL_HEIGHT))
-    });
 }

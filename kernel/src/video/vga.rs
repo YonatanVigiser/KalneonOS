@@ -116,7 +116,7 @@ impl VGA {
   pub fn new(width: u8, height: u8) -> Self {
     let video_type = get_video_type();
     let vmem_ptr = get_vmem_ptr(&video_type);
-    VGA {
+    Self {
       vmem_ptr,
       video_type,
       cx: 0,
@@ -162,14 +162,14 @@ impl VGA {
     Ok(cell)
   }
   
-  pub fn write_char(&mut self, c: char) -> Result<(), VgaError> {
+  pub fn write_char(&mut self, c: char) -> Result<&mut Self, VgaError> {
     if self.cx >= self.width || self.cy >= self.height {
       return Err(VgaError::OutOfBoundsAccess);
     }
     let mut new_cx = self.cx;
     let mut new_cy = self.cy;
     match c {
-      '\0' => return Ok(()),
+      '\0' => return Ok(self),
       '\n' => {
         new_cy += 1;
         new_cx = 0;
@@ -196,14 +196,14 @@ impl VGA {
     } else {
       self.move_cursor(new_cx, new_cy)?;
     }
-    Ok(())
+    Ok(self)
   }
 
-  pub fn write_string(&mut self, string: &str) -> Result<(), VgaError> {
+  pub fn write_string(&mut self, string: &str) -> Result<&mut Self, VgaError> {
     for b in string.bytes() {
-      self.write_char(b as char)?;
+      let _ = self.write_char(b as char)?;
     }
-    Ok(())
+    Ok(self)
   }
 
   pub fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
@@ -311,9 +311,27 @@ impl VGA {
   }
 }
 
-impl core::fmt::Write for &mut VGA {
-  fn write_str(&mut self, s: &str) -> core::fmt::Result {
-    self.write_string(s).map_err(|_| core::fmt::Error)
+
+use core::fmt;
+impl fmt::Write for &mut VGA {
+  fn write_str(&mut self, s: &str) -> fmt::Result {
+    self.write_string(s).map(|_| ()).map_err(|_| fmt::Error)
+  }
+
+  fn write_fmt(&mut self, args: fmt::Arguments) -> fmt::Result {
+    struct Adapter<'a>(&'a mut VGA);
+
+    impl<'a> fmt::Write for Adapter<'a> {
+      fn write_str(&mut self, s: &str) -> fmt::Result {
+        self.0.write_string(s).map(|_| ()).map_err(|_| fmt::Error)
+      }
+    }
+
+    let mut adapter = Adapter(self);
+
+    args.as_str()
+      .map(|s| adapter.write_str(s))
+      .unwrap_or_else(|| Err(fmt::Error))
   }
 }
 
