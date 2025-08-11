@@ -494,7 +494,7 @@ load_kernel:
   ; 0x8000 (64*512=32,768):
 
   mov ebx, [si+8]
-  add ebx, 0x42
+  add ebx, 0x40
   mov [si+8], ebx
   mov ebx, [si+8]
 

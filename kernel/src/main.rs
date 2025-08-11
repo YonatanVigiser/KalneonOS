@@ -1,27 +1,34 @@
 #![no_std]
 #![no_main]
-#![feature(fmt_internals)]
 
 mod video;
+mod idt;
+mod types;
 
 use crate::video::vga::{ VGA, VgaColor };
+use crate::types::SyncUnsafeCell;
+use core::fmt::Write;
+use core::cell::UnsafeCell;
 use core::panic::PanicInfo;
-//use core::fmt::Write;
-use core::fmt::{Arguments, Write};
 
 pub const TERMINAL_WIDTH: u8 = 80;
 pub const TERMINAL_HEIGHT: u8 = 25;
 
+pub static VGA_GLOBAL: SyncUnsafeCell<VGA> = SyncUnsafeCell(UnsafeCell::new(VGA::default()));
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+  let vga = unsafe { VGA_GLOBAL.get_mut() };
+  vga.set_colors(VgaColor::Red, VgaColor::Black).clear();
+  write!(vga, "Kernel panicked: {info}");
   loop {}
 }
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-  let mut vga = VGA::new(TERMINAL_WIDTH, TERMINAL_HEIGHT);
-  vga.set_colors(VgaColor::Black, VgaColor::White).clear();
-  let val = 5;
-  write!(&mut vga, "kernel paniced {}", val);
+  idt::init();
+  unsafe { *VGA_GLOBAL.get_mut() = VGA::new(80, 25); }
+  let vga = unsafe { VGA_GLOBAL.get_mut() };
+  vga.set_colors(VgaColor::Black, VgaColor::White).clear().write_string("hello!");
   loop {}
 }

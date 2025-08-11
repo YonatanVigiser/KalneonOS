@@ -7,7 +7,6 @@ target = "i386-kalneon_os.json"
 target-dir = "../build/kernel"
 
 [profile.release]
-# Optimize build:
-opt-level = "z"
+opt-level = 2
 debug = false
 strip = "symbols"

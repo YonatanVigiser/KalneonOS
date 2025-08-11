@@ -1,5 +1,3 @@
-use core::ptr::{ read_volatile, write_volatile };
-
 #[derive(Debug, Copy, Clone)]
 pub enum VideoType {
   Color,
@@ -108,10 +106,6 @@ pub struct VGA {
   cell_under_cursor: VgaCell,
 }
 
-// SAFETY: We ensure access to VGA is synchronized via `spin::Mutex`.
-unsafe impl Send for VGA {}
-unsafe impl Sync for VGA {}
-
 impl VGA {
   pub fn new(width: u8, height: u8) -> Self {
     let video_type = get_video_type();
@@ -125,6 +119,31 @@ impl VGA {
       fg: VgaColor::White,
       height,
       width,
+      auto_scroll: true,
+      cursor_visible: true,
+      cursor_cell: VgaCell {
+        ascii: '_',
+        bg: VgaColor::Black,
+        fg: VgaColor::White,
+      },
+      cell_under_cursor: VgaCell {
+        ascii: ' ',
+        bg: VgaColor::Black,
+        fg: VgaColor::White,
+      },
+    }
+  }
+
+  pub const fn default() -> Self {
+    Self {
+      vmem_ptr: 0xB8000 as *mut u16,
+      video_type: VideoType::None,
+      cx: 0,
+      cy: 0,
+      bg: VgaColor::Black,
+      fg: VgaColor::White,
+      height: 25,
+      width: 80,
       auto_scroll: true,
       cursor_visible: true,
       cursor_cell: VgaCell {
@@ -311,27 +330,11 @@ impl VGA {
   }
 }
 
+unsafe impl Sync for VGA {}
 
-use core::fmt;
-impl fmt::Write for &mut VGA {
-  fn write_str(&mut self, s: &str) -> fmt::Result {
-    self.write_string(s).map(|_| ()).map_err(|_| fmt::Error)
-  }
-
-  fn write_fmt(&mut self, args: fmt::Arguments) -> fmt::Result {
-    struct Adapter<'a>(&'a mut VGA);
-
-    impl<'a> fmt::Write for Adapter<'a> {
-      fn write_str(&mut self, s: &str) -> fmt::Result {
-        self.0.write_string(s).map(|_| ()).map_err(|_| fmt::Error)
-      }
-    }
-
-    let mut adapter = Adapter(self);
-
-    args.as_str()
-      .map(|s| adapter.write_str(s))
-      .unwrap_or_else(|| Err(fmt::Error))
+impl core::fmt::Write for VGA {
+  fn write_str(&mut self, s: &str) -> core::fmt::Result {
+    self.write_string(s).map(|_| ()).map_err(|_| core::fmt::Error)
   }
 }
 
