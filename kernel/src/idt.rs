@@ -1,11 +1,10 @@
-use core::arch::asm;
 use core::mem::size_of;
-use crate::video::vga::VGA;
+use crate::inline_asm::lidt;
 
 const USED_INTS_NUM: usize = 48;
 
 #[repr(C, packed)]
-struct Idtr {
+pub struct Idtr {
   idt_size: u16,
   idt_ptr: u32,
 }
@@ -51,7 +50,7 @@ pub fn init() {
     idt_size: ((USED_INTS_NUM * size_of::<IdtEntry>()) - 1) as u16,
     idt_ptr,
   };
-  lidt(&idtr);
+  unsafe { lidt(&idtr); } 
 }
 
 fn create_idt() -> Idt {
@@ -64,28 +63,7 @@ fn create_idt() -> Idt {
   idt
 }
 
-fn lidt(idtr: &Idtr) {
-  unsafe { asm!(
-    "lidt [{}]",
-    in(reg) idtr,
-    options(nostack, readonly),
-  ); }
-}
-
-pub fn sti() {
-  unsafe { asm!("sti", options(nostack, readonly)); }
-}
-
-pub fn cli() {
-  unsafe { asm!("cli", options(nostack, readonly)); }
-}
-
-use crate::video::vga::VgaColor;
-use core::fmt::Write;
-
 #[unsafe(no_mangle)]
-pub extern "C" fn cpu_exception_handler(error_code: u32, int_num: u32) {
-  let vga = unsafe { crate::VGA_GLOBAL.get_mut() };
-  vga.set_colors(VgaColor::Red, VgaColor::Black).clear();
-  write!(vga, "An exception occored. Int num: {int_num}, error_code: {error_code}");
+pub extern "C" fn cpu_exception_handler(int_num: u32, error_code: u32) {
+  panic!("Intterupt! Num: {int_num}, error_code: {error_code}");
 }
