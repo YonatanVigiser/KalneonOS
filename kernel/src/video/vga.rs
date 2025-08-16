@@ -205,7 +205,7 @@ impl VGA {
         new_cx += 1;
       },
     };
-    if new_cx > self.width {
+    if new_cx >= self.width {
       new_cy += 1;
       new_cx = 0;
     }

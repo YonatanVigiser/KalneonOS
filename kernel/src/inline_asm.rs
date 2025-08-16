@@ -18,9 +18,9 @@ pub unsafe fn cli() {
 }
 
 pub fn inb(port: u16) -> u8 {
-  let mut inb: u8;
+  let inb: u8;
   unsafe { asm!(
-    "in {to} , dx",
+    "in {to}, dx",
     to = out(reg_byte) inb,
     in("dx") port,
     options(nomem, nostack),
@@ -45,3 +45,4 @@ pub fn io_wait() {
     options(nomem, nostack),
   ); }
 }
+

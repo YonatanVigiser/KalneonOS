@@ -3,9 +3,10 @@ Low mem:
 00000 - 004FF: BIOS reserved memory (1.25KB)
 00500 - 005FF: Free mem (0.25KB)
 00600 - 007FF: MBR or free mem (0.5KB)
-00800 - 00FFF: Boot info block (2KB)
+00800 - 00FFF: Free mem (2KB)
 01000 - 031FF: Boot1 code (8.5KB)
-03200 - 04FFF: Free mem (7.5KB)
+03200 - 03E1F: Boot info block (~3KB)
+03E20 - 04FFF: Free mem (~4.5KB)
 05000 - 07BFF: Real-mode stack (mostly unused mem) (11KB)
 07C00 - 07DFF: Boot0 code (0.5KB)
 07E00 - 07FFF: Free mem (0.5KB)
@@ -17,5 +18,4 @@ Low mem:
 High mem:
 
 100000 - 1FFFFF: Kernel code (1MB)
-200000 - 2FFFFF: Kernel data (1MB)
 300000 - 3FFFFF: Kernel stack (1MB)

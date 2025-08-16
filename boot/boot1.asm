@@ -21,7 +21,8 @@ main16:
   call enter_unreal_mode
   
   ; Generate boot info
-  call gen_info
+  call build_boot_info_block
+  jc .build_info_error
 
   ; Load the kernel
   call load_kernel
@@ -36,6 +37,12 @@ main16:
 
 .a20_error:
   lea si, a20_error_message
+  mov al, 0x40 ; Red background, black text
+  call print_line_color
+  jmp .hlt
+
+.build_info_error:
+  lea si, build_info_error_message
   mov al, 0x40 ; Red background, black text
   call print_line_color
   jmp .hlt
@@ -396,8 +403,16 @@ enter_unreal_mode:
 ; This function gather information about the machine and generate the
 ; boot info section, used to pass info from the bootloader to the kernel.
 ; See: docs/boot-info/general for more info about the boot info section.
-gen_info:
+build_boot_info_block:
   lea si, BOOT_INFO_BLOCK_P
+
+  mov dword [si], 0x594F5649 ; magic bits: "YOVI"
+  mov word [si+0x4], 0x1 ; Version 1
+
+  mov dword [si+0x10], KERNEL_P
+  mov dword [si+0x18], KERNEL_SIZE_BYTES
+
+  mov byte [si+0xE], boot_disk
 
 ; Detects CPUID suppport:
 .cpuid:
@@ -411,46 +426,59 @@ gen_info:
   popfd ; Restore EFLAGS
   and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
   jz .detect_mem
-  mov byte [si], 1 ; Store the result
+  ; Store the result:
+  mov al, byte [si+0x6]
+  or al, 0x2
+  mov byte [si+0x6], al
 
 ; Detects memory and build a memory map (See: docs/boot-info/memory-map for more info)
 .detect_mem:
-  inc si ; Increament si
   xor eax, eax
+  mov es, ax
   ; Set the first entry pointer:
   mov ax, si
-  add ax, 0x04
+  add ax, 0x20 ; Mem map offset in boot info block
   mov di, ax
   xor ebx, ebx
   mov edx, 0x534D4150 ; Magic value
   mov cx, 0x18 ; Length of the entry
   mov ax, 0xE820 ; Function code
   int 0x15 ; Call the first int
-  jc .ret
+  jc .mem_detection_failed
   cmp eax, edx ; Test if eax contains the magic value
-  jne .ret
-  mov byte [si+0x2], 0x1 ; Indicate that the memory map is supported
+  jne .mem_detection_failed
+  
+  xor ax, ax ; Counter
   test cx, 0x18 ; Test if EAB is supported
-  jne .mem_detection_loop
-  mov byte [si+0x3], 0x1
+  jne .mem_detection_loop 
+
+  ; Indicate EAB support for mem map:
+  mov dl, byte [si+0x6]
+  or dl, 0x1
+  mov byte [si+0x6], dl
+
 .mem_detection_loop:
+  inc ax ; Increament counter
+  mov edx, 0x534D4150 ; Magic value
   add di, 0x18 ; Increament pointer
+  push ax ; Save the counter
   xor eax, eax
   mov ax, 0xE820 ; Function code
   mov cx, 0x18 ; Length of the entry
   int 0x15
+  pop ax ; Restore the counter
   jc .detect_mem_end ; The end of the list was reached 
   test bx, bx
   jz .detect_mem_end ; The end of the list was reached
   jmp .mem_detection_loop
+
 .detect_mem_end:
   clc ; Clears the carry flag from previous detection
-  add di, 0x18
-  ; Save map size in bytes:
-  mov ax, di
-  sub ax, si
-  mov word [si], ax
-  mov si, di ; Increament si
+  ; Save map entrys number:
+  mov byte [si+0xF], al
+  jmp .ret
+.mem_detection_failed:
+  stc
 .ret:
   ret
 
@@ -553,9 +581,12 @@ main32:
   mov esp, eax
   mov ebp, eax
 
+  ; Push the boot info block to the stack
+  push BOOT_INFO_BLOCK_P
+
   ; Jump to the kernel
   mov eax, KERNEL_P
-  jmp eax
+  call eax
 
 ; In case the kernel returns, halt the machine:
 .hlt:
@@ -570,6 +601,7 @@ boot_message: db "Booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 a20_enabled_message: db "A20 line was successfuly enabled", 0x0
 enter_unreal_mode_message: db "Entered into unreal mode", 0x0
+build_info_error_message: db "CRITICAL ERROR: Unable to create the Boot Info Block. Machine halted!", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
 memcpy_success_message: db "Kernel copied from disk successfuly", 0x0
 kernel_loaded_message: db "Kernel loading, please wait...", 0x0
@@ -620,6 +652,9 @@ dpa:
 ; Boot disk:
 boot_disk: db 0x00
 
+; CPUID support
+cpuid_supported: db 0x00
+
 ; Current line on screen:
 screen_line: db 0x00
 
@@ -644,13 +679,16 @@ times 0x2200 - ($-$$) db 0
 ; Constants:
 
 ; Pointer to the boot info block location in memory:
-BOOT_INFO_BLOCK_P equ 0x800
+BOOT_INFO_BLOCK_P equ 0x3200
 
 ; Pointer to a 64K buffer for copying the kernel
 KERNEL_COPY_BUFF_P equ 0x8000
 
 ; Pointer to the kernel copy destination in memory:
 KERNEL_P equ 0x100000
+
+; Size of kernel in bytes:
+KERNEL_SIZE_BYTES equ 0x100000
 
 ; Pointer to the kernek stack in memory:
 KERNEL_STACK_P equ 0x400000

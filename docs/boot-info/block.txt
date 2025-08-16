@@ -1,4 +1,0 @@
-struct boot_info_block() {
-  uint8_t boot_disk;
-  struct mem_map mem_map;
-}

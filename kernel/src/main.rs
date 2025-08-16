@@ -6,9 +6,12 @@ mod idt;
 mod inline_asm;
 mod types;
 mod pic;
+mod macros;
+mod boot_info_block;
 
 use crate::video::vga::{ VGA, VgaColor };
 use crate::types::SyncUnsafeCell;
+use crate::boot_info_block::BootInfoBlock;
 use core::fmt::Write;
 use core::cell::UnsafeCell;
 use core::panic::PanicInfo;
@@ -27,13 +30,15 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
+pub extern "C" fn _start(boot_info_ptr: u32) -> ! {
+  let boot_info = unsafe { BootInfoBlock::copy_from_ptr(boot_info_ptr) };
   *VGA_GLOBAL.get_mut() = VGA::new(80, 25);
   idt::init();
   pic::init();
   pic::unmask_irq(1);
-  let vga = VGA_GLOBAL.get_mut();
-  vga.set_colors(VgaColor::Black, VgaColor::White).clear().write_string("hello!").expect("An error occored in the VGA");
   unsafe { inline_asm::sti(); }
+  let vga = VGA_GLOBAL.get_mut();
+  vga.set_colors(VgaColor::Black, VgaColor::White).clear();
+  let _ = write!(vga, "{:?}", boot_info.memory_map());
   loop {}
 }
