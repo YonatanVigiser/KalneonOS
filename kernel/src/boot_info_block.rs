@@ -1,7 +1,7 @@
 use core::fmt;
 use crate::debug_hex;
 
-#[repr(C)]
+#[repr(C, packed)]
 #[derive(Clone)]
 pub struct MemoryMapEntry {
   pub base: u64,
@@ -15,7 +15,7 @@ debug_hex!(MemoryMapEntry,
   normal: []
 );
 
-#[repr(C)]
+#[repr(C, packed)]
 #[derive(Clone)]
 pub struct BootInfoBlock {
   pub magic: u32, // Should be "YOVI"

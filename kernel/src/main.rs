@@ -8,6 +8,7 @@ mod types;
 mod pic;
 mod macros;
 mod boot_info_block;
+mod enable_paging;
 
 use crate::video::vga::{ VGA, VgaColor };
 use crate::types::SyncUnsafeCell;

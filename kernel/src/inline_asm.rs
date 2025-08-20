@@ -46,3 +46,14 @@ pub fn io_wait() {
   ); }
 }
 
+pub unsafe fn enable_paging(pd_address: u32) {
+  unsafe { asm!(
+    "mov eax, {address}",
+    "mov cr3, eax",
+    "mov eax, cr0",
+    "or eax, 0x80000001",
+    "mov cr0, eax",
+    address = in(reg) pd_address,
+    options(nomem, nostack),
+  ); }
+}
