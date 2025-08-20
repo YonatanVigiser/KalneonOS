@@ -1,8 +1,7 @@
-use core::fmt;
 use crate::debug_hex;
 
 #[repr(C, packed)]
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct MemoryMapEntry {
   pub base: u64,
   pub length: u64,

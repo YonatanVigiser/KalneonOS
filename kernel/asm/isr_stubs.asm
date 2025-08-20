@@ -6,7 +6,7 @@ isr_stub_%+%1:
   mov eax, [esp + 32]
   push eax
   push %1
-  call cpu_exception_handler
+  call intterupts_handler
   add esp, 8
   popa
   add esp, 4
@@ -19,14 +19,14 @@ isr_stub_%+%1:
   pusha
   push 0x0000
   push %1
-  call cpu_exception_handler
+  call intterupts_handler
   add esp, 8
   popa
   iret
 %endmacro
 
 ; Call the kernel's general CPU exceptions handler (defined in rust)
-extern cpu_exception_handler
+extern intterupts_handler
 
 ; Define the exception handlers
 isr_no_err_stub 0

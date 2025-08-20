@@ -1,4 +1,4 @@
-use crate::idt::Idtr;
+use super::idt::Idtr;
 use core::arch::asm;
 
 pub unsafe fn lidt(idtr: &Idtr) {

@@ -1,4 +1,4 @@
-use crate::inline_asm::{ inb, outb, io_wait };
+use super::cpu::{ inb, outb, io_wait };
 use core::sync::atomic::{ AtomicU32, Ordering };
 
 const PIC1_COMMAND: u16 = 0x20;

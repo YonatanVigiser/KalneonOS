@@ -1,6 +1,5 @@
 use core::mem::size_of;
-use crate::inline_asm::lidt;
-use crate::pic;
+use super::cpu::lidt;
 
 const USED_INTS_NUM: usize = 48;
 
@@ -36,7 +35,7 @@ impl IdtEntry {
 struct Idt ([IdtEntry; USED_INTS_NUM]);
 
 unsafe extern "C" {
-    static isr_stub_table: [u32; USED_INTS_NUM];
+  static isr_stub_table: [u32; USED_INTS_NUM];
 }
 
 static mut IDT: Idt = Idt([IdtEntry::empty(); USED_INTS_NUM]);
@@ -64,27 +63,3 @@ fn create_idt() -> Idt {
   idt
 }
 
-#[unsafe(no_mangle)]
-pub extern "C" fn cpu_exception_handler(int_num: u32, error_code: u32) {
-  match int_num {
-    39 => {
-      if (pic::read_isr() & 0x0F) == 39 {
-        pic::spurios_irq(true);
-      } else {
-        intterupt_panic(int_num, error_code);
-      }
-    },
-    47 => {
-      if (pic::read_isr() & 0xF0) == 47 {
-        pic::spurios_irq(false);
-      } else {
-        intterupt_panic(int_num, error_code);
-      }
-    },
-    _ => intterupt_panic(int_num, error_code),
-  };
-}
-
-fn intterupt_panic(int_num: u32, error_code: u32) {
-  panic!("Intterupt! Num: {int_num}, error_code: {error_code}");
-}
