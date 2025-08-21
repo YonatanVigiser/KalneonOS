@@ -67,6 +67,8 @@ hard_drive:
   inc di
   loop .copy_lba_to_dap
 
+  inc dword [dap + 0x08]
+
   ; Load the partition VBR to memory
   mov ah, 0x42
   lea si, dap

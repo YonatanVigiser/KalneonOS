@@ -6,6 +6,9 @@
 ; and enter 32-bit protected mode:
 main16:
   mov byte [boot_disk], dl ; Save the boot disk number
+  mov word [partition_table_ptr], si ; Save the partition table pointer
+  mov eax, dword [si+0x08]
+  mov dword [partition_lba_sector], eax
 
   call init_screen
  
@@ -493,6 +496,12 @@ load_kernel:
   xor ax, ax
   mov gs, ax
 
+  ; Load the LBA sector
+  mov eax, dword [partition_lba_sector]
+  add eax, 0x12 ; The 18'th sector in the partition
+  mov dword [dpa + 0x08], eax
+  xor eax, eax
+
   mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
@@ -645,12 +654,18 @@ dpa:
   dw 0x40      ; Read 64 sectors
   dw KERNEL_COPY_BUFF_P ; Buffer offset
   dw 0x0000    ; Buffer segment
-  dq 0x12      ; Start reading from LBA sector num. 0x13 (the 19 sector)
+  dq 0x00      ; Start reading from LBA sector num. Fill dynamiclly
 
 ; Variables:
 
 ; Boot disk:
 boot_disk: db 0x00
+
+; Partition table pointer
+partition_table_ptr: dw 0x0000
+
+; partition LBA sector
+partition_lba_sector: dq 0x0
 
 ; CPUID support
 cpuid_supported: db 0x00
