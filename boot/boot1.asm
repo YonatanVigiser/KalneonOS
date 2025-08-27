@@ -1,11 +1,14 @@
 [BITS 16]
-[ORG 0x500]
+[ORG 0x1000]
 
 ; The zero-stage bootloader will jump here.
 ; Will print another booting message, enable A20,
 ; and enter 32-bit protected mode:
 main16:
   mov byte [boot_disk], dl ; Save the boot disk number
+  mov word [partition_table_ptr], si ; Save the partition table pointer
+  mov eax, dword [si+0x08]
+  mov dword [partition_lba_sector], eax
 
   call init_screen
  
@@ -19,6 +22,10 @@ main16:
 
   ; Enter unreal mode
   call enter_unreal_mode
+  
+  ; Generate boot info
+  call build_boot_info_block
+  jc .build_info_error
 
   ; Load the kernel
   call load_kernel
@@ -37,6 +44,12 @@ main16:
   call print_line_color
   jmp .hlt
 
+.build_info_error:
+  lea si, build_info_error_message
+  mov al, 0x40 ; Red background, black text
+  call print_line_color
+  jmp .hlt
+
 .memcpy_error:
   lea si, memcpy_error_message
   mov al, 0x40 ; Red background, black text
@@ -44,10 +57,10 @@ main16:
   jmp .hlt
 
 .hlt:
-  hlt ; For debugging
+  hlt
   jmp .hlt
 
-; Set video mode, clear the screen, sets a background color,
+; Clear the screen, sets a background color,
 ; and print boot message
 init_screen:
   ; Set the video mode to 0x03
@@ -64,6 +77,11 @@ init_screen:
   mov cl, 0x00              ; x=0
   mov dh, 0x19              ; y=25
   mov dl, 0x50              ; x=80
+  int 0x10
+
+  ; Disable cursor
+  mov ah, 0x01
+  mov ch, 0x3F
   int 0x10
 
   ; Print welcome message:
@@ -118,7 +136,7 @@ print_line_color:
   mov bl, al
   
   ; Set the rows and columns
-  mov dh, [screen_line]
+  mov dh, byte [screen_line]
   mov dl, 0
   
 .print_loop:
@@ -138,13 +156,13 @@ print_line_color:
   int 0x10
 
   ; Loop
-  add dl, 1
+  inc dl
   jmp .print_loop
 
 .ret:
-  mov ah, [screen_line]
+  mov ah, byte [screen_line]
   add ah, 1
-  mov [screen_line], ah
+  mov byte [screen_line], ah
   pop dx
   pop cx
   pop bx
@@ -359,7 +377,7 @@ enter_unreal_mode:
   mov cr0, eax 
 
   ; Reload the segments
-  xor ax, ax
+  mov ax, 0x10
   mov ds, ax
   mov es, ax
   mov fs, ax 
@@ -369,12 +387,102 @@ enter_unreal_mode:
   mov eax, cr0
   and eax, 0xFFFFFFFE
   mov cr0, eax
+
   jmp 0x0:.ret ; reload cs
 
 .ret:
+  ; Reload the segments
+  xor ax, ax
+  mov ds, ax
+  mov es, ax
+  mov fs, ax 
+  mov gs, ax
+
   ; Print unreal-mode entered message
   lea si, enter_unreal_mode_message
   call print_line
+  ret
+
+; This function gather information about the machine and generate the
+; boot info section, used to pass info from the bootloader to the kernel.
+; See: docs/boot-info/general for more info about the boot info section.
+build_boot_info_block:
+  lea si, BOOT_INFO_BLOCK_P
+
+  mov dword [si], 0x594F5649 ; magic bits: "YOVI"
+  mov word [si+0x4], 0x1 ; Version 1
+
+  mov dword [si+0x10], KERNEL_P
+  mov dword [si+0x18], KERNEL_SIZE_BYTES
+
+  mov byte [si+0xE], boot_disk
+
+; Detects CPUID suppport:
+.cpuid:
+  pushfd ; Save EFLAGS
+  pushfd ; Store EFLAGS
+  xor dword [esp], 0x00200000 ; Invert the ID bit in the stored EFLAGS
+  popfd ; Load the modified EFLGAS
+  pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
+  pop eax ; Load EFLAGS to eax
+  xor eax, [esp] ; Store whichever bits where changed in eax
+  popfd ; Restore EFLAGS
+  and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
+  jz .detect_mem
+  ; Store the result:
+  mov al, byte [si+0x6]
+  or al, 0x2
+  mov byte [si+0x6], al
+
+; Detects memory and build a memory map (See: docs/boot-info/memory-map for more info)
+.detect_mem:
+  xor eax, eax
+  mov es, ax
+  ; Set the first entry pointer:
+  mov ax, si
+  add ax, 0x20 ; Mem map offset in boot info block
+  mov di, ax
+  xor ebx, ebx
+  mov edx, 0x534D4150 ; Magic value
+  mov cx, 0x18 ; Length of the entry
+  mov ax, 0xE820 ; Function code
+  int 0x15 ; Call the first int
+  jc .mem_detection_failed
+  cmp eax, edx ; Test if eax contains the magic value
+  jne .mem_detection_failed
+  
+  xor ax, ax ; Counter
+  test cx, 0x18 ; Test if EAB is supported
+  jne .mem_detection_loop 
+
+  ; Indicate EAB support for mem map:
+  mov dl, byte [si+0x6]
+  or dl, 0x1
+  mov byte [si+0x6], dl
+
+.mem_detection_loop:
+  inc ax ; Increament counter
+  mov edx, 0x534D4150 ; Magic value
+  add di, 0x18 ; Increament pointer
+  push ax ; Save the counter
+  xor eax, eax
+  mov ax, 0xE820 ; Function code
+  mov cx, 0x18 ; Length of the entry
+  int 0x15
+  pop ax ; Restore the counter
+  jc .detect_mem_end ; The end of the list was reached 
+  test bx, bx
+  jz .detect_mem_end ; The end of the list was reached
+  jmp .mem_detection_loop
+
+.detect_mem_end:
+  clc ; Clears the carry flag from previous detection
+  ; Save map entrys number:
+  mov byte [si+0xF], al
+  jmp .ret
+.mem_detection_failed:
+  stc
+.ret:
   ret
 
 ; This will load the kernel from disk to memory (100000-1FFFFF).
@@ -385,21 +493,28 @@ load_kernel:
   clc ; clear carry
 
   ; Real-mode segment 
-  mov ax, 0x7000
+  xor ax, ax
   mov gs, ax
+
+  ; Load the LBA sector
+  mov eax, dword [partition_lba_sector]
+  add eax, 0x12 ; The 18'th sector in the partition
+  mov dword [dpa + 0x08], eax
+  xor eax, eax
 
   mov cx, 0x20 ; Read 32 times 32K (32K*32=1024K)
   mov ah, 0x42 ; Function code
   lea si, dpa  ; Load DPA
   mov dl, byte [boot_disk] ; Disk to read from (boot disk)
-  mov edi, 0x100000 ; Kernel offset
+  mov edi, KERNEL_P ; Kernel offset
 
 .copy_loop:
+  clc ; Clears the overflow flag
   int 0x13
   mov ah, 0x42
   jc .ret ; If error, return
   
-  mov bx, 0x8000 ; Buffer starting address
+  mov bx, KERNEL_COPY_BUFF_P ; Buffer starting address
 
 .copy_from_buffer_loop:
   ; Copy the memory from buffer to new location:
@@ -416,16 +531,13 @@ load_kernel:
   ; 0x8000 (64*512=32,768):
 
   mov ebx, [si+8]
-  add ebx, 0x8000
+  add ebx, 0x40
   mov [si+8], ebx
   mov ebx, [si+8]
 
   loop .copy_loop
 
 .ret:
- ; Sets ax to the program offset pointed by the elf header (at bytes 24-27 of kernel):
-  mov eax, [edi+24]
-  mov [kernel_start], eax
   ret
 
 ; This will enter 32-bit mode from protected mode. This should be called
@@ -457,9 +569,10 @@ enter_p_mode_from_unreal_mode:
   mov es, ax
   mov fs, ax 
   mov gs, ax
+  mov ss, ax
 
   ; Setup protected mode stack
-  mov eax, 0x90000
+  mov eax, PROTECTED_MODE_STACK_P 
   mov esp, eax
   mov ebp, eax
 
@@ -470,40 +583,24 @@ enter_p_mode_from_unreal_mode:
 ; 32-bit protected mode code
 [BITS 32]
 
-; This will generate boot info, setup a kernel stack (0x300000:0x3FFFFF), and jump to the kernel
+; setup a kernel stack (0x200000:0x2FFFFF), and jump to the kernel
 main32:
-  ; Generate boot information
-  ;call gen_info
-  
   ; Setup kernel stack
-  mov eax, 0x400000
-  mov sp, ax
-  mov bp, ax
+  mov eax, KERNEL_STACK_P
+  mov esp, eax
+  mov ebp, eax
+
+  ; Push the boot info block to the stack
+  push BOOT_INFO_BLOCK_P
 
   ; Jump to the kernel
-  mov eax, [kernel_start]
+  mov eax, KERNEL_P
   call eax
 
-; This function gather information about the machine and generate the
-; bootloader info section, used to pass info from the bootloader to the kernel.
-; Note: this function doesn't take anything and doesn't return anything
-gen_info:
-
-.cpuid:
-  pushfd ; Save EFLAGS
-  pushfd ; Store EFLAGS
-  xor dword [esp], 0x00200000 ; Invert the ID bit in the stored EFLAGS
-  popfd ; Load the modified EFLGAS
-  pushfd ; Store EFLAGS again (modified  - but ID bit may not be changed)
-  pop eax ; Load EFLAGS to eax
-  xor eax, [esp] ; Store whichever bits where changed in eax
-  popfd ; Restore EFLAGS
-  and eax, 0x0020000 ; Check if the ID bit was changed (if so then CPUID is supported, else not)
-  jz .ret
-  mov byte [0x2700], 1
-
-.ret:
-  ret
+; In case the kernel returns, halt the machine:
+.hlt:
+  hlt
+  jmp .hlt
 
 ; Data:
 
@@ -513,6 +610,7 @@ boot_message: db "Booting, please wait...", 0x0
 a20_error_message: db "CRITICAL ERROR: Unable to enable A20 line. Machine halted!", 0x0
 a20_enabled_message: db "A20 line was successfuly enabled", 0x0
 enter_unreal_mode_message: db "Entered into unreal mode", 0x0
+build_info_error_message: db "CRITICAL ERROR: Unable to create the Boot Info Block. Machine halted!", 0x0
 memcpy_error_message: db "CRITICAL ERROR: Unable to copy the kernel form disk. Machine halted!", 0x0
 memcpy_success_message: db "Kernel copied from disk successfuly", 0x0
 kernel_loaded_message: db "Kernel loading, please wait...", 0x0
@@ -554,20 +652,26 @@ dpa:
   db 0x10      ; Size of DPA (16-bytes)
   db 0x0       ; Reserved
   dw 0x40      ; Read 64 sectors
-  dw 0x8000    ; Buffer offset
-  dw 0x7000    ; Buffer segment
-  dq 0x12      ; Start reading from LBA sector num. 0x13 (the 19 sector)
+  dw KERNEL_COPY_BUFF_P ; Buffer offset
+  dw 0x0000    ; Buffer segment
+  dq 0x00      ; Start reading from LBA sector num. Fill dynamiclly
 
 ; Variables:
 
 ; Boot disk:
 boot_disk: db 0x00
 
+; Partition table pointer
+partition_table_ptr: dw 0x0000
+
+; partition LBA sector
+partition_lba_sector: dq 0x0
+
+; CPUID support
+cpuid_supported: db 0x00
+
 ; Current line on screen:
 screen_line: db 0x00
-
-; Kernel starting address pointer (pointed by the elf header):
-kernel_start: dq 0x00000000
 
 ; Compare byte for testing if A20 line is enabled:
 compare_byte: db 0x00
@@ -580,12 +684,29 @@ new_line: db 0x0
 ; Settings padding (max 64 bytes)
 times 0x2200 - 0x40 - ($-$$) db 0
 
-print_enable: db 0x1
+print_enable: db 0x1 ; Zero disabled, else enabled 
 
-print_extra: db 0x1 ; For debugging - should be defaulted to zero
-
-text_color: db 0x90 ; Background color (default: light-blue), text color (default: black)
+text_color: db 0x10  ; Background color (default: light-blue), text color (default: black)
 
 ; File padding:
 times 0x2200 - ($-$$) db 0
 
+; Constants:
+
+; Pointer to the boot info block location in memory:
+BOOT_INFO_BLOCK_P equ 0x3200
+
+; Pointer to a 64K buffer for copying the kernel
+KERNEL_COPY_BUFF_P equ 0x8000
+
+; Pointer to the kernel copy destination in memory:
+KERNEL_P equ 0x100000
+
+; Size of kernel in bytes:
+KERNEL_SIZE_BYTES equ 0x100000
+
+; Pointer to the kernek stack in memory:
+KERNEL_STACK_P equ 0x400000
+
+; Poiner to the protected mode stack:
+PROTECTED_MODE_STACK_P equ 0x20000

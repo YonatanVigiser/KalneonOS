@@ -9,5 +9,6 @@ set architecture i8086
 layout asm
 layout reg
 b *0x7c00
-b *0x0500
+b *0x1000
+b *0x100000
 target remote localhost:26000
