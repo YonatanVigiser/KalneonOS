@@ -2,25 +2,40 @@
 %macro isr_err_stub 1
 isr_stub_%+%1:
   cli
-  pusha
-  mov eax, [esp + 32]
-  push eax
   push %1
+  pusha
+  push ds
+  push es
+  push fs
+  push gs
+  push esp
   call intterupts_handler
-  add esp, 8
+  pop eax
+  pop gs
+  pop fs
+  pop es
+  pop ds
   popa
-  add esp, 4
   iret
 %endmacro
 
 %macro isr_no_err_stub 1
 isr_stub_%+%1:
   cli
-  pusha
   push 0x0000
   push %1
+  pusha
+  push ds
+  push es
+  push fs
+  push gs
+  push esp
   call intterupts_handler
-  add esp, 8
+  pop eax
+  pop gs
+  pop fs
+  pop es
+  pop ds
   popa
   iret
 %endmacro
