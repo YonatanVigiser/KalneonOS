@@ -52,7 +52,7 @@ isr_no_err_stub 4
 isr_no_err_stub 5
 isr_no_err_stub 6
 isr_no_err_stub 7
-isr_err_stub    8
+; 8 - Double Fault, custom handler.
 isr_no_err_stub 9
 isr_err_stub    10
 isr_err_stub    11
@@ -92,6 +92,9 @@ isr_no_err_stub 44
 isr_no_err_stub 45
 isr_no_err_stub 46
 isr_no_err_stub 47
+
+isr_stub_8:
+  jmp isr_stub_8
 
 ; Define a stub table for ease of use
 global isr_stub_table
