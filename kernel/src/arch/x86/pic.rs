@@ -115,5 +115,3 @@ pub fn spurios_irq(from_master: bool) {
 pub fn get_spurious_irqs_count() -> u32 {
     SPURIOUS_IRQS_COUNT.load(Ordering::Relaxed)
 }
-
-//pub fn set_clock_frq(

@@ -1,0 +1,143 @@
+#[repr(u8)]
+#[derive(Clone, Copy)]
+pub enum ChannelNum {
+    C0 = 0,
+    C1 = 1,
+    C2 = 2,
+}
+
+impl ChannelNum {
+    pub fn get_data_port(&self) -> u16 {
+        (self.clone() as u8) as u16 + 0x40
+    }
+}
+
+#[repr(u8)]
+#[derive(Clone, Copy)]
+pub enum AccessMode {
+    LowByte = 1,
+    HighByte = 2,
+    Word = 3,
+}
+
+#[repr(u8)]
+#[derive(Clone, Copy)]
+pub enum OperationMode {
+    InterruptOnTerminalCount = 0,
+    HardwareRetriggerableOneshot = 1,
+    RateGenerator = 2,
+    SquareWaveGenerator = 3,
+    SoftwareTriggeredStrobe = 4,
+    HardwareTriggeredStrobe = 5,
+}
+
+#[derive(Clone, Copy)]
+pub struct Channel {
+    num: ChannelNum,
+    reload_value: u16,
+    access_mode: AccessMode,
+    mode: OperationMode,
+}
+
+use AccessMode::*;
+use ChannelNum::*;
+use OperationMode::*;
+
+use crate::arch::x86::cpu::{inb, outb};
+use crate::kernel::timer;
+
+use spin::Mutex;
+
+pub static CHANNELS: Mutex<[Channel; 3]> = Mutex::new([
+    Channel {
+        num: C0,
+        reload_value: 0,
+        access_mode: Word,
+        mode: SquareWaveGenerator,
+    },
+    Channel {
+        num: C1,
+        reload_value: 0,
+        access_mode: Word,
+        mode: SquareWaveGenerator,
+    },
+    Channel {
+        num: C2,
+        reload_value: 0,
+        access_mode: Word,
+        mode: SquareWaveGenerator,
+    },
+]);
+
+pub fn init() {
+    let channels = CHANNELS.lock().clone();
+    for channel in channels.iter() {
+        set_mode(channel.num, channel.access_mode, channel.mode).unwrap();
+        set_reload_value(channel.num, channel.reload_value).unwrap();
+    }
+}
+
+pub fn set_mode(
+    channel_num: ChannelNum,
+    access_mode: AccessMode,
+    mode: OperationMode,
+) -> Result<(), ()> {
+    let channel = &mut CHANNELS.lock()[channel_num as u8 as usize];
+    if let C0 | C1 = channel_num
+        && let HardwareRetriggerableOneshot | HardwareTriggeredStrobe = channel.mode
+    {
+        return Err(());
+    }
+    let command: u8 = ((channel.num as u8) << 6) | ((access_mode as u8) << 4) | ((mode as u8) << 1);
+    channel.access_mode = access_mode;
+    channel.mode = mode;
+
+    outb(channel_num.get_data_port(), command);
+    Ok(())
+}
+
+pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Result<(), ()> {
+    let channel = &mut CHANNELS.lock()[channel_num as u8 as usize];
+    if let SquareWaveGenerator = channel.mode {
+        reload_value &= 0xFE;
+    }
+    if let RateGenerator | SquareWaveGenerator = channel.mode
+        && reload_value == 1
+    {
+        return Err(());
+    }
+    match channel.access_mode {
+        LowByte => {
+            outb(channel.num.get_data_port(), reload_value as u8);
+            channel.reload_value = reload_value & 0x00FF;
+        }
+        HighByte => {
+            outb(channel.num.get_data_port(), (reload_value >> 8) as u8);
+            channel.reload_value = reload_value & 0xFF00;
+        }
+        Word => {
+            outb(channel.num.get_data_port(), reload_value as u8);
+            outb(channel.num.get_data_port(), (reload_value >> 8) as u8);
+            channel.reload_value = reload_value;
+        }
+    };
+    Ok(())
+}
+
+pub fn get_count(channel_num: ChannelNum) -> u16 {
+    let channel = &CHANNELS.lock()[channel_num as u8 as usize];
+    match channel.access_mode {
+        LowByte => inb(channel.num.get_data_port()) as u16,
+        HighByte => (inb(channel.num.get_data_port()) as u16) << 8,
+        Word => {
+            let mut count: u16 = 0;
+            count += inb(channel.num.get_data_port()) as u16;
+            count += (inb(channel.num.get_data_port()) as u16) << 8;
+            count
+        }
+    }
+}
+
+pub fn hardware_intterupt() {
+    timer::tick();
+}
