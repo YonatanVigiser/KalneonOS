@@ -121,7 +121,7 @@ pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Resul
 pub fn get_count(channel_num: ChannelNum) -> u16 {
     let channel = &CHANNELS.lock()[channel_num as u8 as usize];
 
-    let latch_command = (ChannelNum as u8) << 6;
+    let latch_command = (channel_num as u8) << 6;
     outb(COMMAND_PORT, latch_command);
 
     match channel.access_mode {
