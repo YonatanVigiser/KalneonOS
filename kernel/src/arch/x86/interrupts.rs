@@ -53,7 +53,7 @@ pub extern "C" fn intterupts_handler(stack_frame: &mut IntteruptStackFrame) {
 }
 
 fn irq0_handler() {
-    pit::hardware_intterupt();
+    pit::hardware_interrupt();
     pic::send_eoi(32);
 }
 

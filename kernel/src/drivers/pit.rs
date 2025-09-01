@@ -39,6 +39,8 @@ pub struct Channel {
     mode: OperationMode,
 }
 
+const COMMAND_PORT: u16 = 0x43;
+
 use AccessMode::*;
 use ChannelNum::*;
 use OperationMode::*;
@@ -69,14 +71,6 @@ pub static CHANNELS: Mutex<[Channel; 3]> = Mutex::new([
     },
 ]);
 
-pub fn init() {
-    let channels = CHANNELS.lock().clone();
-    for channel in channels.iter() {
-        set_mode(channel.num, channel.access_mode, channel.mode).unwrap();
-        set_reload_value(channel.num, channel.reload_value).unwrap();
-    }
-}
-
 pub fn set_mode(
     channel_num: ChannelNum,
     access_mode: AccessMode,
@@ -84,7 +78,7 @@ pub fn set_mode(
 ) -> Result<(), ()> {
     let channel = &mut CHANNELS.lock()[channel_num as u8 as usize];
     if let C0 | C1 = channel_num
-        && let HardwareRetriggerableOneshot | HardwareTriggeredStrobe = channel.mode
+        && let HardwareRetriggerableOneshot | HardwareTriggeredStrobe = mode
     {
         return Err(());
     }
@@ -92,19 +86,19 @@ pub fn set_mode(
     channel.access_mode = access_mode;
     channel.mode = mode;
 
-    outb(channel_num.get_data_port(), command);
+    outb(COMMAND_PORT, command);
     Ok(())
 }
 
 pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Result<(), ()> {
     let channel = &mut CHANNELS.lock()[channel_num as u8 as usize];
-    if let SquareWaveGenerator = channel.mode {
-        reload_value &= 0xFE;
-    }
     if let RateGenerator | SquareWaveGenerator = channel.mode
         && reload_value == 1
     {
         return Err(());
+    }
+    if let SquareWaveGenerator = channel.mode {
+        reload_value &= 0xFE;
     }
     match channel.access_mode {
         LowByte => {
@@ -126,6 +120,10 @@ pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Resul
 
 pub fn get_count(channel_num: ChannelNum) -> u16 {
     let channel = &CHANNELS.lock()[channel_num as u8 as usize];
+
+    let latch_command = (ChannelNum as u8) << 6;
+    outb(COMMAND_PORT, latch_command);
+
     match channel.access_mode {
         LowByte => inb(channel.num.get_data_port()) as u16,
         HighByte => (inb(channel.num.get_data_port()) as u16) << 8,
@@ -138,6 +136,6 @@ pub fn get_count(channel_num: ChannelNum) -> u16 {
     }
 }
 
-pub fn hardware_intterupt() {
+pub fn hardware_interrupt() {
     timer::tick();
 }
