@@ -121,19 +121,34 @@ pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Resul
 pub fn get_count(channel_num: ChannelNum) -> u16 {
     let channel = &CHANNELS.lock()[channel_num as u8 as usize];
 
-    let latch_command = (channel_num as u8) << 6;
-    outb(COMMAND_PORT, latch_command);
-
     match channel.access_mode {
         LowByte => inb(channel.num.get_data_port()) as u16,
         HighByte => (inb(channel.num.get_data_port()) as u16) << 8,
         Word => {
+            let latch_command = (channel_num as u8) << 6;
+            outb(COMMAND_PORT, latch_command);
             let mut count: u16 = 0;
             count += inb(channel.num.get_data_port()) as u16;
             count += (inb(channel.num.get_data_port()) as u16) << 8;
             count
         }
     }
+}
+
+pub fn get_command(channel_num: ChannelNum) -> u8 {
+    let channel = &CHANNELS.lock()[channel_num as u8 as usize];
+
+    let mut read_back_command = 0xE0;
+    if let C0 = channel_num {
+        read_back_command |= 0x02;
+    } else if let C1 = channel_num {
+        read_back_command |= 0x04;
+    } else {
+        read_back_command |= 0x08;
+    }
+    outb(COMMAND_PORT, read_back_command);
+    
+    inb(channel_num.get_data_port())
 }
 
 pub fn hardware_interrupt() {

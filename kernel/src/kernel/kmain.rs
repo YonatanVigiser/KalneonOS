@@ -32,10 +32,10 @@ pub fn kernel_main(boot_info_ptr: u32) -> ! {
     timer::init();
     use pit::ChannelNum::C0;
     let vga = VGA_GLOBAL.get_mut();
-    pit::set_reload_value(C0, 11932);
-    let test = pit::get_count(C0);
     vga.set_colors(VgaColor::Black, VgaColor::White).clear();
-    writeln!(vga, "Count: {test}");
+    writeln!(vga, "TEST!");
+    let test = pit::get_command(C0);
+    writeln!(vga, "Command: {test:x}");
     pic::unmask_irq(0);
     unsafe {
         cpu::sti();

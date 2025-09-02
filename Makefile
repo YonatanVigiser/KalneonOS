@@ -27,8 +27,8 @@ kernel: build_dir
 .PHONY:
 image: boot kernel
 	dd if=/dev/zero of=$(IMAGE_NAME) bs=512 count=$(DISK_SIZE)
-	dd conv=notrunc if=$(MBR) 	 of=$(IMAGE_NAME) bs=512 count=1 seek=0
-	echo "1,,83,*" | sfdisk $(IMAGE_NAME) 
+	echo "1,,83,*" | sfdisk $(IMAGE_NAME)
+	dd conv=notrunc if=$(MBR) 	 of=$(IMAGE_NAME) bs=446 count=1 seek=0
 	dd conv=notrunc if=$(BOOT_0) of=$(IMAGE_NAME) bs=512 count=1 seek=1
 	dd conv=notrunc if=$(BOOT_1) of=$(IMAGE_NAME) bs=512 count=17 seek=2
 	dd conv=notrunc if=$(KERNEL) of=$(IMAGE_NAME) bs=512 count=2048 seek=19
