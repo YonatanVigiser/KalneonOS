@@ -16,6 +16,7 @@ isr_stub_%+%1:
   pop es
   pop ds
   popa
+  add esp, 0x04
   iret
 %endmacro
 
@@ -37,6 +38,7 @@ isr_stub_%+%1:
   pop es
   pop ds
   popa
+  add esp, 0x08
   iret
 %endmacro
 

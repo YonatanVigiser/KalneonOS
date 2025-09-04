@@ -1,21 +1,113 @@
-warning|:|build.rs|:|9|:|9|:|8|:|58|:|this `map_or` can be simplified|:|[0m[1m[33mwarning[0m[0m[1m: this `map_or` can be simplified[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0mbuild.rs:9:8[0m
+warning|:|build.rs|:|9|:|9|:|12|:|62|:|this `map_or` can be simplified|:|[0m[1m[33mwarning[0m[0m[1m: this `map_or` can be simplified[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mbuild.rs:9:12[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    if path.extension().map_or(false, |ext| ext == "asm") {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if path.extension().map_or(false, |ext| ext == "asm") {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_map_or[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_map_or)]` on by default[0m
 [0m[1m[38;5;14mhelp[0m[0m: use is_some_and instead[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;9m- [0m[0m    if path.extension().[0m[0m[38;5;9mmap_or[0m[0m([0m[0m[38;5;9mfalse, [0m[0m|ext| ext == "asm") {[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;10m+ [0m[0m    if path.extension().[0m[0m[38;5;10mis_some_and[0m[0m(|ext| ext == "asm") {[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;9m- [0m[0m        if path.extension().[0m[0m[38;5;9mmap_or[0m[0m([0m[0m[38;5;9mfalse, [0m[0m|ext| ext == "asm") {[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;10m+ [0m[0m        if path.extension().[0m[0m[38;5;10mis_some_and[0m[0m(|ext| ext == "asm") {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 
 |:|none
-help|:|build.rs|:|9|:|9|:|25|:|31|:|use is_some_and instead|:|none|:|is_some_and
-help|:|build.rs|:|9|:|9|:|32|:|39|:|use is_some_and instead|:|none|:|
+help|:|build.rs|:|9|:|9|:|29|:|35|:|use is_some_and instead|:|none|:|is_some_and
+help|:|build.rs|:|9|:|9|:|36|:|43|:|use is_some_and instead|:|none|:|
 error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|45|:|45|:|29|:|32|:|unused import: `inb`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `inb`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:45:29[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m45[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::arch::x86::cpu::{inb, outb};[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[33m^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|45|:|45|:|29|:|34|:|remove the unused import|:|none|:|
+help|:|src/drivers/pit.rs|:|45|:|45|:|28|:|29|:|remove the unused import|:|none|:|
+help|:|src/drivers/pit.rs|:|45|:|45|:|38|:|39|:|remove the unused import|:|none|:|
+warning|:|src/drivers/pit.rs|:|47|:|47|:|5|:|16|:|unused import: `spin::Mutex`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `spin::Mutex`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:47:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m47[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse spin::Mutex;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|47|:|48|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/drivers/pit.rs|:|45|:|45|:|29|:|32|:|unused import: `inb`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `inb`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:45:29[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m45[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::arch::x86::cpu::{inb, outb};[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[33m^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|45|:|45|:|29|:|34|:|remove the unused import|:|none|:|
+help|:|src/drivers/pit.rs|:|45|:|45|:|28|:|29|:|remove the unused import|:|none|:|
+help|:|src/drivers/pit.rs|:|45|:|45|:|38|:|39|:|remove the unused import|:|none|:|
+warning|:|src/drivers/pit.rs|:|47|:|47|:|5|:|16|:|unused import: `spin::Mutex`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `spin::Mutex`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:47:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m47[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse spin::Mutex;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|47|:|48|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/drivers/pit.rs|:|80|:|80|:|25|:|36|:|unused variable: `channel_num`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `channel_num`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:80:25[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_reload_value(channel_num: ChannelNum, reload_value: u16) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[33m^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_channel_num`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|80|:|80|:|25|:|36|:|if this is intentional, prefix it with an underscore|:|none|:|_channel_num
+warning|:|src/drivers/pit.rs|:|80|:|80|:|50|:|62|:|unused variable: `reload_value`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `reload_value`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:80:50[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_reload_value(channel_num: ChannelNum, reload_value: u16) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_reload_value`[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|80|:|80|:|50|:|62|:|if this is intentional, prefix it with an underscore|:|none|:|_reload_value
+warning|:|src/drivers/pit.rs|:|80|:|80|:|25|:|36|:|unused variable: `channel_num`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `channel_num`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:80:25[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_reload_value(channel_num: ChannelNum, reload_value: u16) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[33m^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_channel_num`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|80|:|80|:|25|:|36|:|if this is intentional, prefix it with an underscore|:|none|:|_channel_num
+warning|:|src/drivers/pit.rs|:|80|:|80|:|50|:|62|:|unused variable: `reload_value`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `reload_value`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:80:50[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_reload_value(channel_num: ChannelNum, reload_value: u16) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_reload_value`[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|80|:|80|:|50|:|62|:|if this is intentional, prefix it with an underscore|:|none|:|_reload_value
+warning|:|src/arch/x86/cpu.rs|:|61|:|61|:|15|:|19|:|function `halt` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `halt` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:61:15[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn halt() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+|:|none
+warning|:|src/arch/x86/cpu.rs|:|67|:|67|:|15|:|28|:|function `enable_paging` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `enable_paging` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:67:15[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m67[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn enable_paging(pd_address: u32) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
 warning|:|src/arch/x86/pic.rs|:|60|:|60|:|8|:|16|:|function `mask_irq` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `mask_irq` is never used[0m
@@ -23,8 +115,6 @@ warning|:|src/arch/x86/pic.rs|:|60|:|60|:|8|:|16|:|function `mask_irq` is never 
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn mask_irq(mut irq: u8) {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
 warning|:|src/arch/x86/pic.rs|:|84|:|84|:|8|:|16|:|function `send_eoi` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `send_eoi` is never used[0m
@@ -48,170 +138,200 @@ warning|:|src/arch/x86/pic.rs|:|115|:|115|:|8|:|31|:|function `get_spurious_irqs
 [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/arch/x86/cpu.rs|:|49|:|49|:|15|:|19|:|function `halt` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `halt` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:49:15[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m49[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn halt() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^[0m
+warning|:|src/drivers/pit.rs|:|3|:|3|:|10|:|20|:|enum `ChannelNum` is never used|:|[0m[1m[33mwarning[0m[0m[1m: enum `ChannelNum` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:3:10[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum ChannelNum {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/arch/x86/cpu.rs|:|56|:|56|:|15|:|28|:|function `enable_paging` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `enable_paging` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:56:15[0m
+warning|:|src/drivers/pit.rs|:|9|:|9|:|1|:|16|:|method `get_data_port` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_data_port` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:10:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m56[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn enable_paging(pd_address: u32) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m9[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl ChannelNum {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_data_port(&self) -> u16 {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|10|:|10|:|12|:|25|:|method `get_data_port` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_data_port` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:10:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m9[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl ChannelNum {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_data_port(&self) -> u16 {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|17|:|17|:|10|:|20|:|enum `AccessMode` is never used|:|[0m[1m[33mwarning[0m[0m[1m: enum `AccessMode` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:17:10[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AccessMode {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|25|:|25|:|10|:|23|:|enum `OperationMode` is never used|:|[0m[1m[33mwarning[0m[0m[1m: enum `OperationMode` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:25:10[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum OperationMode {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|34|:|34|:|12|:|19|:|struct `Channel` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `Channel` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:34:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m34[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Channel {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|49|:|49|:|12|:|20|:|static `channels` is never used|:|[0m[1m[33mwarning[0m[0m[1m: static `channels` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:49:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m49[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub static channels: [Channel; 3] = [[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|70|:|70|:|8|:|12|:|function `init` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `init` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:70:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m70[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn init() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|74|:|74|:|8|:|16|:|function `set_mode` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `set_mode` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:74:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_mode(channel_num: ChannelNum, access_mode: AccessMode, mode: OperationMode) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/pit.rs|:|80|:|80|:|8|:|24|:|function `set_reload_value` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `set_reload_value` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:80:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn set_reload_value(channel_num: ChannelNum, reload_value: u16) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
 
 |:|none
 warning|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:3[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:5[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct VGA {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  vmem_ptr: *mut u16,[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  video_type: VideoType,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^^^^[0m
+[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    vmem_ptr: *mut u16,[0m
+[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    video_type: VideoType,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|96|:|96|:|3|:|13|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:3[0m
+warning|:|src/drivers/video/vga.rs|:|96|:|96|:|5|:|15|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:5[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct VGA {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  vmem_ptr: *mut u16,[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  video_type: VideoType,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^^^^[0m
+[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    vmem_ptr: *mut u16,[0m
+[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    video_type: VideoType,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
 warning|:|src/drivers/video/vga.rs|:|109|:|109|:|1|:|9|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:295:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn update_cursor(&mut self) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_video_type(&self) -> VideoType {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|287|:|287|:|10|:|19|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
+warning|:|src/drivers/video/vga.rs|:|295|:|295|:|12|:|21|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:295:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn update_cursor(&mut self) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_video_type(&self) -> VideoType {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|319|:|319|:|10|:|23|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
+warning|:|src/drivers/video/vga.rs|:|329|:|329|:|12|:|25|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:295:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn update_cursor(&mut self) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_video_type(&self) -> VideoType {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|324|:|324|:|10|:|24|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
+warning|:|src/drivers/video/vga.rs|:|334|:|334|:|12|:|26|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:295:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn update_cursor(&mut self) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_video_type(&self) -> VideoType {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|328|:|328|:|10|:|24|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
+warning|:|src/drivers/video/vga.rs|:|338|:|338|:|12|:|26|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:295:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn update_cursor(&mut self) -> &mut Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_video_type(&self) -> VideoType {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/kernel/kmain.rs|:|33|:|33|:|3|:|10|:|empty `loop {}` wastes CPU cycles|:|[0m[1m[33mwarning[0m[0m[1m: empty `loop {}` wastes CPU cycles[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/kmain.rs:33:3[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  loop {}[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: you should either use `panic!()` or add a call pausing or sleeping the thread to the loop body[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_loop[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::empty_loop)]` on by default[0m
-
-|:|none
-error|:|src/arch/x86/interrupts.rs|:|7|:|7|:|10|:|40|:|incompatible bit mask: `_ & 15` can never be equal to `39`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 15` can never be equal to `39`[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:7:10[0m
+warning|:|src/arch/x86/cpu.rs|:|8|:|8|:|11|:|23|:|passing pointers to nomem asm block|:|[0m[1m[33mwarning[0m[0m[1m: passing pointers to nomem asm block[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:8:11[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m      if (pic::read_isr() & 0x0F) == 39 {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::bad_bit_mask)]` on by default[0m
-
-|:|none
-error|:|src/arch/x86/interrupts.rs|:|14|:|14|:|10|:|40|:|incompatible bit mask: `_ & 240` can never be equal to `47`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 240` can never be equal to `47`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:14:10[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m      if (pic::read_isr() & 0xF0) == 47 {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
-
-|:|none
-warning|:|src/arch/x86/cpu.rs|:|7|:|7|:|5|:|17|:|passing pointers to nomem asm block|:|[0m[1m[33mwarning[0m[0m[1m: passing pointers to nomem asm block[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:7:5[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    in(reg) idtr,[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m          in(reg) idtr,[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[33m^^^^^^^^^^^^[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `nomem` means that no memory write or read happens inside the asm! block[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: if this is intentional and no pointers are read or written to, consider allowing the lint[0m
@@ -219,22 +339,25 @@ warning|:|src/arch/x86/cpu.rs|:|7|:|7|:|5|:|17|:|passing pointers to nomem asm b
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::pointers_in_nomem_asm_block)]` on by default[0m
 
 |:|none
-error|:|src/utils/types.rs|:|9|:|9|:|28|:|34|:|mutable borrow from immutable input(s)|:|[0m[1m[38;5;9merror[0m[0m[1m: mutable borrow from immutable input(s)[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:28[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_mut(&self) -> &mut T {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: immutable borrow here[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:18[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_mut(&self) -> &mut T {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[38;5;10m^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#mut_from_ref[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::mut_from_ref)]` on by default[0m
+error|:|src/arch/x86/interrupts.rs|:|36|:|36|:|16|:|46|:|incompatible bit mask: `_ & 15` can never be equal to `39`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 15` can never be equal to `39`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:36:16[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if (pic::read_isr() & 0x0F) == 39 {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::bad_bit_mask)]` on by default[0m
 
 |:|none
-note|:|src/utils/types.rs|:|9|:|9|:|18|:|23|:|immutable borrow here|:|none|:|none
+error|:|src/arch/x86/interrupts.rs|:|43|:|43|:|16|:|46|:|incompatible bit mask: `_ & 240` can never be equal to `47`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 240` can never be equal to `47`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:43:16[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m43[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if (pic::read_isr() & 0xF0) == 47 {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
+
+|:|none
 warning|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|name `VGA` contains a capitalized acronym|:|[0m[1m[33mwarning[0m[0m[1m: name `VGA` contains a capitalized acronym[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:94:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
@@ -246,15 +369,52 @@ warning|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|name `VGA` contains a c
 
 |:|none
 help|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|consider making the acronym lowercase, except the initial letter|:|none|:|Vga
-warning|:|src/drivers/video/vga.rs|:|180|:|180|:|31|:|39|:|use of a fallible conversion when an infallible one could be used|:|[0m[1m[33mwarning[0m[0m[1m: use of a fallible conversion when an infallible one could be used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:180:31[0m
+warning|:|src/drivers/video/vga.rs|:|180|:|180|:|35|:|43|:|use of a fallible conversion when an infallible one could be used|:|[0m[1m[33mwarning[0m[0m[1m: use of a fallible conversion when an infallible one could be used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:180:35[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let cell: VgaCell = value.try_into().map_err(|_| VgaError::ConversionError)?;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                               [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: use: `into`[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let cell: VgaCell = value.try_into().map_err(|_| VgaError::ConversionError)?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: use: `into`[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: converting `u16` to `VgaCell` cannot fail[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_fallible_conversions[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_fallible_conversions)]` on by default[0m
 
 |:|none
-help|:|src/drivers/video/vga.rs|:|180|:|180|:|31|:|39|:|use|:|none|:|into
+help|:|src/drivers/video/vga.rs|:|180|:|180|:|35|:|43|:|use|:|none|:|into
+warning|:|src/kernel/kmain.rs|:|35|:|35|:|5|:|12|:|empty `loop {}` wastes CPU cycles|:|[0m[1m[33mwarning[0m[0m[1m: empty `loop {}` wastes CPU cycles[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/kmain.rs:35:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    loop {}[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: you should either use `panic!()` or add a call pausing or sleeping the thread to the loop body[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_loop[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::empty_loop)]` on by default[0m
+
+|:|none
+error|:|src/utils/types.rs|:|9|:|9|:|30|:|36|:|mutable borrow from immutable input(s)|:|[0m[1m[38;5;9merror[0m[0m[1m: mutable borrow from immutable input(s)[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:30[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_mut(&self) -> &mut T {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;9m^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: immutable borrow here[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:20[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_mut(&self) -> &mut T {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;10m^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#mut_from_ref[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::mut_from_ref)]` on by default[0m
+
+|:|none
+note|:|src/utils/types.rs|:|9|:|9|:|20|:|25|:|immutable borrow here|:|none|:|none
+warning|:|src/drivers/pit.rs|:|49|:|49|:|12|:|20|:|static variable `channels` should have an upper case name|:|[0m[1m[33mwarning[0m[0m[1m: static variable `channels` should have an upper case name[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/pit.rs:49:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m49[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub static channels: [Channel; 3] = [[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: convert the identifier to upper case: `CHANNELS`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(non_upper_case_globals)]` on by default[0m
+
+|:|none
+help|:|src/drivers/pit.rs|:|49|:|49|:|12|:|20|:|convert the identifier to upper case|:|none|:|CHANNELS

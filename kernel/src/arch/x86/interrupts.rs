@@ -1,5 +1,6 @@
 use super::pic;
 use crate::debug_hex;
+use crate::drivers::pit;
 
 #[repr(C)]
 pub struct IntteruptStackFrame {
@@ -32,6 +33,7 @@ debug_hex!(IntteruptStackFrame,
 #[unsafe(no_mangle)]
 pub extern "C" fn intterupts_handler(stack_frame: &mut IntteruptStackFrame) {
     match stack_frame.int_num {
+        32 => irq0_handler(),
         39 => {
             if (pic::read_isr() & 0x0F) == 39 {
                 pic::spurios_irq(true);
@@ -48,6 +50,11 @@ pub extern "C" fn intterupts_handler(stack_frame: &mut IntteruptStackFrame) {
         }
         _ => intterupt_panic(stack_frame),
     };
+}
+
+fn irq0_handler() {
+    pit::hardware_interrupt();
+    pic::send_eoi(32);
 }
 
 fn intterupt_panic(stack_frame: &mut IntteruptStackFrame) {

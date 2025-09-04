@@ -160,7 +160,7 @@ dap:
   dw 0x0000 ; Buffer segment
   dq 0x0    ; LBA address (fill dynamically)
 
-UDID dd 0x0 ; Unique Disk ID
+UDID dd 0x42231234 ; Unique Disk ID
 dw 0x0 ; Reserved
 
 ; Partition Table:
