@@ -30,18 +30,11 @@ pub fn kernel_main(boot_info_ptr: u32) -> ! {
     idt::init();
     pic::init();
     timer::init();
-    use pit::ChannelNum::C0;
     let vga = VGA_GLOBAL.get_mut();
     vga.set_colors(VgaColor::Black, VgaColor::White).clear();
-    writeln!(vga, "TEST!");
-    let test = pit::get_command(C0);
-    writeln!(vga, "Command: {test:x}");
     pic::unmask_irq(0);
     unsafe {
         cpu::sti();
     }
-    writeln!(vga, "Old: {}", timer::get_uptime_ms()).expect("Error while writing to VGA!");
-    timer::sleep(30000);
-    writeln!(vga, "New: {}", timer::get_uptime_ms()).expect("Error while writing to VGA!");
     loop {}
 }

@@ -98,7 +98,7 @@ pub fn set_reload_value(channel_num: ChannelNum, mut reload_value: u16) -> Resul
         return Err(());
     }
     if let SquareWaveGenerator = channel.mode {
-        reload_value &= 0xFE;
+        reload_value &= 0xFFFE;
     }
     match channel.access_mode {
         LowByte => {
