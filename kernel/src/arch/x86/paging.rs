@@ -4,7 +4,7 @@ pub const PAGE_SIZE: u32 = 4096;
 
 impl PageAlignedAddress {
   pub fn new(address: u32) -> Self {
-    let address -= address % PAGE_SIZE;
+    address -= address % PAGE_SIZE;
     Self(address)
   }
 
@@ -12,12 +12,12 @@ impl PageAlignedAddress {
     self.0
   }
 
-  pub fn next(&self) -> Self {
-    Self(self.0 + PAGE_SIZE)
+  pub fn next(&self, n: u32) -> Self {
+    Self(self.0 + PAGE_SIZE * n)
   }
 
-  pub fn prev(&self) -> Self {
-    Self(self.1 - PAGE_SIZE);
+  pub fn prev(&self, n: u32) -> Self {
+    Self(self.1 - PAGE_SIZE * n)
   }
 
   pub fn is_aligned(address: u32) -> bool {
@@ -53,5 +53,7 @@ impl PDE {
   }
 }
 
+/*
 impl Into<u32> for PDE {
 }
+*/
