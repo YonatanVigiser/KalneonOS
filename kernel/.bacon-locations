@@ -1,260 +1,1260 @@
-warning|:|build.rs|:|9|:|9|:|8|:|58|:|this `map_or` can be simplified|:|[0m[1m[33mwarning[0m[0m[1m: this `map_or` can be simplified[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0mbuild.rs:9:8[0m
+warning|:|build.rs|:|9|:|9|:|12|:|62|:|this `map_or` can be simplified|:|[0m[1m[33mwarning[0m[0m[1m: this `map_or` can be simplified[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mbuild.rs:9:12[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    if path.extension().map_or(false, |ext| ext == "asm") {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if path.extension().map_or(false, |ext| ext == "asm") {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_map_or[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_map_or)]` on by default[0m
 [0m[1m[38;5;14mhelp[0m[0m: use is_some_and instead[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;9m- [0m[0m    if path.extension().[0m[0m[38;5;9mmap_or[0m[0m([0m[0m[38;5;9mfalse, [0m[0m|ext| ext == "asm") {[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;10m+ [0m[0m    if path.extension().[0m[0m[38;5;10mis_some_and[0m[0m(|ext| ext == "asm") {[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;9m- [0m[0m        if path.extension().[0m[0m[38;5;9mmap_or[0m[0m([0m[0m[38;5;9mfalse, [0m[0m|ext| ext == "asm") {[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[38;5;10m+ [0m[0m        if path.extension().[0m[0m[38;5;10mis_some_and[0m[0m(|ext| ext == "asm") {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 
 |:|none
-help|:|build.rs|:|9|:|9|:|25|:|31|:|use is_some_and instead|:|none|:|is_some_and
-help|:|build.rs|:|9|:|9|:|32|:|39|:|use is_some_and instead|:|none|:|
+help|:|build.rs|:|9|:|9|:|29|:|35|:|use is_some_and instead|:|none|:|is_some_and
+help|:|build.rs|:|9|:|9|:|36|:|43|:|use is_some_and instead|:|none|:|
+error|:|src/kernel/frame_allocator.rs|:|26|:|26|:|37|:|38|:|missing lifetime specifier|:|[0m[1m[38;5;9merror[E0106][0m[0m[1m: missing lifetime specifier[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:26:37[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct FrameAllocator(LinkedList<Frame>);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mexpected named lifetime parameter[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: consider introducing a named lifetime parameter[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0mpub struct FrameAllocator[0m[0m[38;5;10m<'a>[0m[0m(LinkedList<[0m[0m[38;5;10m'a, [0m[0mFrame>);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[38;5;10m++++[0m[0m            [0m[0m[38;5;10m+++[0m
+
+|:|none
+help|:|src/kernel/frame_allocator.rs|:|26|:|26|:|26|:|26|:|consider introducing a named lifetime parameter|:|none|:|<'a>
+help|:|src/kernel/frame_allocator.rs|:|26|:|26|:|38|:|38|:|consider introducing a named lifetime parameter|:|none|:|'a, 
 error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
 
 |:|none
-warning|:|src/arch/x86/pic.rs|:|60|:|60|:|8|:|16|:|function `mask_irq` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `mask_irq` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:60:8[0m
+error|:|src/kernel/frame_allocator.rs|:|26|:|26|:|37|:|38|:|missing lifetime specifier|:|[0m[1m[38;5;9merror[E0106][0m[0m[1m: missing lifetime specifier[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:26:37[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn mask_irq(mut irq: u8) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct FrameAllocator(LinkedList<Frame>);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mexpected named lifetime parameter[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
-
-|:|none
-warning|:|src/arch/x86/pic.rs|:|84|:|84|:|8|:|16|:|function `send_eoi` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `send_eoi` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:84:8[0m
+[0m[1m[38;5;14mhelp[0m[0m: consider introducing a named lifetime parameter[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m84[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn send_eoi(irq: u8) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0mpub struct FrameAllocator[0m[0m[38;5;10m<'a>[0m[0m(LinkedList<[0m[0m[38;5;10m'a, [0m[0mFrame>);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[38;5;10m++++[0m[0m            [0m[0m[38;5;10m+++[0m
 
 |:|none
-warning|:|src/arch/x86/pic.rs|:|96|:|96|:|8|:|18|:|function `unmask_all` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `unmask_all` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:96:8[0m
+help|:|src/kernel/frame_allocator.rs|:|26|:|26|:|26|:|26|:|consider introducing a named lifetime parameter|:|none|:|<'a>
+help|:|src/kernel/frame_allocator.rs|:|26|:|26|:|38|:|38|:|consider introducing a named lifetime parameter|:|none|:|'a, 
+error|:|src/kernel/frame_allocator.rs|:|37|:|37|:|17|:|35|:|expected value, found struct `PageAlignedAddress`|:|[0m[1m[38;5;9merror[E0423][0m[0m[1m: expected value, found struct `PageAlignedAddress`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:37:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn unmask_all() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/pic.rs|:|115|:|115|:|8|:|31|:|function `get_spurious_irqs_count` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `get_spurious_irqs_count` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:115:8[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn get_spurious_irqs_count() -> u32 {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/cpu.rs|:|49|:|49|:|15|:|19|:|function `halt` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `halt` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:49:15[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if !PageAlignedAddress.is_aligned(entry.base) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m49[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn halt() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/cpu.rs|:|56|:|56|:|15|:|28|:|function `enable_paging` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `enable_paging` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:56:15[0m
+[0m[1m[38;5;14mhelp[0m[0m: use the path separator to refer to an item[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m56[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn enable_paging(pd_address: u32) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:3[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[38;5;9m- [0m[0m            if !PageAlignedAddress[0m[0m[38;5;9m.[0m[0mis_aligned(entry.base) {[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[38;5;10m+ [0m[0m            if !PageAlignedAddress[0m[0m[38;5;10m::[0m[0mis_aligned(entry.base) {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct VGA {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  vmem_ptr: *mut u16,[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  video_type: VideoType,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/video/vga.rs|:|96|:|96|:|3|:|13|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:96:3[0m
+help|:|src/kernel/frame_allocator.rs|:|37|:|37|:|35|:|36|:|use the path separator to refer to an item|:|none|:|::
+error|:|src/kernel/frame_allocator.rs|:|40|:|40|:|17|:|35|:|expected value, found struct `PageAlignedAddress`|:|[0m[1m[38;5;9merror[E0423][0m[0m[1m: expected value, found struct `PageAlignedAddress`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:40:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct VGA {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  vmem_ptr: *mut u16,[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  video_type: VideoType,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|109|:|109|:|1|:|9|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|287|:|287|:|10|:|19|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|319|:|319|:|10|:|23|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|324|:|324|:|10|:|24|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/video/vga.rs|:|328|:|328|:|10|:|24|:|methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `scroll_up`, `update_cursor`, `get_cursor_pos`, and `get_video_type` are never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:287:10[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl VGA {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn scroll_up(&mut self, amount: u8) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn update_cursor(&mut self) -> &mut Self {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_cursor_pos(&self) -> (u8, u8) {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_video_type(&self) -> VideoType {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/kernel/kmain.rs|:|33|:|33|:|3|:|10|:|empty `loop {}` wastes CPU cycles|:|[0m[1m[33mwarning[0m[0m[1m: empty `loop {}` wastes CPU cycles[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/kmain.rs:33:3[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if !PageAlignedAddress.is_aligned(entry.base + entry.length) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  loop {}[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[33m^^^^^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: use the path separator to refer to an item[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: you should either use `panic!()` or add a call pausing or sleeping the thread to the loop body[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_loop[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::empty_loop)]` on by default[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[38;5;9m- [0m[0m            if !PageAlignedAddress[0m[0m[38;5;9m.[0m[0mis_aligned(entry.base + entry.length) {[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[38;5;10m+ [0m[0m            if !PageAlignedAddress[0m[0m[38;5;10m::[0m[0mis_aligned(entry.base + entry.length) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
 
 |:|none
-error|:|src/arch/x86/interrupts.rs|:|7|:|7|:|10|:|40|:|incompatible bit mask: `_ & 15` can never be equal to `39`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 15` can never be equal to `39`[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:7:10[0m
+help|:|src/kernel/frame_allocator.rs|:|40|:|40|:|35|:|36|:|use the path separator to refer to an item|:|none|:|::
+error|:|src/kernel/frame_allocator.rs|:|37|:|37|:|17|:|35|:|expected value, found struct `PageAlignedAddress`|:|[0m[1m[38;5;9merror[E0423][0m[0m[1m: expected value, found struct `PageAlignedAddress`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:37:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if !PageAlignedAddress.is_aligned(entry.base) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: use the path separator to refer to an item[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[38;5;9m- [0m[0m            if !PageAlignedAddress[0m[0m[38;5;9m.[0m[0mis_aligned(entry.base) {[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[38;5;10m+ [0m[0m            if !PageAlignedAddress[0m[0m[38;5;10m::[0m[0mis_aligned(entry.base) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/kernel/frame_allocator.rs|:|37|:|37|:|35|:|36|:|use the path separator to refer to an item|:|none|:|::
+error|:|src/kernel/frame_allocator.rs|:|40|:|40|:|17|:|35|:|expected value, found struct `PageAlignedAddress`|:|[0m[1m[38;5;9merror[E0423][0m[0m[1m: expected value, found struct `PageAlignedAddress`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:40:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            if !PageAlignedAddress.is_aligned(entry.base + entry.length) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: use the path separator to refer to an item[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[38;5;9m- [0m[0m            if !PageAlignedAddress[0m[0m[38;5;9m.[0m[0mis_aligned(entry.base + entry.length) {[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[38;5;10m+ [0m[0m            if !PageAlignedAddress[0m[0m[38;5;10m::[0m[0mis_aligned(entry.base + entry.length) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/kernel/frame_allocator.rs|:|40|:|40|:|35|:|36|:|use the path separator to refer to an item|:|none|:|::
+warning|:|src/kernel/frame_allocator.rs|:|1|:|1|:|32|:|36|:|unused import: `self`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `self`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:1:32[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m      if (pic::read_isr() & 0x0F) == 39 {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m1[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::arch::x86::paging::{self, PAGE_SIZE, PageAlignedAddress};[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[33m^^^^[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::bad_bit_mask)]` on by default[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
-error|:|src/arch/x86/interrupts.rs|:|14|:|14|:|10|:|40|:|incompatible bit mask: `_ & 240` can never be equal to `47`|:|[0m[1m[38;5;9merror[0m[0m[1m: incompatible bit mask: `_ & 240` can never be equal to `47`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/interrupts.rs:14:10[0m
+help|:|src/kernel/frame_allocator.rs|:|1|:|1|:|32|:|38|:|remove the unused import|:|none|:|
+warning|:|src/kernel/frame_allocator.rs|:|1|:|1|:|32|:|36|:|unused import: `self`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `self`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:1:32[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::arch::x86::paging::{self, PAGE_SIZE, PageAlignedAddress};[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[33m^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+|:|none
+help|:|src/kernel/frame_allocator.rs|:|1|:|1|:|32|:|38|:|remove the unused import|:|none|:|
+error|:|src/kernel/frame_allocator.rs|:|35|:|35|:|49|:|59|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:35:49[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m      if (pic::read_isr() & 0xF0) == 47 {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let start = PageAlignedAddress::new(entry.base);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#bad_bit_mask[0m
-
-|:|none
-warning|:|src/arch/x86/cpu.rs|:|7|:|7|:|5|:|17|:|passing pointers to nomem asm block|:|[0m[1m[33mwarning[0m[0m[1m: passing pointers to nomem asm block[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:7:5[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    in(reg) idtr,[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `nomem` means that no memory write or read happens inside the asm! block[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: if this is intentional and no pointers are read or written to, consider allowing the lint[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#pointers_in_nomem_asm_block[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::pointers_in_nomem_asm_block)]` on by default[0m
-
-|:|none
-error|:|src/utils/types.rs|:|9|:|9|:|28|:|34|:|mutable borrow from immutable input(s)|:|[0m[1m[38;5;9merror[0m[0m[1m: mutable borrow from immutable input(s)[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:28[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_mut(&self) -> &mut T {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: immutable borrow here[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/types.rs:9:18[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m  pub fn get_mut(&self) -> &mut T {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[38;5;10m^^^^^[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#mut_from_ref[0m
-[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[deny(clippy::mut_from_ref)]` on by default[0m
-
-|:|none
-note|:|src/utils/types.rs|:|9|:|9|:|18|:|23|:|immutable borrow here|:|none|:|none
-warning|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|name `VGA` contains a capitalized acronym|:|[0m[1m[33mwarning[0m[0m[1m: name `VGA` contains a capitalized acronym[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:94:12[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct VGA {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m[0m [0m[0m[1m[33mhelp: consider making the acronym lowercase, except the initial letter: `Vga`[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#upper_case_acronyms[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::upper_case_acronyms)]` on by default[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let start = PageAlignedAddress::new(entry.base[0m[0m[38;5;10m.try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m++++++++++++++++++++[0m
 
 |:|none
-help|:|src/drivers/video/vga.rs|:|94|:|94|:|12|:|15|:|consider making the acronym lowercase, except the initial letter|:|none|:|Vga
-warning|:|src/drivers/video/vga.rs|:|180|:|180|:|31|:|39|:|use of a fallible conversion when an infallible one could be used|:|[0m[1m[33mwarning[0m[0m[1m: use of a fallible conversion when an infallible one could be used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/video/vga.rs:180:31[0m
+error|:|src/kernel/frame_allocator.rs|:|35|:|35|:|25|:|48|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:35:49[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let start = PageAlignedAddress::new(entry.base);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let start = PageAlignedAddress::new(entry.base[0m[0m[38;5;10m.try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|16|:|32|:|associated function defined here|:|none|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+help|:|src/kernel/frame_allocator.rs|:|35|:|35|:|59|:|59|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/kernel/frame_allocator.rs|:|35|:|35|:|49|:|59|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:35:49[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let start = PageAlignedAddress::new(entry.base);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let start = PageAlignedAddress::new(entry.base[0m[0m[38;5;10m.try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/kernel/frame_allocator.rs|:|35|:|35|:|25|:|48|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:35:49[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let start = PageAlignedAddress::new(entry.base);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let start = PageAlignedAddress::new(entry.base[0m[0m[38;5;10m.try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|16|:|32|:|associated function defined here|:|none|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+help|:|src/kernel/frame_allocator.rs|:|35|:|35|:|59|:|59|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/kernel/frame_allocator.rs|:|36|:|36|:|47|:|72|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:36:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let end = PageAlignedAddress::new(entry.base + entry.length);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let end = PageAlignedAddress::new([0m[0m[38;5;10m([0m[0mentry.base + entry.length[0m[0m[38;5;10m).try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[38;5;10m+[0m[0m                         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/kernel/frame_allocator.rs|:|36|:|36|:|23|:|46|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:36:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let end = PageAlignedAddress::new(entry.base + entry.length);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let end = PageAlignedAddress::new([0m[0m[38;5;10m([0m[0mentry.base + entry.length[0m[0m[38;5;10m).try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[38;5;10m+[0m[0m                         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|16|:|32|:|associated function defined here|:|none|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+help|:|src/kernel/frame_allocator.rs|:|36|:|36|:|47|:|47|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/kernel/frame_allocator.rs|:|36|:|36|:|72|:|72|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/kernel/frame_allocator.rs|:|36|:|36|:|47|:|72|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:36:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let end = PageAlignedAddress::new(entry.base + entry.length);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let end = PageAlignedAddress::new([0m[0m[38;5;10m([0m[0mentry.base + entry.length[0m[0m[38;5;10m).try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[38;5;10m+[0m[0m                         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/kernel/frame_allocator.rs|:|36|:|36|:|23|:|46|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:36:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let end = PageAlignedAddress::new(entry.base + entry.length);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u32`, found `u64`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/paging.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(mut address: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m [0m[0m[1m[38;5;12m----------------[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u64` to a `u32` and panic if the converted value doesn't fit[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            let end = PageAlignedAddress::new([0m[0m[38;5;10m([0m[0mentry.base + entry.length[0m[0m[38;5;10m).try_into().unwrap()[0m[0m);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[38;5;10m+[0m[0m                         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|16|:|32|:|associated function defined here|:|none|:|none
+note|:|src/arch/x86/paging.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+help|:|src/kernel/frame_allocator.rs|:|36|:|36|:|47|:|47|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/kernel/frame_allocator.rs|:|36|:|36|:|72|:|72|:|you can convert a `u64` to a `u32` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/kernel/frame_allocator.rs|:|83|:|83|:|63|:|66|:|no method named `get` found for type `u32` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `get` found for type `u32` in the current scope[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:83:63[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m83[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                free_frame.start = free_frame.prev(frame.size.get());[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                                               [0m[0m[1m[38;5;9m^^^[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `ge` with a similar name, but with different arguments[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs:1441:5[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1441[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn ge(&self, other: &Rhs) -> bool {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs|:|1441|:|1441|:|5|:|38|:|there is a method `ge` with a similar name, but with different arguments|:|none|:|none
+error|:|src/kernel/frame_allocator.rs|:|83|:|83|:|63|:|66|:|no method named `get` found for type `u32` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `get` found for type `u32` in the current scope[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:83:63[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m83[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                free_frame.start = free_frame.prev(frame.size.get());[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                                               [0m[0m[1m[38;5;9m^^^[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `ge` with a similar name, but with different arguments[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs:1441:5[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1441[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn ge(&self, other: &Rhs) -> bool {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs|:|1441|:|1441|:|5|:|38|:|there is a method `ge` with a similar name, but with different arguments|:|none|:|none
+error|:|src/kernel/frame_allocator.rs|:|84|:|84|:|47|:|50|:|no method named `get` found for type `u32` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `get` found for type `u32` in the current scope[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:84:47[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m84[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                free_frame.size += frame.size.get();[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `ge` with a similar name, but with different arguments[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs:1441:5[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1441[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn ge(&self, other: &Rhs) -> bool {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs|:|1441|:|1441|:|5|:|38|:|there is a method `ge` with a similar name, but with different arguments|:|none|:|none
+error|:|src/kernel/frame_allocator.rs|:|84|:|84|:|47|:|50|:|no method named `get` found for type `u32` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `get` found for type `u32` in the current scope[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/frame_allocator.rs:84:47[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m84[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                free_frame.size += frame.size.get();[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `ge` with a similar name, but with different arguments[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs:1441:5[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1441[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn ge(&self, other: &Rhs) -> bool {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cmp.rs|:|1441|:|1441|:|5|:|38|:|there is a method `ge` with a similar name, but with different arguments|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|52|:|52|:|46|:|50|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:52:46[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m52[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().last().next = Some(Node::new(value, None));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|52|:|52|:|46|:|50|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:52:46[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m52[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().last().next = Some(Node::new(value, None));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|54|:|54|:|56|:|66|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:54:56[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m54[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = Some(Node::new(value, first_node));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Node<'_, T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<&utils::heapless::linked_list::Node<'_, T>>[0m[0m`[0m
+[0m            found struct `[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|54|:|54|:|39|:|48|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:54:56[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m54[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = Some(Node::new(value, first_node));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Node<'_, T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<&utils::heapless::linked_list::Node<'_, T>>[0m[0m`[0m
+[0m            found struct `[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|26|:|48|:|associated function defined here|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|54|:|54|:|56|:|66|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:54:56[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m54[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = Some(Node::new(value, first_node));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Node<'_, T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<&utils::heapless::linked_list::Node<'_, T>>[0m[0m`[0m
+[0m            found struct `[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|54|:|54|:|39|:|48|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:54:56[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m54[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = Some(Node::new(value, first_node));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Node<'_, T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<&utils::heapless::linked_list::Node<'_, T>>[0m[0m`[0m
+[0m            found struct `[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|26|:|48|:|associated function defined here|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|43|:|52|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:43[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let cell: VgaCell = value.try_into().map_err(|_| VgaError::ConversionError)?;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                               [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: use: `into`[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: converting `u16` to `VgaCell` cannot fail[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_fallible_conversions[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_fallible_conversions)]` on by default[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
 
 |:|none
-help|:|src/drivers/video/vga.rs|:|180|:|180|:|31|:|39|:|use|:|none|:|into
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|52|:|52|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|43|:|52|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next =[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|52|:|52|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|54|:|58|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:54[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|56|:|56|:|54|:|58|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:56:54[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m56[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next =[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|69|:|74|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:69[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                        Some(Node::new(value, first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                          [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|65|:|68|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:69[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                        Some(Node::new(value, first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                          [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|74|:|74|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|69|:|74|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:69[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                        Some(Node::new(value, first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                          [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|65|:|68|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:69[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m57[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                        Some(Node::new(value, first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m)));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                          [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|74|:|74|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|47|:|75|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|40|:|40|:|10|:|11|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|30|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|26|:|48|:|associated function defined here|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|47|:|75|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|40|:|40|:|10|:|11|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|57|:|57|:|30|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:57:47[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a, T> LinkedList<'a, T> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mfound this type parameter[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Some(Node::new(value, first_node.iter().nth(index)));[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---------[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<&Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this function are incorrect[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<&[0m[0m[1m[35mutils::heapless::linked_list::Node<'_, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<&[0m[0m[1m[35mT[0m[0m>`[0m
+[0m[1m[38;5;10mnote[0m[0m: associated function defined here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:7:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new(value: T, next: Option<&'a Self>) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;10m^^^[0m[0m           [0m[0m[1m[38;5;12m----------------------[0m
+
+|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|26|:|48|:|associated function defined here|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|7|:|7|:|12|:|15|:|associated function defined here|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|34|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:34[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|30|:|33|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:34[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|39|:|39|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|34|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:34[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|30|:|33|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:34[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).value)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|39|:|39|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|41|:|46|:|no field `value` on type `core::option::Option<&utils::heapless::linked_list::Node<'_, T>>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `value` on type `core::option::Option<&utils::heapless::linked_list::Node<'_, T>>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:41[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: one of the expressions' fields has a field of the same name[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index).[0m[0m[38;5;10munwrap().[0m[0mvalue)[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[38;5;10m+++++++++[0m
+
+|:|none
+help|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|41|:|41|:|one of the expressions' fields has a field of the same name|:|none|:|unwrap().
+error|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|41|:|46|:|no field `value` on type `core::option::Option<&utils::heapless::linked_list::Node<'_, T>>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `value` on type `core::option::Option<&utils::heapless::linked_list::Node<'_, T>>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:69:41[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Ok(self.first.iter().nth(index).value)[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: one of the expressions' fields has a field of the same name[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m69[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        Ok(self.first.iter().nth(index).[0m[0m[38;5;10munwrap().[0m[0mvalue)[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[38;5;10m+++++++++[0m
+
+|:|none
+help|:|src/utils/heapless/linked_list.rs|:|69|:|69|:|41|:|41|:|one of the expressions' fields has a field of the same name|:|none|:|unwrap().
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|43|:|56|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mself.size - 2[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m             [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mself.size - 2[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m             [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|56|:|56|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|58|:|62|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:58[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|43|:|56|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mself.size - 2[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m             [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mself.size - 2[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = None;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m             [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|56|:|56|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|76|:|76|:|58|:|62|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:76:58[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(self.size - 2).next = None;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|78|:|78|:|34|:|58|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:78:34[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = first_node.iter().next();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m----------[0m[0m   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12mexpected due to the type of this binding[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<[0m[0m[1m[35mutils::heapless::linked_list::Node<'a, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<[0m[0m[1m[35m&T[0m[0m>`[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|78|:|78|:|21|:|31|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:78:34[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = first_node.iter().next();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m----------[0m[0m   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12mexpected due to the type of this binding[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<[0m[0m[1m[35mutils::heapless::linked_list::Node<'a, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<[0m[0m[1m[35m&T[0m[0m>`[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|78|:|78|:|34|:|58|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:78:34[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = first_node.iter().next();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m----------[0m[0m   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12mexpected due to the type of this binding[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<[0m[0m[1m[35mutils::heapless::linked_list::Node<'a, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<[0m[0m[1m[35m&T[0m[0m>`[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|78|:|78|:|21|:|31|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:78:34[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    self.first = first_node.iter().next();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m----------[0m[0m   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Node<'_, T>>`, found `Option<&T>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12mexpected due to the type of this binding[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `core::option::Option<[0m[0m[1m[35mutils::heapless::linked_list::Node<'a, T>[0m[0m>`[0m
+[0m              found enum `core::option::Option<[0m[0m[1m[35m&T[0m[0m>`[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|43|:|52|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|52|:|52|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|43|:|52|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|39|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:43[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth([0m[0m[38;5;10m([0m[0mindex - 1[0m[0m[38;5;10m).try_into().unwrap()[0m[0m).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[38;5;10m+[0m[0m         [0m[0m[38;5;10m+++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|43|:|43|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|(
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|52|:|52|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|).try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|54|:|58|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:54[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|54|:|58|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:54[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|83|:|88|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:83[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|79|:|82|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:83[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|88|:|88|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|83|:|88|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:83[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|79|:|82|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:83[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `usize`, found `u32`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                               [0m[0m[1m[38;5;12marguments to this method are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: method defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs:373:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m373[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn nth(&mut self, n: usize) -> Option<Self::Item> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;10m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you can convert a `u32` to a `usize` and panic if the converted value doesn't fit[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m  [0m[0m[1m[38;5;12m| [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index[0m[0m[38;5;10m.try_into().unwrap()[0m[0m).next;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m++++++++++++++++++++[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/traits/iterator.rs|:|373|:|373|:|8|:|11|:|method defined here|:|none|:|none
+help|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|88|:|88|:|you can convert a `u32` to a `usize` and panic if the converted value doesn't fit|:|none|:|.try_into().unwrap()
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|90|:|94|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:90[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|80|:|80|:|90|:|94|:|no field `next` on type `core::option::Option<&T>`|:|[0m[1m[38;5;9merror[E0609][0m[0m[1m: no field `next` on type `core::option::Option<&T>`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:80:90[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    first_node.iter().nth(index - 1).next = first_node.iter().nth(index).next;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9munknown field[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|90|:|90|:|9|:|26|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:90:9[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m89[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn iter(&'a self) -> Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mexpected `utils::heapless::linked_list::Iter<'a, T>` because of return type[0m
+[0m[1m[38;5;12m90[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.first.iter()[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Iter<'_, T>`, found `Iter<'_, Node<'_, T>>`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `Iter<'_, Node<'_, T>>` and `Iter<'a, T>` have similar names, but are actually distinct types[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'_, Node<'_, T>>` is defined in crate `core`[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:2400:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m2400[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Iter<'a, A: 'a> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'a, T>` is defined in the current crate[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:18:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m18[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0mstruct Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|89|:|89|:|30|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:90:9[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m89[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn iter(&'a self) -> Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mexpected `utils::heapless::linked_list::Iter<'a, T>` because of return type[0m
+[0m[1m[38;5;12m90[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.first.iter()[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Iter<'_, T>`, found `Iter<'_, Node<'_, T>>`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `Iter<'_, Node<'_, T>>` and `Iter<'a, T>` have similar names, but are actually distinct types[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'_, Node<'_, T>>` is defined in crate `core`[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:2400:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m2400[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Iter<'a, A: 'a> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'a, T>` is defined in the current crate[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:18:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m18[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0mstruct Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|2400|:|2400|:|1|:|27|:|`Iter<'_, Node<'_, T>>` is defined in crate `core`|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|18|:|18|:|1|:|19|:|`Iter<'a, T>` is defined in the current crate|:|none|:|none
+error|:|src/utils/heapless/linked_list.rs|:|90|:|90|:|9|:|26|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:90:9[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m89[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn iter(&'a self) -> Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mexpected `utils::heapless::linked_list::Iter<'a, T>` because of return type[0m
+[0m[1m[38;5;12m90[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.first.iter()[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Iter<'_, T>`, found `Iter<'_, Node<'_, T>>`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `Iter<'_, Node<'_, T>>` and `Iter<'a, T>` have similar names, but are actually distinct types[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'_, Node<'_, T>>` is defined in crate `core`[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:2400:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m2400[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Iter<'a, A: 'a> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'a, T>` is defined in the current crate[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:18:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m18[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0mstruct Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+error|:|src/utils/heapless/linked_list.rs|:|89|:|89|:|30|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:90:9[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m89[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn iter(&'a self) -> Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mexpected `utils::heapless::linked_list::Iter<'a, T>` because of return type[0m
+[0m[1m[38;5;12m90[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.first.iter()[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Iter<'_, T>`, found `Iter<'_, Node<'_, T>>`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `Iter<'_, Node<'_, T>>` and `Iter<'a, T>` have similar names, but are actually distinct types[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'_, Node<'_, T>>` is defined in crate `core`[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:2400:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m2400[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Iter<'a, A: 'a> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;10mnote[0m[0m: `Iter<'a, T>` is defined in the current crate[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/utils/heapless/linked_list.rs:18:1[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m18[0m[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0mstruct Iter<'a, T> {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|2400|:|2400|:|1|:|27|:|`Iter<'_, Node<'_, T>>` is defined in crate `core`|:|none|:|none
+note|:|src/utils/heapless/linked_list.rs|:|18|:|18|:|1|:|19|:|`Iter<'a, T>` is defined in the current crate|:|none|:|none
