@@ -1,9 +1,10 @@
+#[derive(Clone, Copy)]
 pub struct PageAlignedAddress(u32);
 
 pub const PAGE_SIZE: u32 = 4096;
 
 impl PageAlignedAddress {
-  pub fn new(address: u32) -> Self {
+  pub fn new(mut address: u32) -> Self {
     address -= address % PAGE_SIZE;
     Self(address)
   }
@@ -17,7 +18,7 @@ impl PageAlignedAddress {
   }
 
   pub fn prev(&self, n: u32) -> Self {
-    Self(self.1 - PAGE_SIZE * n)
+    Self(self.0 - PAGE_SIZE * n)
   }
 
   pub fn is_aligned(address: u32) -> bool {
@@ -26,7 +27,7 @@ impl PageAlignedAddress {
 }
 
 pub struct Page {
-  start: AlignedAddress,
+  start: PageAlignedAddress,
 }
 
 pub struct PDE {
