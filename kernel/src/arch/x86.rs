@@ -3,3 +3,4 @@ pub mod idt;
 pub mod interrupts;
 pub mod paging;
 pub mod pic;
+pub mod memory_map;

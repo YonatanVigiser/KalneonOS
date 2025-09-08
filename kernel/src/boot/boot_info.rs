@@ -51,19 +51,4 @@ impl BootInfoBlock {
         &self.mmap[..self.mmap_entry_count as usize]
     }
 
-    // Sort the map. Fill all the holes in the mmap with Reserved. Fix overlaps by proiritizing reserved
-    // areas. Mark all of the ACPI Reclaimables as Free.
-    fn adjust_mmap(&mut self) { 
-        self.mmap.sort();
-        for i in 1..MEM_MAP_SIZE {
-            //if self.mmap[i].mem_type =
-            if self.mmap[i].base < self.mmap[i-1].base + self.mmap[i-1].length {
-                if self.mmap[i].mem_type <= self.mmap[i].mem_type {
-                    self.mmap[i].base = self.mmap[i-1].base + self.mmap[i-1].length;
-                } else {
-                    self.mmap[i-1].length = self.mmap[i].base - self.mmap[i-1].base;
-                }
-            }
-        }
-    }
 }
