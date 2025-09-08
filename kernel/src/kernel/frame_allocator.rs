@@ -1,7 +1,8 @@
-use crate::arch::x86::paging::{self, PAGE_SIZE, PageAlignedAddress};
+use crate::arch::x86::paging::{PAGE_SIZE, PageAlignedAddress};
 use crate::boot::boot_info::MemoryMapEntry;
-use crate::utils::heapless::linked_list::LinkedList;
+use heapless::sorted_linked_list::{Max, SortedLinkedList};
 
+#[derive(Debug, Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Frame {
     start: PageAlignedAddress,
     end: PageAlignedAddress,
@@ -22,32 +23,32 @@ impl Frame {
     }
 }
 
-#[derive(Clone)]
-pub struct FrameAllocator(LinkedList<Frame>);
+const LINKED_LIST_MAX_SIZE: usize = 1024;
+
+pub struct FrameAllocator(SortedLinkedList<Frame, Max, LINKED_LIST_MAX_SIZE, usize>);
 
 impl FrameAllocator {
-    pub fn new(mem_map: [MemoryMapEntry; 128]) -> Self {
-        let linked_list = LinkedList::new();
+    pub fn new(mem_map: &[MemoryMapEntry]) -> Self {
+        let mut linked_list = SortedLinkedList::new_usize();
         for entry in mem_map.iter() {
             if entry.mem_type != 0 {
                 continue;
             }
-            let start = PageAlignedAddress::new(entry.base);
-            let end = PageAlignedAddress::new(entry.base + entry.length);
-            if !PageAlignedAddress.is_aligned(entry.base) {
-                let start = start.next(1);
+            let mut start = PageAlignedAddress::new(entry.base as u32);
+            let mut end = PageAlignedAddress::new(entry.base as u32 + entry.length as u32);
+            if !PageAlignedAddress::is_aligned(entry.base as u32) {
+                start = start.next(1);
             }
-            if !PageAlignedAddress.is_aligned(entry.base + entry.length) {
-                let end = end.prev(1);
+            if !PageAlignedAddress::is_aligned(entry.base as u32 + entry.length as u32) {
+                end = end.prev(1);
             }
-            linked_list.insert(
-                linked_list.size(),
+            linked_list.push(
                 Frame {
                     start,
                     end,
                     size: (end.get() - start.get()) / PAGE_SIZE,
                 },
-            );
+            ).unwrap();
         }
         Self(linked_list)
     }
@@ -56,38 +57,55 @@ impl FrameAllocator {
         if size == 0 {
             return None;
         }
-        for frame in self.0 {
-            if frame.size >= size {
-                if frame.size > size {
-                    let split_address = frame.start.next(size);
-                    let new_frame = Frame {
-                        start: frame.start,
-                        end: split_address,
-                        size,
-                    };
-                    frame.start = split_address;
-                    frame.size -= size;
-                    return Some(new_frame);
-                }
-                let new_frame = frame.clone();
-                return Some(new_frame);
-            }
+        let frame_index = self.0.iter().position(|frame| { frame.size >= size })?;
+        let mut frame = self.linked_list_pop_n(frame_index)?;
+        if frame.size != size {
+            let mut new_frame = frame.clone();
+            new_frame.size -= size;
+            new_frame.start = frame.start.next(size);
+            frame.size = size;
+            frame.end = new_frame.start;
+            self.0.push(new_frame).ok();
         }
-        None
+        Some(frame)
     }
 
-    pub fn free(&mut self, frame: Frame) {
-        let mut count = 0;
-        for free_frame in self.0 {
-            if frame.end.get() == free_frame.start.get() {
-                free_frame.start = free_frame.prev(frame.size.get());
-                free_frame.size += frame.size.get();
-                return;
-            }
-            if frame.end.get() > free_frame.start.get() {
-                self.0.insert(count, frame);
-            }
-            count += 1;
+    fn linked_list_pop_n(&mut self, index: usize) -> Option<Frame> {
+        let mut list: [Frame; LINKED_LIST_MAX_SIZE - 1] = [Frame {
+            start: PageAlignedAddress::new(0),
+            end: PageAlignedAddress::new(0),
+            size: 0,
+        }; LINKED_LIST_MAX_SIZE - 1];
+        for i in 0..index {
+            list[i] = self.0.pop()?;
         }
+        for i in 0..(index - 1) {
+            self.0.push(list[i]).ok()?;
+        }
+        Some(list[index])
+    }
+    
+    pub fn free(&mut self, mut frame: Frame) -> Result<(), Frame> {
+        let merge_front = self.0.iter().position(|test_frame| test_frame.start == frame.end);
+        let merge_back = self.0.iter().position(|test_frame| test_frame.end == frame.start);
+        if merge_front.is_none() && merge_back.is_none() {
+            return Err(frame);
+        }
+
+        if let Some(frame_index) = merge_back {
+            let frame_to_merge = self.linked_list_pop_n(frame_index).unwrap();
+            frame.size += frame_to_merge.size;
+            frame.start = frame_to_merge.start;
+        }
+
+        if let Some(frame_index) = merge_front {
+            let frame_to_merge = self.linked_list_pop_n(frame_index).unwrap();
+            frame.size += frame_to_merge.size;
+            frame.end = frame_to_merge.end;
+        }
+
+        self.0.push(frame)?;
+
+        Ok(())
     }
 }

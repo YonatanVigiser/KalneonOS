@@ -1,4 +1,4 @@
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 pub struct PageAlignedAddress(u32);
 
 pub const PAGE_SIZE: u32 = 4096;

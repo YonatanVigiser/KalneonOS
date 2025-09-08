@@ -1,7 +1,7 @@
 use crate::debug_hex;
 
 #[repr(C, packed)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Ord)]
 pub struct MemoryMapEntry {
     pub base: u64,
     pub length: u64,
@@ -14,6 +14,8 @@ debug_hex!(MemoryMapEntry,
   normal: []
 );
 
+const MEM_MAP_SIZE: usize = 128;
+
 #[repr(C, packed)]
 #[derive(Clone)]
 pub struct BootInfoBlock {
@@ -25,7 +27,7 @@ pub struct BootInfoBlock {
     pub mmap_entry_count: u8,
     pub kernel_base: u64,
     pub kernel_length: u64,
-    pub mmap: [MemoryMapEntry; 128],
+    pub mmap: [MemoryMapEntry; MEM_MAP_SIZE],
 }
 
 debug_hex!(BootInfoBlock,
@@ -47,5 +49,21 @@ impl BootInfoBlock {
 
     pub fn memory_map(&self) -> &[MemoryMapEntry] {
         &self.mmap[..self.mmap_entry_count as usize]
+    }
+
+    // Sort the map. Fill all the holes in the mmap with Reserved. Fix overlaps by proiritizing reserved
+    // areas. Mark all of the ACPI Reclaimables as Free.
+    fn adjust_mmap(&mut self) { 
+        self.mmap.sort();
+        for i in 1..MEM_MAP_SIZE {
+            //if self.mmap[i].mem_type =
+            if self.mmap[i].base < self.mmap[i-1].base + self.mmap[i-1].length {
+                if self.mmap[i].mem_type <= self.mmap[i].mem_type {
+                    self.mmap[i].base = self.mmap[i-1].base + self.mmap[i-1].length;
+                } else {
+                    self.mmap[i-1].length = self.mmap[i].base - self.mmap[i-1].base;
+                }
+            }
+        }
     }
 }
