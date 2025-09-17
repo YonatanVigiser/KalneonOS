@@ -1,2 +1,2 @@
-pub mod CPU;
-pub mod IntteruptsController;
+pub mod cpu_controller;
+pub mod intterupts_controller;

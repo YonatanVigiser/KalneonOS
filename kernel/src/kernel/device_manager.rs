@@ -5,11 +5,11 @@ pub struct DeviceManager<A: Arch> {
     pub timer: A::Timer,
 }
 
-impl DeviceManager<A: Arch> {
+impl<A> DeviceManager<A: Arch> {
     pub fn init() -> Self {
         Self {
-            console: A::Console::init();
-            timer: A::Timer::init();
+            console: A::Console::init(),
+            timer: A::Timer::init(),
         }
     }
 }

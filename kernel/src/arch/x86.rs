@@ -9,12 +9,11 @@ use super::Arch;
 pub struct ArchX86();
 
 impl Arch for ArchX86 {
-    type CPU = cpu::CPUController;
-    type IntteruptsController = interrupts::IntteruptsController;
+    type CPUController = cpu::Controller;
+    type IntteruptsController = interrupts::Controller;
 
     type Console = drivers::vga::Vga;
     type Timer = drivers::pit::Pit;
 
-    pub fn init() -> Self {
-    }
+    fn init() -> Self {}
 }

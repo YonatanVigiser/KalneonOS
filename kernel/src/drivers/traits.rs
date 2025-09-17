@@ -1,2 +1,2 @@
-pub mod Console;
-pub mod Timer;
+pub mod console;
+pub mod timer;

@@ -1,25 +1,27 @@
 mod device_manager;
 
 use device_manager::DeviceManager;
+use crate::arch::Arch;
 
 pub struct Kernel<A: Arch> {
     arch: A,
     device_manager: DeviceManager<A>,
 }
 
-impl Kernel<A: Arch> {
-    pub init(arch: Arch, boot_info_ptr: usize) -> Self {
+impl<A> Kernel<A: Arch> {
+    pub fn init(arch: A, boot_info_ptr: usize) -> Self {
         Self {
             arch,
-            device_manager: DeviceManager<A>::init(),
+            device_manager: DeviceManager::<A>::init(),
         }
     }
 
-    pub run(&mut self) -> ! {
-        A::IntteruptsController::enable();
+    pub fn run(&mut self) -> ! {
+        A::InterupptsController::enable();
+        loop {}
     }
 }
 
 pub fn kmain<A: Arch>(arch: A, boot_info_ptr: usize) -> ! {
-    Kernel::init(arch).run()
+    Kernel::init(arch, boot_info_ptr).run()
 }
