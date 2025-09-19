@@ -108,8 +108,8 @@ pub struct VGA {
 
 impl VGA {
     pub fn new(width: u8, height: u8) -> Self {
-        let video_type = get_video_type();
-        let vmem_ptr = get_vmem_ptr(&video_type);
+        let video_type = Self::get_video_type_bda();
+        let vmem_ptr = Self::get_vmem_ptr(&video_type);
         Self {
             vmem_ptr,
             video_type,
@@ -119,31 +119,6 @@ impl VGA {
             fg: VgaColor::White,
             height,
             width,
-            auto_scroll: true,
-            cursor_visible: true,
-            cursor_cell: VgaCell {
-                ascii: '_',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
-            cell_under_cursor: VgaCell {
-                ascii: ' ',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
-        }
-    }
-
-    pub const fn default() -> Self {
-        Self {
-            vmem_ptr: 0xB8000 as *mut u16,
-            video_type: VideoType::None,
-            cx: 0,
-            cy: 0,
-            bg: VgaColor::Black,
-            fg: VgaColor::White,
-            height: 25,
-            width: 80,
             auto_scroll: true,
             cursor_visible: true,
             cursor_cell: VgaCell {
@@ -338,9 +313,20 @@ impl VGA {
     pub fn get_video_type(&self) -> VideoType {
         self.video_type
     }
-}
+    
+    fn get_video_type_bda() -> VideoType {
+        let bda_detected_hardware_ptr: *const u8 = 0x410 as *const u8;
+        unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
+    }
 
-unsafe impl Sync for VGA {}
+    fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
+        match video_type {
+            VideoType::Color => 0xB8000 as *mut u16,
+            VideoType::Monochrome => 0xB0000 as *mut u16,
+            VideoType::None => 0xB8000 as *mut u16, // Fake vmem
+        }
+    }
+}
 
 impl core::fmt::Write for VGA {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
@@ -350,15 +336,10 @@ impl core::fmt::Write for VGA {
     }
 }
 
-fn get_video_type() -> VideoType {
-    let bda_detected_hardware_ptr: *const u8 = 0x410 as *const u8;
-    unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
-}
+use crate::drivers::traits::console::Console;
 
-fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
-    match video_type {
-        VideoType::Color => 0xB8000 as *mut u16,
-        VideoType::Monochrome => 0xB0000 as *mut u16,
-        VideoType::None => 0xB8000 as *mut u16, // Fake vmem
+impl Console for VGA {
+    fn init() -> Self {
+        VGA::new(80, 25)
     }
 }

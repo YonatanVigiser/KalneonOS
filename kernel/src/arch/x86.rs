@@ -12,8 +12,10 @@ impl Arch for ArchX86 {
     type CPUController = cpu::Controller;
     type IntteruptsController = interrupts::Controller;
 
-    type Console = drivers::vga::Vga;
-    type Timer = drivers::pit::Pit;
+    type Console = drivers::vga::VGA;
+    type Timer = drivers::pit::PitTimer;
 
-    fn init() -> Self {}
+    fn init() -> Self {
+        Self()
+    }
 }
