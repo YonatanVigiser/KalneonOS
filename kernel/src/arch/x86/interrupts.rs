@@ -60,3 +60,5 @@ fn irq0_handler() {
 fn intterupt_panic(stack_frame: &mut IntteruptStackFrame) {
     panic!("{:?}", stack_frame);
 }
+
+pub struct Controller();

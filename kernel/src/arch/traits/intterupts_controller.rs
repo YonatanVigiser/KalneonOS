@@ -1,5 +1,7 @@
 pub trait IntteruptsController {
     fn init() -> Self;
 
-    fn enable();
+    fn enable_intterupts();
+    fn disable_intterupts();
+
 }
