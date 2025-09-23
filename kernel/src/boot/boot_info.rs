@@ -14,7 +14,7 @@ debug_hex!(MemoryMapEntry,
   normal: []
 );
 
-const MEM_MAP_SIZE: usize = 128;
+pub const MMAP_SIZE: usize = 128;
 
 #[repr(C, packed)]
 #[derive(Clone)]
@@ -27,7 +27,7 @@ pub struct BootInfoBlock {
     pub mmap_entry_count: u8,
     pub kernel_base: u64,
     pub kernel_length: u64,
-    pub mmap: [MemoryMapEntry; MEM_MAP_SIZE],
+    pub mmap: [MemoryMapEntry; MMAP_SIZE],
 }
 
 debug_hex!(BootInfoBlock,
@@ -50,5 +50,4 @@ impl BootInfoBlock {
     pub fn memory_map(&self) -> &[MemoryMapEntry] {
         &self.mmap[..self.mmap_entry_count as usize]
     }
-
 }

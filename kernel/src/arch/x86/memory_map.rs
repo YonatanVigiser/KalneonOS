@@ -42,35 +42,38 @@ pub struct MemoryMapEntry {
     pub mem_type: MemoryType,
 }
 
-const MMAP_SIZE: usize = 256;
+const MMAP_SIZE: usize = boot_info::MMAP_SIZE;
 
 pub struct MemoryMap([MemoryMapEntry; MMAP_SIZE]);
 
 impl MemoryMap {
     pub fn from_bios_mmap(bios_mmap: &[boot_info::MemoryMapEntry]) -> Self {
-        let mut mmap = Self([MemoryMapEntry { start: 0, end: 0, mem_type: MemoryType::Reserved }; MMAP_SIZE]);
-        for (count, entry) in bios_mmap.iter().enumerate() {
-            mmap.0[count].start = entry.base as usize;
-            mmap.0[count].end = entry.base as usize + entry.length as usize;
-            mmap.0[count].mem_type = entry.mem_type.try_into().unwrap_or(MemoryType::Reserved);
+        let mut mmap = Self([MemoryMapEntry { start: usize::MAX, end: usize::MAX, mem_type: MemoryType::Reserved }; MMAP_SIZE]);
+        let mut filled_length = 0;
+        for (count, bios_entry) in bios_mmap.iter().enumerate() {
+            if bios_entry.length == 0 || bios_entry.mem_type == 0 {
+                continue;
+            }
+            let entry = &mut mmap.0[count];
+            entry.start = bios_entry.base as usize;
+            entry.end = bios_entry.base as usize + bios_entry.length as usize;
+            entry.mem_type = bios_entry.mem_type.try_into().unwrap_or(MemoryType::Reserved);
+            filled_length += 1;
         }
         mmap.0.sort_unstable();
-        let mut holes_counter = 0;
-        for entry_index in 1..bios_mmap.len() {
-            if mmap.0[entry_index - 1].end < mmap.0[entry_index].start {
-                mmap.0[bios_mmap.len() + holes_counter] = MemoryMapEntry {
-                    start: mmap.0[entry_index - 1].end,
-                    end: mmap.0[entry_index].start,
-                    mem_type: MemoryType::Reserved,
+        let mut last_end = 0;
+        for entry in mmap.0 {
+            if entry.start > last_end {
+                mmap.0[filled_length] = MemoryMapEntry {
+                    start: last_end,
+                    end: entry.start,
+                    mem_type: MemoryType::Reserved
                 };
-                holes_counter += 1;
+                filled_length += 1;
             }
-            if mmap.0[entry_index - 1].end > mmap.0[entry_index].start {
-                if mmap.0[entry_index - 1].mem_type.is_usable() {
-                } else {
-                }
-            }
+            last_end = entry.start;
         }
+
         mmap
     }
 
