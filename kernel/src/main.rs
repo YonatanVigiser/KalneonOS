@@ -14,6 +14,6 @@ pub type TargetArch = arch::x86::ArchX86;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start(boot_info_ptr: usize) -> ! {
-    let arch = TargetArch::init();
-    kernel::kmain(arch, boot_info_ptr)
+    let arch = TargetArch::init(boot_info_ptr);
+    kernel::kmain(arch)
 }

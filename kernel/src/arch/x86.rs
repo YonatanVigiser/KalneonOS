@@ -15,7 +15,7 @@ impl Arch for ArchX86 {
     type Console = drivers::vga::VGA;
     type Timer = drivers::pit::PitTimer;
 
-    fn init() -> Self {
+    fn init(_boot_info_ptr: usize) -> Self {
         Self()
     }
 }

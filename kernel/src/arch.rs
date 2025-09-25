@@ -16,5 +16,5 @@ pub trait Arch {
     type Console: Console;
     type Timer: Timer;
 
-    fn init() -> Self;
+    fn init(boot_info_ptr: usize) -> Self;
 }
