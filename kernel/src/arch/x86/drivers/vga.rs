@@ -141,7 +141,7 @@ impl Vga {
             auto_scroll: true,
             cursor_visible: true,
             cursor_cell: VgaCell {
-                ascii: '|',
+                ascii: '_',
                 bg: VgaColor::Black,
                 fg: VgaColor::White,
             },
@@ -171,7 +171,7 @@ impl Vga {
         let index = (x as usize) + (y as usize) * (self.width as usize);
         let ptr = unsafe { self.vmem_ptr.add(index) };
         let value: u16 = unsafe { ptr.read_volatile() };
-        value.into()
+        Ok(value.into())
     }
 
     fn write_char(&mut self, c: char) -> Result<&mut Self, ()> {
@@ -249,6 +249,20 @@ impl Vga {
         Ok(())
     }
 
+    fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, ()> {
+        if x >= self.width || y >= self.height {
+            return Err(());
+        }
+        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
+        self.cell_under_cursor = self.get_cell(x, y)?;
+        if self.cursor_visible {
+            self.put_cell(x, y, self.cursor_cell)?;
+        }
+        self.cx = x;
+        self.cy = y;
+        Ok(self)
+    }
+
     pub fn update_cursor(&mut self) -> &mut Self {
         let _ = self.move_cursor(self.cx, self.cy);
         self
@@ -279,7 +293,7 @@ impl core::fmt::Write for Vga {
 use crate::drivers::traits::console::Console;
 
 impl Console for Vga {
-    fn clear(&mut self) -> &mut Self {
+    fn clear(&mut self) -> &mut dyn Console {
         let empty_cell = VgaCell {
             ascii: ' ',
             bg: self.bg,
@@ -299,38 +313,29 @@ impl Console for Vga {
         (self.cx as usize, self.cy as usize)
     }
 
-    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut Self, ()> {
-        let x = x as u8;
-        let y = y as u8;
-        if x >= self.width || y >= self.height {
-            return Err(());
-        }
-        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
-        self.cell_under_cursor = self.get_cell(x, y)?;
-        if self.cursor_visible {
-            self.put_cell(x, y, self.cursor_cell)?;
-        }
-        self.cx = x;
-        self.cy = y;
+    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn Console, ()> {
+        self.move_cursor(x as u8, y as u8);
         Ok(self)
     }
 
-    fn set_bg(&mut self, color: &Color) -> &mut Self {
-        self.set_colors(color.into(), self.fg)
+    fn set_bg(&mut self, color: Color) -> &mut dyn Console {
+        self.set_colors(color.into(), self.fg);
+        self
     }
 
-    fn set_fg(&mut self, color: &Color) -> &mut Self {
-        self.set_colors(self.bg, color.into())
+    fn set_fg(&mut self, color: Color) -> &mut dyn Console {
+        self.set_colors(self.bg, color.into());
+        self
     }
 
-    fn scroll_down(&mut self, amount: u8) -> &mut Self {
+    fn scroll_down(&mut self, amount: usize) -> &mut dyn Console {
         if amount == 0 {
             return self;
         }
-        if amount > self.height {
+        if amount > self.height.into() {
             self.clear();
         } else {
-            for line_num in amount..self.height {
+            for line_num in (amount as u8)..self.height {
                 let _ = self.copy_line(line_num, line_num - 1);
             }
         }
@@ -343,15 +348,15 @@ impl Console for Vga {
         self
     }
 
-    fn scroll_up(&mut self, amount: u8) -> &mut Self {
+    fn scroll_up(&mut self, amount: usize) -> &mut dyn Console {
         if amount == 0 {
             return self;
         }
-        if amount > self.height {
+        if amount > self.height.into() {
             self.clear();
             let _ = self.move_cursor(0, 0);
         } else {
-            for line_num in 0..(self.height - amount) {
+            for line_num in 0..(self.height - amount as u8) {
                 let _ = self.copy_line(line_num, line_num + 1);
             }
         }

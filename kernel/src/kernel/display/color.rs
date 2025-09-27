@@ -38,7 +38,7 @@ pub struct ColorPalette<'a>(pub &'a [Color]);
 
 impl<'a> ColorPalette<'_> {
     pub fn select_closest(&self, target: &Color) -> &Color {
-        let closest = self.0[0];
+        let mut closest = &self.0[0];
         for color in self.0 {
             if color.distance_to(target) < closest.distance_to(target) {
                 closest = color;
@@ -48,8 +48,8 @@ impl<'a> ColorPalette<'_> {
     }
 
     pub fn get_closest_index(&self, target: &Color) -> usize {
-        let closest_index = 0;
-        for color_index in 1..self.0.len {
+        let mut closest_index = 0;
+        for color_index in 1..self.0.len() {
             if self.0[color_index].distance_to(target) < self.0[closest_index].distance_to(target) {
                 closest_index = color_index;
             }

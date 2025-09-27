@@ -24,12 +24,11 @@ impl<A: Arch> Kernel<A> {
 
     pub fn run(&mut self) -> ! {
         writeln!(self.device_manager.console.clear(), "Hello World!");
-        panic!("Test!");
         loop {}
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        writeln!(self.device_manager.console.set_bg(Color::red()).clear(), "{:?}", info);
+        writeln!(self.device_manager.console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
         loop {}
     }
 }

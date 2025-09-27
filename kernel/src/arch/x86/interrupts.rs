@@ -1,6 +1,5 @@
 use super::pic;
 use crate::debug_hex;
-use super::drivers::pit;
 
 #[repr(C)]
 pub struct IntteruptStackFrame {
