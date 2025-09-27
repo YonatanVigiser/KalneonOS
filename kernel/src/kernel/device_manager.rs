@@ -1,17 +1,17 @@
-use crate::arch::Arch;
-use crate::drivers::traits::timer::Timer;
-use crate::drivers::traits::console::Console;
+use crate::Arch;
+use crate::drivers::traits::console::ConsoleImpl;
+use crate::drivers::traits::timer::TimerImpl;
 
-pub struct DeviceManager<A: Arch> {
-    pub console: A::Console,
-    pub timer: A::Timer,
+pub struct DeviceManager {
+    pub console: ConsoleImpl,
+    pub timer: TimerImpl,
 }
 
-impl<A: Arch> DeviceManager<A> {
-    pub fn init() -> Self {
+impl DeviceManager {
+    pub fn init(arch: &impl Arch) -> Self {
         Self {
-            console: A::Console::init(),
-            timer: A::Timer::init(),
+            console: arch.init_console(),
+            timer: arch.init_timer(),
         }
     }
 }

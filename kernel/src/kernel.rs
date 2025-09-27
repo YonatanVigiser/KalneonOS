@@ -1,28 +1,35 @@
 mod device_manager;
+pub mod display;
 
 use device_manager::DeviceManager;
 use crate::arch::Arch;
-use crate::arch::traits::intterupts_controller::IntteruptsController;
+
+use core::fmt::Write;
+use crate::drivers::traits::console::Console;
+use display::color::Color;
 
 pub struct Kernel<A: Arch> {
     arch: A,
-    device_manager: DeviceManager<A>,
+    device_manager: DeviceManager,
 }
 
 impl<A: Arch> Kernel<A> {
     pub fn init(arch: A) -> Self {
+        let device_manager = DeviceManager::init(&arch);
         Self {
             arch,
-            device_manager: DeviceManager::<A>::init(),
+            device_manager,
         }
     }
 
     pub fn run(&mut self) -> ! {
-        A::IntteruptsController::enable();
+        writeln!(self.device_manager.console.clear(), "Hello World!");
+        panic!("Test!");
         loop {}
     }
 
-    pub fn panic(&mut self, _info: &PanicInfo) -> ! {
+    pub fn panic(&mut self, info: &PanicInfo) -> ! {
+        writeln!(self.device_manager.console.set_bg(Color::red()).clear(), "{:?}", info);
         loop {}
     }
 }

@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-spin = { version = "0.10.0", default-features = false, features = ["spin_mutex"] }
+enum_dispatch = "0.3"

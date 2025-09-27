@@ -36,29 +36,54 @@ pub enum VgaColor {
     White = 15,
 }
 
-impl TryFrom<u8> for VgaColor {
-    type Error = ();
-
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
+impl From<u8> for VgaColor {
+    fn from(value: u8) -> Self {
         match value {
-            0 => Ok(VgaColor::Black),
-            1 => Ok(VgaColor::Blue),
-            2 => Ok(VgaColor::Green),
-            3 => Ok(VgaColor::Cyan),
-            4 => Ok(VgaColor::Red),
-            5 => Ok(VgaColor::Magenta),
-            6 => Ok(VgaColor::Brown),
-            7 => Ok(VgaColor::LightGray),
-            8 => Ok(VgaColor::DarkGray),
-            9 => Ok(VgaColor::LightBlue),
-            10 => Ok(VgaColor::LightGreen),
-            11 => Ok(VgaColor::LightCyan),
-            12 => Ok(VgaColor::LightRed),
-            13 => Ok(VgaColor::LightMagenta),
-            14 => Ok(VgaColor::Yellow),
-            15 => Ok(VgaColor::White),
-            _ => Err(()),
+            0 => VgaColor::Black,
+            1 => VgaColor::Blue,
+            2 => VgaColor::Green,
+            3 => VgaColor::Cyan,
+            4 => VgaColor::Red,
+            5 => VgaColor::Magenta,
+            6 => VgaColor::Brown,
+            7 => VgaColor::LightGray,
+            8 => VgaColor::DarkGray,
+            9 => VgaColor::LightBlue,
+            10 => VgaColor::LightGreen,
+            11 => VgaColor::LightCyan,
+            12 => VgaColor::LightRed,
+            13 => VgaColor::LightMagenta,
+            14 => VgaColor::Yellow,
+            15 => VgaColor::White,
+            _ => VgaColor::Black,
         }
+    }
+}
+
+use crate::kernel::display::color::{Color, ColorPalette};
+
+const VGA_COLOR_PALLETE: ColorPalette = ColorPalette(&[
+    Color::black(),
+    Color(0, 0, 170),
+    Color(0, 170, 0),
+    Color(0, 170, 170),
+    Color(170, 0, 0),
+    Color(170, 0, 170),
+    Color(170, 85, 0),
+    Color(170, 170, 170),
+    Color(85, 85, 85),
+    Color(85, 85, 255),
+    Color(85, 255, 85),
+    Color(85, 255, 255),
+    Color(255, 85, 85),
+    Color(255, 85, 255),
+    Color(255, 255, 85),
+    Color::white(),
+]);
+
+impl From<Color> for VgaColor {
+    fn from(value: Color) -> Self {
+        (VGA_COLOR_PALLETE.get_closest_index(&value) as u8).into()
     }
 }
 
@@ -73,8 +98,8 @@ impl From<u16> for VgaCell {
     fn from(value: u16) -> Self {
         VgaCell {
             ascii: char::from((value & 0x00FF) as u8),
-            bg: VgaColor::try_from(((value & 0xF000) >> 12) as u8).unwrap_or(VgaColor::Black),
-            fg: VgaColor::try_from(((value & 0x0F00) >> 8) as u8).unwrap_or(VgaColor::White),
+            bg: VgaColor::from(((value & 0xF000) >> 12) as u8),
+            fg: VgaColor::from(((value & 0x0F00) >> 8) as u8),
         }
     }
 }
@@ -85,28 +110,22 @@ impl From<VgaCell> for u16 {
     }
 }
 
-#[derive(Debug)]
-pub enum VgaError {
-    OutOfBoundsAccess,
-    ConversionError,
-}
-
-pub struct VGA {
+pub struct Vga {
     vmem_ptr: *mut u16,
     video_type: VideoType,
     cx: u8,
     cy: u8,
     height: u8,
     width: u8,
-    pub auto_scroll: bool,
-    pub bg: VgaColor,
-    pub fg: VgaColor,
-    pub cursor_visible: bool,
-    pub cursor_cell: VgaCell,
+    auto_scroll: bool,
+    bg: VgaColor,
+    fg: VgaColor,
+    cursor_visible: bool,
+    cursor_cell: VgaCell,
     cell_under_cursor: VgaCell,
 }
 
-impl VGA {
+impl Vga {
     pub fn new(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
@@ -122,7 +141,7 @@ impl VGA {
             auto_scroll: true,
             cursor_visible: true,
             cursor_cell: VgaCell {
-                ascii: '_',
+                ascii: '|',
                 bg: VgaColor::Black,
                 fg: VgaColor::White,
             },
@@ -134,9 +153,9 @@ impl VGA {
         }
     }
 
-    pub fn put_cell(&self, x: u8, y: u8, cell: VgaCell) -> Result<(), VgaError> {
+    fn put_cell(&self, x: u8, y: u8, cell: VgaCell) -> Result<(), ()> {
         if x >= self.width || y >= self.height {
-            return Err(VgaError::OutOfBoundsAccess);
+            return Err(());
         }
         let value: u16 = cell.into();
         let index = (x as usize) + (y as usize) * (self.width as usize);
@@ -145,20 +164,19 @@ impl VGA {
         Ok(())
     }
 
-    fn get_cell(&self, x: u8, y: u8) -> Result<VgaCell, VgaError> {
+    fn get_cell(&self, x: u8, y: u8) -> Result<VgaCell, ()> {
         if x >= self.width || y >= self.height {
-            return Err(VgaError::OutOfBoundsAccess);
+            return Err(());
         }
         let index = (x as usize) + (y as usize) * (self.width as usize);
         let ptr = unsafe { self.vmem_ptr.add(index) };
         let value: u16 = unsafe { ptr.read_volatile() };
-        let cell: VgaCell = value.try_into().map_err(|_| VgaError::ConversionError)?;
-        Ok(cell)
+        value.into()
     }
 
-    pub fn write_char(&mut self, c: char) -> Result<&mut Self, VgaError> {
+    fn write_char(&mut self, c: char) -> Result<&mut Self, ()> {
         if self.cx >= self.width || self.cy >= self.height {
-            return Err(VgaError::OutOfBoundsAccess);
+            return Err(());
         }
         let mut new_cx = self.cx;
         let mut new_cy = self.cy;
@@ -193,14 +211,14 @@ impl VGA {
         Ok(self)
     }
 
-    pub fn write_string(&mut self, string: &str) -> Result<&mut Self, VgaError> {
+    fn write_string(&mut self, string: &str) -> Result<&mut Self, ()> {
         for b in string.bytes() {
             let _ = self.write_char(b as char)?;
         }
         Ok(self)
     }
 
-    pub fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
+    fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
         self.bg = bg;
         self.fg = fg;
         self.cursor_cell.bg = bg;
@@ -208,7 +226,60 @@ impl VGA {
         self
     }
 
-    pub fn clear(&mut self) -> &mut Self {
+    fn copy_line(&mut self, from: u8, to: u8) -> Result<(), ()> {
+        for index in 0..self.width {
+            let cell = self.get_cell(index, from)?;
+            self.put_cell(index, to, cell)?;
+        }
+        Ok(())
+    }
+
+    fn clear_line(&mut self, line: u8) -> Result<(), ()> {
+        for index in 0..self.width {
+            self.put_cell(
+                index,
+                line,
+                VgaCell {
+                    ascii: ' ',
+                    bg: self.bg,
+                    fg: self.fg,
+                },
+            )?;
+        }
+        Ok(())
+    }
+
+    pub fn update_cursor(&mut self) -> &mut Self {
+        let _ = self.move_cursor(self.cx, self.cy);
+        self
+    }
+
+    fn get_video_type_bda() -> VideoType {
+        let bda_detected_hardware_ptr: *const u8 = 0x410 as *const u8;
+        unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
+    }
+
+    fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
+        match video_type {
+            VideoType::Color => 0xB8000 as *mut u16,
+            VideoType::Monochrome => 0xB0000 as *mut u16,
+            VideoType::None => 0xB8000 as *mut u16, // Fake vmem
+        }
+    }
+}
+
+impl core::fmt::Write for Vga {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        self.write_string(s)
+            .map(|_| ())
+            .map_err(|_| core::fmt::Error)
+    }
+}
+
+use crate::drivers::traits::console::Console;
+
+impl Console for Vga {
+    fn clear(&mut self) -> &mut Self {
         let empty_cell = VgaCell {
             ascii: ' ',
             bg: self.bg,
@@ -224,30 +295,35 @@ impl VGA {
         self
     }
 
-    fn copy_line(&mut self, from: u8, to: u8) -> Result<(), VgaError> {
-        for index in 0..self.width {
-            let cell = self.get_cell(index, from)?;
-            self.put_cell(index, to, cell)?;
-        }
-        Ok(())
+    fn get_cursor_pos(&self) -> (usize, usize) {
+        (self.cx as usize, self.cy as usize)
     }
 
-    fn clear_line(&mut self, line: u8) -> Result<(), VgaError> {
-        for index in 0..self.width {
-            self.put_cell(
-                index,
-                line,
-                VgaCell {
-                    ascii: ' ',
-                    bg: self.bg,
-                    fg: self.fg,
-                },
-            )?;
+    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut Self, ()> {
+        let x = x as u8;
+        let y = y as u8;
+        if x >= self.width || y >= self.height {
+            return Err(());
         }
-        Ok(())
+        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
+        self.cell_under_cursor = self.get_cell(x, y)?;
+        if self.cursor_visible {
+            self.put_cell(x, y, self.cursor_cell)?;
+        }
+        self.cx = x;
+        self.cy = y;
+        Ok(self)
     }
 
-    pub fn scroll_down(&mut self, amount: u8) -> &mut Self {
+    fn set_bg(&mut self, color: &Color) -> &mut Self {
+        self.set_colors(color.into(), self.fg)
+    }
+
+    fn set_fg(&mut self, color: &Color) -> &mut Self {
+        self.set_colors(self.bg, color.into())
+    }
+
+    fn scroll_down(&mut self, amount: u8) -> &mut Self {
         if amount == 0 {
             return self;
         }
@@ -267,7 +343,7 @@ impl VGA {
         self
     }
 
-    pub fn scroll_up(&mut self, amount: u8) -> &mut Self {
+    fn scroll_up(&mut self, amount: u8) -> &mut Self {
         if amount == 0 {
             return self;
         }
@@ -285,61 +361,5 @@ impl VGA {
             let _ = self.move_cursor(0, self.height - 1);
         }
         self
-    }
-
-    pub fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, VgaError> {
-        if x >= self.width || y >= self.height {
-            return Err(VgaError::OutOfBoundsAccess);
-        }
-        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
-        self.cell_under_cursor = self.get_cell(x, y)?;
-        if self.cursor_visible {
-            self.put_cell(x, y, self.cursor_cell)?;
-        }
-        self.cx = x;
-        self.cy = y;
-        Ok(self)
-    }
-
-    pub fn update_cursor(&mut self) -> &mut Self {
-        let _ = self.move_cursor(self.cx, self.cy);
-        self
-    }
-
-    pub fn get_cursor_pos(&self) -> (u8, u8) {
-        (self.cx, self.cy)
-    }
-
-    pub fn get_video_type(&self) -> VideoType {
-        self.video_type
-    }
-    
-    fn get_video_type_bda() -> VideoType {
-        let bda_detected_hardware_ptr: *const u8 = 0x410 as *const u8;
-        unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
-    }
-
-    fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
-        match video_type {
-            VideoType::Color => 0xB8000 as *mut u16,
-            VideoType::Monochrome => 0xB0000 as *mut u16,
-            VideoType::None => 0xB8000 as *mut u16, // Fake vmem
-        }
-    }
-}
-
-impl core::fmt::Write for VGA {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        self.write_string(s)
-            .map(|_| ())
-            .map_err(|_| core::fmt::Error)
-    }
-}
-
-use crate::drivers::traits::console::Console;
-
-impl Console for VGA {
-    fn init() -> Self {
-        VGA::new(80, 25)
     }
 }

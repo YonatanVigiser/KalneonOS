@@ -77,13 +77,3 @@ pub unsafe fn enable_paging(pd_address: u32) {
         );
     }
 }
-
-use crate::arch::traits::cpu_controller::CPUController;
-
-pub struct Controller();
-
-impl CPUController for Controller {
-    unsafe fn halt() {
-        unsafe { halt() }
-    }
-}

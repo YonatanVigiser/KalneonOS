@@ -1,0 +1,35 @@
+pub mod cpu;
+pub mod idt;
+pub mod interrupts;
+pub mod pic;
+pub mod drivers;
+
+use super::Arch;
+
+use crate::drivers::traits::console::Console;
+use crate::drivers::traits::timer::Timer;
+
+use drivers::vga::VGA;
+use drivers::pit::PitTimer;
+
+pub struct ArchX86 {
+    console: &'static mut dyn Console,
+    timer: &'static mut dyn Timer,
+}
+
+impl Arch for ArchX86 {
+    fn init(_boot_info_ptr: usize) -> Self {
+        Self {
+            console: &'static mut VGA::init(),
+            timer: &mut PitTimer::init(),
+        }
+    }
+
+    fn console_driver(&mut self) -> &mut impl Console {
+        VGA::init()
+    }
+
+    fn timer_driver(&mut self) -> &mut impl Timer {
+        PitTimer::init()
+    }
+}

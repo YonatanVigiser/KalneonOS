@@ -54,6 +54,33 @@ pub struct PitTimer {
 }
 
 impl PitTimer {
+    pub fn init() -> Self {
+        let channels = [
+            Channel {
+                num: C0,
+                reload_value: 0,
+                access_mode: Word,
+                mode: SquareWaveGenerator,
+            },
+            Channel {
+                num: C1,
+                reload_value: 0,
+                access_mode: Word,
+                mode: SquareWaveGenerator,
+            },
+            Channel {
+                num: C2,
+                reload_value: 0,
+                access_mode: Word,
+                mode: SquareWaveGenerator,
+            },
+        ];
+        Self {
+            channels,
+            counter: 0,
+        }
+    }
+
     fn tick(&mut self) {
         self.counter += 1;
     }
@@ -138,33 +165,6 @@ impl PitTimer {
 }
 
 impl Timer for PitTimer {
-    fn init() -> Self {
-        let channels = [
-            Channel {
-                num: C0,
-                reload_value: 0,
-                access_mode: Word,
-                mode: SquareWaveGenerator,
-            },
-            Channel {
-                num: C1,
-                reload_value: 0,
-                access_mode: Word,
-                mode: SquareWaveGenerator,
-            },
-            Channel {
-                num: C2,
-                reload_value: 0,
-                access_mode: Word,
-                mode: SquareWaveGenerator,
-            },
-        ];
-        Self {
-            channels,
-            counter: 0,
-        }
-    }
-
     fn get_uptime_ms(&self) -> u64 {
         self.counter
     }
