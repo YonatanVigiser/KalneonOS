@@ -223,6 +223,7 @@ impl Vga {
         self.fg = fg;
         self.cursor_cell.bg = bg;
         self.cursor_cell.fg = fg;
+        self.update_cursor();
         self
     }
 
@@ -305,7 +306,7 @@ impl Console for Vga {
             }
         }
         self.cell_under_cursor = empty_cell;
-        let _ = self.move_cursor(0, 0);
+        self.update_cursor();
         self
     }
 
@@ -314,7 +315,7 @@ impl Console for Vga {
     }
 
     fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn Console, ()> {
-        self.move_cursor(x as u8, y as u8);
+        self.move_cursor(x as u8, y as u8)?;
         Ok(self)
     }
 

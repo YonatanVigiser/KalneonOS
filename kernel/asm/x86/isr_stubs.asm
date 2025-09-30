@@ -9,7 +9,7 @@ isr_stub_%+%1:
   push fs
   push gs
   push esp
-  call intterupts_handler
+  call interrupts_handler
   pop eax
   pop gs
   pop fs
@@ -31,7 +31,7 @@ isr_stub_%+%1:
   push fs
   push gs
   push esp
-  call intterupts_handler
+  call interrupts_handler
   pop eax
   pop gs
   pop fs
@@ -43,7 +43,7 @@ isr_stub_%+%1:
 %endmacro
 
 ; Call the kernel's general CPU exceptions handler (defined in rust)
-extern intterupts_handler
+extern interrupts_handler
 
 ; Define the exception handlers
 isr_no_err_stub 0
@@ -95,6 +95,7 @@ isr_no_err_stub 45
 isr_no_err_stub 46
 isr_no_err_stub 47
 
+; Dommy is for double fault
 isr_stub_8:
   jmp isr_stub_8
 

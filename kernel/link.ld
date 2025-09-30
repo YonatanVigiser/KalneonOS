@@ -4,7 +4,7 @@ SECTIONS {
   . = 0x00100000;
 
   .text : {
-    *(.text._start)
+    KEEP(*(.text._start))
     *(.text*)
   }
 
@@ -19,5 +19,9 @@ SECTIONS {
   .bss : {
     *(.bss*)
     *(COMMON)
+  }
+
+  .stack ALIGN(16) : {
+    KEEP(*(.stack))
   }
 }

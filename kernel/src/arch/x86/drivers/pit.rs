@@ -47,10 +47,15 @@ use OperationMode::*;
 
 use crate::arch::x86::cpu::{inb, outb};
 use crate::drivers::traits::timer::Timer;
+use crate::arch::x86::interrupts;
+use crate::arch::x86::pic;
+use core::sync::atomic::{AtomicU32, Ordering};
+
+static COUNTER_LOW: AtomicU32 = AtomicU32::new(0);
+static COUNTER_HIGH: AtomicU32 = AtomicU32::new(0);
 
 pub struct PitTimer {
     channels: [Channel; 3],
-    counter: u64,
 }
 
 impl PitTimer {
@@ -75,14 +80,25 @@ impl PitTimer {
                 mode: SquareWaveGenerator,
             },
         ];
+        interrupts::register_interrupt_handler(0x20, Self::irq);
+        COUNTER_LOW.store(0, Ordering::Relaxed);
+        COUNTER_HIGH.store(0, Ordering::Relaxed);
+        pic::unmask_irq(0);
         Self {
             channels,
-            counter: 0,
         }
     }
 
-    fn tick(&mut self) {
-        self.counter += 1;
+    fn irq(_stack_info: &mut interrupts::InterruptStackFrame) {
+        Self::tick();
+        pic::send_eoi(0);
+    }
+
+    fn tick() {
+        COUNTER_LOW.fetch_add(1, Ordering::Relaxed);
+        if COUNTER_LOW.load(Ordering::Relaxed) == 0 {
+            COUNTER_HIGH.fetch_add(1, Ordering::Relaxed);
+        }
     }
 
     pub fn set_mode(&mut self,
@@ -166,7 +182,7 @@ impl PitTimer {
 
 impl Timer for PitTimer {
     fn get_uptime_ms(&self) -> u64 {
-        self.counter
+        ((COUNTER_HIGH.load(Ordering::Relaxed) << 8) as u64 | COUNTER_LOW.load(Ordering::Relaxed) as u64) * 10
     }
 
     fn sleep(&self, ms: u64) {

@@ -15,7 +15,11 @@ use drivers::pit::PitTimer;
 pub struct ArchX86();
 
 impl Arch for ArchX86 {
-    fn init(_boot_info_ptr: usize) -> Self {
+    fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
+        idt::init();
+        pic::init();
+        pic::unmask_irq(0);
+        unsafe { cpu::sti(); }
         Self()
     }
 

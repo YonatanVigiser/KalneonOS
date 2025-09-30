@@ -2,7 +2,7 @@ use super::pic;
 use crate::debug_hex;
 
 #[repr(C)]
-pub struct IntteruptStackFrame {
+pub struct InterruptStackFrame {
     gs: u32,
     fs: u32,
     es: u32,
@@ -24,32 +24,38 @@ pub struct IntteruptStackFrame {
     ss: u32,
 }
 
-debug_hex!(IntteruptStackFrame,
+debug_hex!(InterruptStackFrame,
   hex: [ss, useresp, eflags, cs, eip, err_code, int_num, eax, ecx, edx, ebx, esp, ebp, esi, edi, ds, es, fs, gs],
   normal: []
-);
+); 
+
+static mut INTS_HANDLERS: [fn(&mut InterruptStackFrame); 256] = [interrupt_panic; 256];
 
 #[unsafe(no_mangle)]
-pub extern "C" fn intterupts_handler(stack_frame: &mut IntteruptStackFrame) {
+pub extern "C" fn interrupts_handler(stack_frame: &mut InterruptStackFrame) {
     match stack_frame.int_num {
-        39 => {
-            if (pic::read_isr() & 0x0F) == 39 {
+        0x27 => {
+            if (pic::read_isr() & 0xFF) == 0x27 {
                 pic::spurios_irq(true);
             } else {
-                intterupt_panic(stack_frame);
+                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame); }
             }
         }
-        47 => {
-            if (pic::read_isr() & 0xF0) == 47 {
+        0x2F => {
+            if ((pic::read_isr() & 0xFF00) >> 8) == 0x2F {
                 pic::spurios_irq(false);
             } else {
-                intterupt_panic(stack_frame);
+                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame); }
             }
         }
-        _ => intterupt_panic(stack_frame),
+        _ => unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame) },
     };
 }
 
-fn intterupt_panic(stack_frame: &mut IntteruptStackFrame) {
-    panic!("{:?}", stack_frame);
+fn interrupt_panic(stack_frame: &mut InterruptStackFrame) {
+    panic!("Intterupt num: {}, is unimplemented! Stack frame:\n{:?}", stack_frame.int_num, stack_frame);
+}
+
+pub fn register_interrupt_handler(int_num: u8, handler: fn(&mut InterruptStackFrame)) {
+    unsafe { INTS_HANDLERS[int_num as usize] = handler; }
 }

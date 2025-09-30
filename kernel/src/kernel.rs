@@ -4,9 +4,11 @@ pub mod display;
 use device_manager::DeviceManager;
 use crate::arch::Arch;
 
-use core::fmt::Write;
 use crate::drivers::traits::console::Console;
+use crate::drivers::traits::timer::Timer;
 use display::color::Color;
+
+use core::fmt::Write;
 
 pub struct Kernel<A: Arch> {
     arch: A,
@@ -23,12 +25,14 @@ impl<A: Arch> Kernel<A> {
     }
 
     pub fn run(&mut self) -> ! {
-        writeln!(self.device_manager.console.clear(), "Hello World!");
+        let _ = writeln!(self.device_manager.console.clear(), "Hello World!");
+        self.device_manager.timer.sleep(500);
+        let _ = writeln!(self.device_manager.console, "Current count ms: {}", self.device_manager.timer.get_uptime_ms());
         loop {}
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        writeln!(self.device_manager.console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
+        let _ = writeln!(self.device_manager.console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
         loop {}
     }
 }
