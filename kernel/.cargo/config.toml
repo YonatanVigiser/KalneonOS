@@ -6,6 +6,11 @@ build-std-features = ["compiler-builtins-mem"]
 target = "i386-kalneon_os.json"
 target-dir = "../build/kernel"
 
+[target.i686-unknown-none]
+rustflags = [
+  "-C", "link-args=-nostartfiles -Wl,-entry=_start"
+]
+
 [profile.release]
 opt-level = 2
 debug = false

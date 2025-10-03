@@ -283,6 +283,8 @@ impl Vga {
     }
 }
 
+use crate::drivers::traits::console::{OutputConsole, VideoConsole};
+
 impl core::fmt::Write for Vga {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         self.write_string(s)
@@ -291,10 +293,10 @@ impl core::fmt::Write for Vga {
     }
 }
 
-use crate::drivers::traits::console::Console;
+impl OutputConsole for Vga {}
 
-impl Console for Vga {
-    fn clear(&mut self) -> &mut dyn Console {
+impl VideoConsole for Vga {
+    fn clear(&mut self) -> &mut dyn VideoConsole {
         let empty_cell = VgaCell {
             ascii: ' ',
             bg: self.bg,
@@ -314,22 +316,22 @@ impl Console for Vga {
         (self.cx as usize, self.cy as usize)
     }
 
-    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn Console, ()> {
+    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()> {
         self.move_cursor(x as u8, y as u8)?;
         Ok(self)
     }
 
-    fn set_bg(&mut self, color: Color) -> &mut dyn Console {
+    fn set_bg(&mut self, color: Color) -> &mut dyn VideoConsole {
         self.set_colors(color.into(), self.fg);
         self
     }
 
-    fn set_fg(&mut self, color: Color) -> &mut dyn Console {
+    fn set_fg(&mut self, color: Color) -> &mut dyn VideoConsole {
         self.set_colors(self.bg, color.into());
         self
     }
 
-    fn scroll_down(&mut self, amount: usize) -> &mut dyn Console {
+    fn scroll_down(&mut self, amount: usize) -> &mut dyn VideoConsole {
         if amount == 0 {
             return self;
         }
@@ -349,7 +351,7 @@ impl Console for Vga {
         self
     }
 
-    fn scroll_up(&mut self, amount: usize) -> &mut dyn Console {
+    fn scroll_up(&mut self, amount: usize) -> &mut dyn VideoConsole {
         if amount == 0 {
             return self;
         }

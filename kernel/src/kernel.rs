@@ -4,7 +4,7 @@ pub mod display;
 use device_manager::DeviceManager;
 use crate::arch::Arch;
 
-use crate::drivers::traits::console::Console;
+use crate::drivers::traits::console::VideoConsole;
 use crate::drivers::traits::timer::Timer;
 use display::color::Color;
 
@@ -25,14 +25,14 @@ impl<A: Arch> Kernel<A> {
     }
 
     pub fn run(&mut self) -> ! {
-        let _ = writeln!(self.device_manager.console.clear(), "Hello World!");
+        let _ = writeln!(self.device_manager.video_console.clear(), "Hello World!");
         self.device_manager.timer.sleep(500);
-        let _ = writeln!(self.device_manager.console, "Current count ms: {}", self.device_manager.timer.get_uptime_ms());
+        let _ = writeln!(self.device_manager.video_console, "Current count ms: {}", self.device_manager.timer.get_uptime_ms());
         loop {}
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        let _ = writeln!(self.device_manager.console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
+        let _ = writeln!(self.device_manager.video_console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
         loop {}
     }
 }

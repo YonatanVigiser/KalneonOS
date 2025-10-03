@@ -3,6 +3,7 @@ use std::{env, fs, path::PathBuf, process::Command};
 fn main() {
     let mut asm_dir = PathBuf::from("asm");
     asm_dir.push(env::var("CARGO_CFG_TARGET_ARCH").unwrap());
+    println!("cargo:warning=Looking for assembly files in {}", asm_dir.display());
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     for entry in fs::read_dir(&asm_dir).unwrap() {

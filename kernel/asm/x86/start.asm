@@ -1,5 +1,6 @@
 extern main
 
+section .text._start
 global _start
 _start:
   ; Load a temp "valid" stack for init:
