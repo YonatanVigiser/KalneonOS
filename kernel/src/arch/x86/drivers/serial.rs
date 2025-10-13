@@ -1,30 +1,32 @@
-const COM1_PORT: u16 = 0x3F8;
-const COM2_PORT: u16 = 0x2F8;
-const COM1_IRQ_INT_NUM: u8 = 0x24;
-const COM2_IRQ_INT_NUM: u8 = 0x23;
+use heapless::spsc::Queue;
+use crate::arch::x86::cpu::{inb, outb};
+use crate::arch::x86::{interrupts, pic};
+use crate::arch::x86::SERIAL_CONSOLE_REF;
 
-static mut COM1_USED: bool = true;
+const COM1_IO_PORT: u16 = 0x3F8;
+const COM2_IO_PORT: u16 = 0x2F8;
 
-pub struct SerialDriver();
+pub struct SerialDriver {
+    port: u16,
+    queue: Queue<u8, 256>,
+}
 
 impl SerialDriver {
     pub fn init() -> Option<Self> {
         let mut driver = None;
-        if let Some(result) = try_init_port(COM1_PORT) {
-            driver = result;
-            unsafe { COM1_USED = true; }
-            interrupts::register_interrupt_handler(COM1_IRQ_INT_NUM, Self::irq);
+        if let Some(result) = Self::try_init_port(COM1_IO_PORT) {
+            driver = Some(result);
+            interrupts::register_interrupt_handler(0x24, Self::handle_irq);
             pic::unmask_irq(4);
-        } else if let Some(result) = try_init_port(COM2_PORT) {
-            driver = result;
-            unsafe { COM1_USED = false; }
-            interrupts::register_interrupt_handler(COM2_IRQ_INT_NUM, Self::irq);
+        } else if let Some(result) = Self::try_init_port(COM2_IO_PORT) {
+            driver = Some(result);
+            interrupts::register_interrupt_handler(0x23, Self::handle_irq);
             pic::unmask_irq(3);
         }
         driver
      }
 
-    fn try_init_port(port: u16) -> Result<Self, ()> {
+    fn try_init_port(port: u16) -> Option<Self> {
         outb(port + 1, 0x00);    // Disable all interrupts
         outb(port + 3, 0x80);    // Enable DLAB (set baud rate divisor)
         outb(port + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
@@ -37,8 +39,8 @@ impl SerialDriver {
         outb(port + 0, 0xAE);    // Test serial chip (send byte 0xAE and check if serial returns same byte)
 
         // Check if serial is not faulty (i.e: same byte as sent)
-        if inb(port + 0) == 0xAE {
-            return Err(());
+        if inb(port + 0) != 0xAE {
+            return None;
         }
 
         // If serial is not faulty set it in normal operation mode
@@ -48,15 +50,60 @@ impl SerialDriver {
         // Enable "received data available" interrupt
         outb(port + 1, 0x01);
 
-        Ok(Self())
+        Some(Self{ port, queue: Queue::new() })
     }
 
-    fn irq(_stack_info: &InterruptStackFrame) {
+    fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
+        if let Some(mut serial_console) = unsafe { SERIAL_CONSOLE_REF } {
+            unsafe { serial_console.as_mut() }.process_input();
+        }
+    }
 
+    fn has_next(&self) -> bool {
+        inb(self.port + 5) & 1 == 1
+    }
+
+    fn ready_to_send(&self) -> bool {
+        inb(self.port + 5) & 0x20 != 0
+    }
+
+    fn read_next(&self) -> u8 {
+        inb(self.port)
+    }
+
+    fn write_byte(&mut self, byte: u8) {
+        while !self.ready_to_send() { }
+        outb(self.port, byte);
     }
 }
 
-use crate::drivers::traits::console::SerialConsoleImpl;
+use crate::drivers::traits::console::{OutputConsole, InputConsole, SerialConsole};
 
-impl SerialConsoleImpl for SerialDriver {
+impl core::fmt::Write for SerialDriver {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        for byte in s.bytes() {
+            self.write_byte(byte);
+        }
+        Ok(())
+    }
 }
+
+impl OutputConsole for SerialDriver {}
+
+impl InputConsole for SerialDriver {
+    fn process_input(&mut self) {
+        while self.has_next() {
+            let _ = self.queue.enqueue(self.read_next());
+        }
+    }
+
+    fn read_byte(&mut self) -> Option<u8> {
+        self.queue.dequeue()
+    }
+
+    fn has_next_byte(&self) -> bool {
+        !self.queue.is_empty()
+    }
+}
+
+impl SerialConsole for SerialDriver {}

@@ -126,7 +126,7 @@ pub struct Vga {
 }
 
 impl Vga {
-    pub fn new(width: u8, height: u8) -> Self {
+    pub fn init(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
         Self {
@@ -247,6 +247,7 @@ impl Vga {
                 },
             )?;
         }
+        self.move_cursor(0, 0);
         Ok(())
     }
 

@@ -1,38 +1,38 @@
-mod device_manager;
 pub mod display;
 
-use device_manager::DeviceManager;
 use crate::arch::Arch;
-
-use crate::drivers::traits::console::VideoConsole;
-use crate::drivers::traits::timer::Timer;
 use display::color::Color;
 
-use core::fmt::Write;
-
-pub struct Kernel<A: Arch> {
-    arch: A,
-    device_manager: DeviceManager,
+pub struct Kernel {
+    arch: TargetArch,
 }
 
-impl<A: Arch> Kernel<A> {
-    pub fn init(arch: A) -> Self {
-        let device_manager = DeviceManager::init(&arch);
+impl Kernel {
+    pub fn init(mut arch: TargetArch) -> Self {
+        if let Some(video) = arch.video() {
+            video.write_str("\nStart kernel init...");
+            video.write_str("\nFinish kernel init!");
+        }
         Self {
             arch,
-            device_manager,
         }
     }
 
     pub fn run(&mut self) -> ! {
-        let _ = writeln!(self.device_manager.video_console.clear(), "Hello World!");
-        self.device_manager.timer.sleep(500);
-        let _ = writeln!(self.device_manager.video_console, "Current count ms: {}", self.device_manager.timer.get_uptime_ms());
+        if let Some(video) = self.arch.video() {
+            video.write_str("\nKernel entered mainloop!");
+        }
         loop {}
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        let _ = writeln!(self.device_manager.video_console.set_bg(Color::red()).set_fg(Color::black()).clear(), "{}", info);
+        if let Some(video_console) = self.arch.video() {
+            video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
+            let _ = writeln!(video_console, "{}", info);
+        }
+        if let Some(serial_console) = self.arch.serial() {
+            let _ = writeln!(serial_console, "{}", info);
+        }
         loop {}
     }
 }
@@ -40,9 +40,11 @@ impl<A: Arch> Kernel<A> {
 use core::ptr::NonNull;
 use crate::TargetArch;
 
-static mut KERNEL: Option<NonNull<Kernel<TargetArch>>> = None;
+static mut KERNEL: Option<NonNull<Kernel>> = None;
+static mut ARCH: Option<NonNull<TargetArch>> = None;
 
 pub fn kmain(arch: TargetArch) -> ! {
+    unsafe { ARCH = Some(NonNull::from(&arch)); }
     let mut kernel = Kernel::init(arch);
     unsafe { KERNEL = Some(NonNull::from(&kernel)); }
     kernel.run()
@@ -55,6 +57,9 @@ pub fn panic(info: &PanicInfo) -> ! {
     unsafe {
         if let Some(mut kernel) = KERNEL {
             kernel.as_mut().panic(info)
+        }
+        else if let Some(mut arch) = ARCH {
+            arch.as_mut().panic(info)
         }
         else {
             loop { }

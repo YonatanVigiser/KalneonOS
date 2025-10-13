@@ -36,16 +36,16 @@ pub extern "C" fn interrupts_handler(stack_frame: &mut InterruptStackFrame) {
     match stack_frame.int_num {
         0x27 => {
             if (pic::read_isr() & 0xFF) == 0x27 {
-                pic::spurios_irq(true);
+                pic::spurios_irq(true)
             } else {
-                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame); }
+                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame) }
             }
         }
         0x2F => {
             if ((pic::read_isr() & 0xFF00) >> 8) == 0x2F {
-                pic::spurios_irq(false);
+                pic::spurios_irq(false)
             } else {
-                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame); }
+                unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame) }
             }
         }
         _ => unsafe { INTS_HANDLERS[stack_frame.int_num as usize](stack_frame) },
