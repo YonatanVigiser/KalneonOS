@@ -1,4 +1,4 @@
-mod cpu;
+pub mod cpu;
 pub mod idt;
 pub mod interrupts;
 pub mod pic;
@@ -59,6 +59,7 @@ impl Arch for ArchX86 {
     fn panic(&mut self, info: &PanicInfo) -> ! {
         use core::fmt::Write;
         use crate::kernel::display::color::Color;
+        unsafe { cpu::cli(); }
 
         if let Some(video_console) = &mut self.video_console {
             video_console.set_bg(Color::red()).set_fg(Color::black()).clear();

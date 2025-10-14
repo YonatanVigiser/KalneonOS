@@ -309,7 +309,7 @@ impl VideoConsole for Vga {
             }
         }
         self.cell_under_cursor = empty_cell;
-        self.update_cursor();
+        self.move_cursor(0, 0);
         self
     }
 

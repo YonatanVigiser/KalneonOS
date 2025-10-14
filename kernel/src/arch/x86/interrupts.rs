@@ -20,12 +20,10 @@ pub struct InterruptStackFrame {
     eip: u32,
     cs: u32,
     eflags: u32,
-    useresp: u32,
-    ss: u32,
 }
 
 debug_hex!(InterruptStackFrame,
-  hex: [ss, useresp, eflags, cs, eip, err_code, int_num, eax, ecx, edx, ebx, esp, ebp, esi, edi, ds, es, fs, gs],
+  hex: [eflags, cs, eip, err_code, int_num, eax, ecx, edx, ebx, esp, ebp, esi, edi, ds, es, fs, gs],
   normal: []
 ); 
 
