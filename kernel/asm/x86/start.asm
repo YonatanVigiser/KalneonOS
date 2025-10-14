@@ -3,6 +3,9 @@ extern main
 section .text._start
 global _start
 _start:
+  ; Disable interrupts:
+  cli
+
   ; Load a temp "valid" stack for init:
   mov esp, stack_top
 

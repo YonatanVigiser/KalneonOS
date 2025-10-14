@@ -15,11 +15,14 @@ impl Kernel {
     }
 
     pub fn run(&mut self) -> ! {
-        if let Some(mut video) = self.arch.video() {
-            unsafe { video.as_mut().clear().write_str("Kernel finish init! Start mainloop"); } 
-        }
         let serial = unsafe { self.arch.serial().unwrap().as_mut() };
         let video = unsafe { self.arch.video().unwrap().as_mut() };
+        let timer = unsafe { self.arch.timer().as_mut() };
+        video.clear();
+        /*
+        timer.sleep(100);
+        writeln!(video, "{}", timer.get_uptime_ms());
+        */
         loop {
             if serial.has_next_byte() {
                 write!(video, "hey!");

@@ -10,14 +10,13 @@ isr_stub_%+%1:
   push gs
   push esp
   call interrupts_handler
-  pop eax
+  add esp, 0x04
   pop gs
   pop fs
   pop es
   pop ds
   popa
   add esp, 0x04
-  sti
   iret
 %endmacro
 
@@ -33,14 +32,13 @@ isr_stub_%+%1:
   push gs
   push esp
   call interrupts_handler
-  pop eax
+  add esp, 0x04
   pop gs
   pop fs
   pop es
   pop ds
   popa
   add esp, 0x08
-  sti
   iret
 %endmacro
 

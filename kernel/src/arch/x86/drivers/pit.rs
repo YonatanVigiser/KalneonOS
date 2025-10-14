@@ -10,7 +10,7 @@ use crate::arch::x86::cpu::outb;
 use crate::drivers::traits::timer::Timer;
 use crate::arch::x86::interrupts;
 use crate::arch::x86::pic;
-use crate::arch::x86::TIMER_REF;
+use crate::arch::x86::{TIMER_REF, VIDEO_CONSOLE_REF};
 
 pub struct PitTimer(u64);
 
@@ -26,9 +26,12 @@ impl PitTimer {
     }
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
-        if let Some(mut timer) = unsafe { TIMER_REF } {
-            unsafe { timer.as_mut() }.tick();
+        unsafe {
+            let debug = 0x1000 as *mut u16;
+            debug.write_volatile(debug.read_volatile() + 1);
         }
+        let timer = unsafe { TIMER_REF.expect("Timer wasn't initialized!").as_mut() };
+        timer.tick();
         pic::send_eoi(0);
     }
 }
