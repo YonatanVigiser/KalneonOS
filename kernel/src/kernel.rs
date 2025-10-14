@@ -9,28 +9,35 @@ pub struct Kernel {
 
 impl Kernel {
     pub fn init(mut arch: TargetArch) -> Self {
-        if let Some(video) = arch.video() {
-            video.write_str("\nStart kernel init...");
-            video.write_str("\nFinish kernel init!");
-        }
         Self {
             arch,
         }
     }
 
     pub fn run(&mut self) -> ! {
-        if let Some(video) = self.arch.video() {
-            video.write_str("\nKernel entered mainloop!");
+        if let Some(mut video) = self.arch.video() {
+            unsafe { video.as_mut().clear().write_str("Kernel finish init! Start mainloop"); } 
         }
-        loop {}
+        let serial = unsafe { self.arch.serial().unwrap().as_mut() };
+        let video = unsafe { self.arch.video().unwrap().as_mut() };
+        loop {
+            if serial.has_next_byte() {
+                write!(video, "hey!");
+            }
+            while serial.has_next_byte() {
+                write!(video, "{}", serial.read_byte().unwrap() as char);
+            }
+        }
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        if let Some(video_console) = self.arch.video() {
+        if let Some(mut video_console) = self.arch.video() {
+            let video_console = unsafe { video_console.as_mut() };
             video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video_console, "{}", info);
         }
-        if let Some(serial_console) = self.arch.serial() {
+        if let Some(mut serial_console) = self.arch.serial() {
+            let serial_console = unsafe { serial_console.as_mut() };
             let _ = writeln!(serial_console, "{}", info);
         }
         loop {}

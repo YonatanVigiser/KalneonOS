@@ -4,6 +4,7 @@ use crate::drivers::traits::console::{VideoConsole, SerialConsole};
 use crate::drivers::traits::timer::Timer;
 
 use core::panic::PanicInfo;
+use core::ptr::NonNull;
 
 pub trait Arch {
     fn init(boot_magic_val: usize, boot_info_ptr: usize) -> Self;
@@ -11,8 +12,8 @@ pub trait Arch {
     fn panic(&mut self, info: &PanicInfo) -> !;
 
     // Arch-specific drivers access
-    fn video<'a>(&'a mut self) -> Option<&'a mut dyn VideoConsole>;
-    fn serial<'a>(&'a mut self) -> Option<&'a mut dyn SerialConsole>;
-    fn timer<'a>(&'a mut self) -> &'a mut dyn Timer;
+    fn video(&self) -> Option<NonNull<dyn VideoConsole>>;
+    fn serial(&self) -> Option<NonNull<dyn SerialConsole>>;
+    fn timer(&self) -> NonNull<dyn Timer>;
 }
 

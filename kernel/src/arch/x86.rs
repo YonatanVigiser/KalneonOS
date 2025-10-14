@@ -51,15 +51,8 @@ impl Arch for ArchX86 {
             TIMER_REF = Some(NonNull::from(&mut insteance.timer as &mut dyn Timer));
         }
 
-        if let Some(video) = insteance.video() {
-            video.clear().write_str("Start arch init...");
-        }
-
         // Finish init - enable interrupts
         unsafe { cpu::sti(); }
-        if let Some(video) = insteance.video() {
-            video.write_str("\nFinish arch init!\n");
-        }
         insteance
     }
 
@@ -74,15 +67,15 @@ impl Arch for ArchX86 {
         loop { }
     }
 
-    fn video<'a>(&'a mut self) -> Option<&'a mut dyn VideoConsole> {
-        self.video_console.as_mut().map(move |video| video as &'a mut dyn VideoConsole)
+    fn video(&self) -> Option<NonNull<dyn VideoConsole>> {
+        self.video_console.as_ref().map(|v| NonNull::from(v as &dyn VideoConsole))
     }
 
-    fn serial<'a>(&'a mut self) -> Option<&'a mut dyn SerialConsole> {
-        self.serial_console.as_mut().map(move |serial| serial as &'a mut dyn SerialConsole)
+    fn serial(&self) -> Option<NonNull<dyn SerialConsole>> {
+        self.serial_console.as_ref().map(|s| NonNull::from(s as &dyn SerialConsole))
     }
 
-    fn timer<'a>(&'a mut self) -> &'a mut dyn Timer {
-        &mut self.timer as &'a mut dyn Timer
+    fn timer(&self) -> NonNull<dyn Timer> {
+        NonNull::from(&self.timer as &dyn Timer)
     }
 }

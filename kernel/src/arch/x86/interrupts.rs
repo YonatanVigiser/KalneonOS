@@ -33,6 +33,7 @@ static mut INTS_HANDLERS: [fn(&mut InterruptStackFrame); 256] = [interrupt_panic
 
 #[unsafe(no_mangle)]
 pub extern "C" fn interrupts_handler(stack_frame: &mut InterruptStackFrame) {
+    write!(unsafe { crate::arch::x86::VIDEO_CONSOLE_REF.unwrap().as_mut() }, "{}", stack_frame.int_num);
     match stack_frame.int_num {
         0x27 => {
             if (pic::read_isr() & 0xFF) == 0x27 {
