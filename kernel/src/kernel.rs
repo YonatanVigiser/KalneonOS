@@ -15,9 +15,9 @@ impl Kernel {
     }
 
     pub fn run(&mut self) -> ! {
-        let video = TargetArch::video().expect("Video driver wasn't init!");
-        let serial = TargetArch::serial().expect("Serial driver wasn't init!");
-        let timer = TargetArch::timer();
+        let video = unsafe { TargetArch::video().expect("Video driver wasn't init!").as_mut() };
+        let serial = unsafe { TargetArch::serial().expect("Serial driver wasn't init!").as_mut() };
+        let timer = unsafe { TargetArch::timer().as_mut() };
         video.clear();
         timer.sleep(100);
         writeln!(video, "{}", timer.get_uptime_ms());
@@ -33,10 +33,12 @@ impl Kernel {
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
         if let Some(video_console) = TargetArch::video(){ 
+            let video_console = unsafe { video_console.as_mut() };
             video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video_console, "{}", info);
         }
         if let Some(serial_console) = TargetArch::serial() {
+            let serial_console = unsafe { serial_console.as_mut() };
             let _ = writeln!(serial_console, "{}", info);
         }
         loop {}

@@ -26,7 +26,8 @@ impl PitTimer {
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
         use crate::arch::Arch;
-        crate::arch::x86::ArchX86::timer().tick();
+        let mut timer = crate::arch::x86::ArchX86::timer();
+        unsafe { timer.as_mut() }.tick();
         pic::send_eoi(0);
     }
 }

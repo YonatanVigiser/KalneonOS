@@ -13,14 +13,13 @@ use drivers::vga::Vga;
 use drivers::serial::SerialDriver;
 use drivers::pit::PitTimer;
 
-//use core::ptr::NonNull;
+use core::ptr::NonNull;
 use core::panic::PanicInfo;
-use core::mem::MaybeUninit;
 
 // Early boot drivers refrences for IRQ handlers
-static mut VIDEO_DRIVER: MaybeUninit<Vga> = MaybeUninit::uninit();
-static mut SERIAL_DRIVER: MaybeUninit<SerialDriver> = MaybeUninit::uninit();
-static mut TIMER_DRIVER: MaybeUninit<PitTimer> = MaybeUninit::uninit();
+static mut VIDEO_DRIVER: Option<Vga> = None;
+static mut SERIAL_DRIVER: Option<SerialDriver> = None;
+static mut TIMER_DRIVER: Option<PitTimer> = None;
 
 pub struct ArchX86();
 
@@ -32,11 +31,9 @@ impl Arch for ArchX86 {
 
         // Init early drivers
         unsafe {
-            VIDEO_DRIVER.write(Vga::init(80, 25));
-            if let Some(serial_driver) = SerialDriver::init() {
-                SERIAL_DRIVER.write(serial_driver);
-            }
-            TIMER_DRIVER.write(PitTimer::init());
+            VIDEO_DRIVER = Some(Vga::init(80, 25));
+            SERIAL_DRIVER = SerialDriver::init();
+            TIMER_DRIVER = Some(PitTimer::init());
         }
 
         // Finish init - enable interrupts
@@ -49,20 +46,22 @@ impl Arch for ArchX86 {
         unsafe { cpu::cli(); }
 
         if let Some(video_console) = Self::video() {
+            let video_console = unsafe { video_console.as_mut() };
             video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video_console, "{}", info);
         }
         loop { }
     }
 
-    fn video() -> Option<&'static mut dyn VideoConsole> {
-        unsafe { VIDEO_DRIVER }
+    fn video() -> Option<core::ptr::NonNull<dyn VideoConsole>> {
+        unsafe { VIDEO_DRIVER.map(|v| NonNull::from(&v as &dyn VideoConsole)) }
     }
 
-    fn serial() -> Option<&'static mut dyn SerialConsole> {
-        unsafe { SERIAL_DRIVER.as_mut().map(|s| s as &'static mut dyn SerialConsole) }
-    } 
-
-    fn timer() -> &'static mut dyn Timer {
-        unsafe { TIMER_DRIVER.as_mut().unwrap() as &'static mut dyn Timer }
+    fn serial() -> Option<core::ptr::NonNull<dyn SerialConsole>> {
+        unsafe { SERIAL_DRIVER.map(|s| NonNull::from(&s as &dyn SerialConsole)) }
     }
+
+    fn timer() -> core::ptr::NonNull<dyn Timer> {
+        unsafe { NonNull::from(&TIMER_DRIVER.expect("Timer driver wasn't initilized before acceced!") as &dyn Timer) }
+    }
+}

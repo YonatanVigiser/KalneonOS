@@ -15,11 +15,11 @@ impl SerialDriver {
         let mut driver = None;
         if let Some(result) = Self::try_init_port(COM1_IO_PORT) {
             driver = Some(result);
-            interrupts::register_interrupt_handler(0x24, Self::handle_irq);
+            interrupts::register_interrupt_handler(0x24, Self::handle_irq_com1);
             pic::unmask_irq(4);
         } else if let Some(result) = Self::try_init_port(COM2_IO_PORT) {
             driver = Some(result);
-            interrupts::register_interrupt_handler(0x23, Self::handle_irq);
+            interrupts::register_interrupt_handler(0x23, Self::handle_irq_com2);
             pic::unmask_irq(3);
         }
         driver
@@ -52,9 +52,18 @@ impl SerialDriver {
         Some(Self{ port, queue: Queue::new() })
     }
 
-    fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
+    fn handle_irq_com1(_stack_info: &mut interrupts::InterruptStackFrame) {
         use crate::arch::Arch;
-        crate::arch::x86::ArchX86::serial().expect("Serial driver wasn't initiliazed, but handler was called!").process_input();
+        let mut serial = crate::arch::x86::ArchX86::serial().expect("Serial driver wasn't initiliazed, but handler was called!");
+        unsafe { serial.as_mut().process_input() };
+        pic::send_eoi(4);
+    }
+
+    fn handle_irq_com2(_stack_info: &mut interrupts::InterruptStackFrame) {
+        use crate::arch::Arch;
+        let mut serial = crate::arch::x86::ArchX86::serial().expect("Serial driver wasn't initiliazed, but handler was called!");
+        unsafe { serial.as_mut().process_input() };
+        pic::send_eoi(3);
     }
 
     fn has_next(&self) -> bool {
