@@ -15,14 +15,12 @@ impl Kernel {
     }
 
     pub fn run(&mut self) -> ! {
-        let serial = unsafe { self.arch.serial().unwrap().as_mut() };
-        let video = unsafe { self.arch.video().unwrap().as_mut() };
-        let timer = unsafe { self.arch.timer().as_mut() };
+        let video = TargetArch::video().expect("Video driver wasn't init!");
+        let serial = TargetArch::serial().expect("Serial driver wasn't init!");
+        let timer = TargetArch::timer();
         video.clear();
-        /*
         timer.sleep(100);
         writeln!(video, "{}", timer.get_uptime_ms());
-        */
         loop {
             if serial.has_next_byte() {
                 write!(video, "hey!");
@@ -34,13 +32,11 @@ impl Kernel {
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        if let Some(mut video_console) = self.arch.video() {
-            let video_console = unsafe { video_console.as_mut() };
+        if let Some(video_console) = TargetArch::video(){ 
             video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video_console, "{}", info);
         }
-        if let Some(mut serial_console) = self.arch.serial() {
-            let serial_console = unsafe { serial_console.as_mut() };
+        if let Some(serial_console) = TargetArch::serial() {
             let _ = writeln!(serial_console, "{}", info);
         }
         loop {}

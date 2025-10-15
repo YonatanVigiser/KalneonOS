@@ -1,7 +1,6 @@
 use heapless::spsc::Queue;
 use crate::arch::x86::cpu::{inb, outb};
 use crate::arch::x86::{interrupts, pic};
-use crate::arch::x86::SERIAL_CONSOLE_REF;
 
 const COM1_IO_PORT: u16 = 0x3F8;
 const COM2_IO_PORT: u16 = 0x2F8;
@@ -54,9 +53,8 @@ impl SerialDriver {
     }
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
-        if let Some(mut serial_console) = unsafe { SERIAL_CONSOLE_REF } {
-            unsafe { serial_console.as_mut() }.process_input();
-        }
+        use crate::arch::Arch;
+        crate::arch::x86::ArchX86::serial().expect("Serial driver wasn't initiliazed, but handler was called!").process_input();
     }
 
     fn has_next(&self) -> bool {
