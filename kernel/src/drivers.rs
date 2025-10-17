@@ -1,2 +1,1 @@
-pub mod pit;
-pub mod video;
+pub mod traits;

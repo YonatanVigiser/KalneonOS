@@ -7,9 +7,13 @@ mod drivers;
 mod kernel;
 mod utils;
 
-use kernel::kmain::kernel_main;
+use arch::Arch;
+
+#[cfg(target_arch = "x86")]
+pub type TargetArch = arch::x86::ArchX86;
 
 #[unsafe(no_mangle)]
-pub extern "C" fn _start(boot_info_ptr: u32) -> ! {
-    kernel_main(boot_info_ptr)
+pub extern "C" fn main(boot_magic_val: usize, boot_info_ptr: usize) -> ! {
+    let arch = TargetArch::init(boot_magic_val, boot_info_ptr);
+    kernel::kmain(arch)
 }
