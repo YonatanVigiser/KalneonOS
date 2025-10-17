@@ -1,67 +1,108 @@
 pub mod cpu;
+pub mod drivers;
 pub mod idt;
 pub mod interrupts;
 pub mod pic;
-pub mod drivers;
 
 use super::Arch;
 
-use crate::drivers::traits::console::{VideoConsole, SerialConsole};
-use crate::drivers::traits::timer::Timer;
+use crate::drivers::traits::console::VideoConsole;
 
-use drivers::vga::Vga;
-use drivers::serial::SerialDriver;
 use drivers::pit::PitTimer;
+use drivers::serial::SerialDriver;
+use drivers::vga::Vga;
 
-use core::ptr::NonNull;
+use core::fmt::Write;
 use core::panic::PanicInfo;
 
-// Early boot drivers refrences for IRQ handlers
-static mut VIDEO_DRIVER: Option<Vga> = None;
-static mut SERIAL_DRIVER: Option<SerialDriver> = None;
-static mut TIMER_DRIVER: Option<PitTimer> = None;
+use spin::mutex::Mutex;
+
+// Early boot drivers references for IRQ handlers
+static VIDEO_DRIVER: Mutex<Option<Vga>> = Mutex::new(None);
+static SERIAL_DRIVER: Mutex<Option<SerialDriver>> = Mutex::new(None);
+static TIMER_DRIVER: Mutex<Option<PitTimer>> = Mutex::new(None);
+
+// Helper functions for IRQ-safe direct access (bypasses mutex, only for IRQ handlers)
+impl ArchX86 {
+    /// SAFETY: This must ONLY be called from IRQ handlers where interrupts are already disabled
+    /// Accesses the driver data directly, bypassing the mutex lock to avoid deadlocks in IRQ context
+    pub unsafe fn video_irq_unsafe() -> &'static mut Option<Vga> {
+        // SAFETY: In IRQ context, interrupts are disabled, so we have exclusive access
+        // We're directly accessing the data inside the Mutex by converting to raw pointer
+        unsafe {
+            let mutex_ptr = &VIDEO_DRIVER as *const Mutex<Option<Vga>> as *mut Mutex<Option<Vga>>;
+            (*mutex_ptr).get_mut()
+        }
+    }
+
+    /// SAFETY: This must ONLY be called from IRQ handlers where interrupts are already disabled
+    pub unsafe fn serial_irq_unsafe() -> &'static mut Option<SerialDriver> {
+        unsafe {
+            let mutex_ptr = &SERIAL_DRIVER as *const Mutex<Option<SerialDriver>>
+                as *mut Mutex<Option<SerialDriver>>;
+            (*mutex_ptr).get_mut()
+        }
+    }
+
+    /// SAFETY: This must ONLY be called from IRQ handlers where interrupts are already disabled
+    pub unsafe fn timer_irq_unsafe() -> &'static mut Option<PitTimer> {
+        unsafe {
+            let mutex_ptr =
+                &TIMER_DRIVER as *const Mutex<Option<PitTimer>> as *mut Mutex<Option<PitTimer>>;
+            (*mutex_ptr).get_mut()
+        }
+    }
+}
 
 pub struct ArchX86();
 
 impl Arch for ArchX86 {
+    type VideoDriver = Vga;
+    type SerialDriver = SerialDriver;
+    type TimerDriver = PitTimer;
+
     fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
         // Init CPU intterupts
         idt::init();
         pic::init();
 
         // Init early drivers
-        unsafe {
-            VIDEO_DRIVER = Some(Vga::init(80, 25));
-            SERIAL_DRIVER = SerialDriver::init();
-            TIMER_DRIVER = Some(PitTimer::init());
-        }
+        *VIDEO_DRIVER.lock() = Some(Vga::init(80, 25));
+        *SERIAL_DRIVER.lock() = SerialDriver::init();
+        *TIMER_DRIVER.lock() = Some(PitTimer::init());
 
         // Finish init - enable interrupts
-        unsafe { cpu::sti(); }
+        unsafe {
+            cpu::sti();
+        }
         Self()
     }
 
     fn panic(&mut self, info: &PanicInfo) -> ! {
         use crate::kernel::display::color::Color;
-        unsafe { cpu::cli(); }
+        unsafe {
+            cpu::cli();
+        }
 
-        if let Some(video_console) = Self::video() {
-            let video_console = unsafe { video_console.as_mut() };
-            video_console.set_bg(Color::red()).set_fg(Color::black()).clear();
+        if let Some(ref mut video_console) = *Self::video().lock() {
+            video_console
+                .set_bg(Color::red())
+                .set_fg(Color::black())
+                .clear();
             let _ = writeln!(video_console, "{}", info);
         }
-        loop { }
+        loop {}
     }
 
-    fn video() -> Option<core::ptr::NonNull<dyn VideoConsole>> {
-        unsafe { VIDEO_DRIVER.map(|v| NonNull::from(&v as &dyn VideoConsole)) }
+    fn video() -> &'static Mutex<Option<Vga>> {
+        &VIDEO_DRIVER
     }
 
-    fn serial() -> Option<core::ptr::NonNull<dyn SerialConsole>> {
-        unsafe { SERIAL_DRIVER.map(|s| NonNull::from(&s as &dyn SerialConsole)) }
+    fn serial() -> &'static Mutex<Option<SerialDriver>> {
+        &SERIAL_DRIVER
     }
 
-    fn timer() -> core::ptr::NonNull<dyn Timer> {
-        unsafe { NonNull::from(&TIMER_DRIVER.expect("Timer driver wasn't initilized before acceced!") as &dyn Timer) }
+    fn timer() -> &'static Mutex<Option<PitTimer>> {
+        &TIMER_DRIVER
     }
 }

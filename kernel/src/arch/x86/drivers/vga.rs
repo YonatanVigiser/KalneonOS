@@ -125,6 +125,12 @@ pub struct Vga {
     cell_under_cursor: VgaCell,
 }
 
+// SAFETY: Vga contains a pointer to memory-mapped I/O (VGA text buffer at 0xB8000).
+// This is not heap memory and is safe to access from any execution context.
+// The hardware handles concurrent access, and VGA text mode operations are atomic at the u16 level.
+unsafe impl Send for Vga {}
+unsafe impl Sync for Vga {}
+
 impl Vga {
     pub fn init(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();

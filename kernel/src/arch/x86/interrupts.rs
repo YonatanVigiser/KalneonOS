@@ -25,7 +25,7 @@ pub struct InterruptStackFrame {
 debug_hex!(InterruptStackFrame,
   hex: [eflags, cs, eip, err_code, int_num, eax, ecx, edx, ebx, esp, ebp, esi, edi, ds, es, fs, gs],
   normal: []
-); 
+);
 
 static mut INTS_HANDLERS: [fn(&mut InterruptStackFrame); 256] = [interrupt_panic; 256];
 
@@ -51,9 +51,14 @@ pub extern "C" fn interrupts_handler(stack_frame: &mut InterruptStackFrame) {
 }
 
 fn interrupt_panic(stack_frame: &mut InterruptStackFrame) {
-    panic!("Intterupt num: {}, is unimplemented! Stack frame:\n{:?}", stack_frame.int_num, stack_frame);
+    panic!(
+        "Intterupt num: {}, is unimplemented! Stack frame:\n{:?}",
+        stack_frame.int_num, stack_frame
+    );
 }
 
 pub fn register_interrupt_handler(int_num: u8, handler: fn(&mut InterruptStackFrame)) {
-    unsafe { INTS_HANDLERS[int_num as usize] = handler; }
+    unsafe {
+        INTS_HANDLERS[int_num as usize] = handler;
+    }
 }
