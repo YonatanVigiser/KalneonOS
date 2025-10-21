@@ -1,11 +1,14 @@
 #![no_std]
 #![no_main]
+#![feature(alloc_error_handler)]
 
 mod arch;
 mod boot;
 mod drivers;
 mod kernel;
 mod utils;
+
+extern crate alloc;
 
 use arch::Arch;
 

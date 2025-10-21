@@ -70,7 +70,7 @@ pub fn kmain(arch: TargetArch) -> ! {
 use core::panic::PanicInfo;
 
 #[panic_handler]
-pub fn panic(info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
     unsafe {
         if let Some(mut kernel) = KERNEL {
             kernel.as_mut().panic(info)
@@ -80,4 +80,14 @@ pub fn panic(info: &PanicInfo) -> ! {
             loop {}
         }
     }
+}
+
+use linked_list_allocator::LockedHeap;
+
+#[global_allocator]
+pub static HEAP_ALLOCATOR: LockedHeap = LockedHeap::empty();
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
+    panic!("Allocation failed: {:?}", layout)
 }

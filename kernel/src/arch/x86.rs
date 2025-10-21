@@ -3,6 +3,7 @@ pub mod drivers;
 pub mod idt;
 pub mod interrupts;
 pub mod pic;
+pub mod heap;
 
 use super::Arch;
 
@@ -62,8 +63,13 @@ impl Arch for ArchX86 {
     type TimerDriver = PitTimer;
 
     fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
-        // Init CPU intterupts
+        // Init CPU
         idt::init();
+
+        // Init heap
+        heap::init_heap();
+
+        // Init intterupts:
         pic::init();
 
         // Init early drivers
