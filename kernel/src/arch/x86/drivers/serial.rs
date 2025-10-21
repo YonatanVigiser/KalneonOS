@@ -100,6 +100,8 @@ impl SerialDriver {
 
 use crate::drivers::traits::console::{InputConsole, OutputConsole, SerialConsole};
 
+unsafe impl Sync for SerialDriver {}
+
 impl core::fmt::Write for SerialDriver {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         for byte in s.bytes() {

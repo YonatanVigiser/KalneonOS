@@ -13,7 +13,7 @@ pub trait Arch {
     fn panic(&mut self, info: &PanicInfo) -> !;
 
     // Arch-specific drivers access - returns references to static mutexes
-    fn video() -> Option<Box<dyn VideoConsole>>;
+    fn video() -> ;
     fn serial() -> Option<Box<dyn SerialConsole>>;
     fn timer() -> Box<dyn Timer>;
 }

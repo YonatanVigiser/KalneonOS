@@ -1,8 +1,8 @@
 use crate::kernel::display::color::Color;
 
-pub trait OutputConsole: core::fmt::Write {}
+pub trait OutputConsole: core::fmt::Write + Sync {}
 
-pub trait InputConsole {
+pub trait InputConsole : Sync {
     fn process_input(&mut self);
     fn read_byte(&mut self) -> Option<u8>;
     fn has_next_byte(&self) -> bool;

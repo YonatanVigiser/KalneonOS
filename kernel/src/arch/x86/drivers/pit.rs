@@ -36,6 +36,8 @@ impl PitTimer {
     }
 }
 
+unsafe impl Sync for PitTimer {}
+
 impl Timer for PitTimer {
     fn get_uptime_ms(&self) -> u64 {
         self.0 * 10
