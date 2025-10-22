@@ -12,6 +12,8 @@ use crate::arch::x86::interrupts;
 use crate::arch::x86::pic;
 use crate::drivers::traits::timer::Timer;
 
+use crate::arch::Arch;
+
 pub struct PitTimer(u64);
 
 impl PitTimer {
@@ -26,15 +28,14 @@ impl PitTimer {
     }
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
-        unsafe {
-            crate::arch::x86::ArchX86::timer_irq_unsafe()
-                .as_mut()
-                .expect("Timer driver was not initilized!")
-                .tick();
+        if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
+            arch_drivers.timer.tick();
         }
         pic::send_eoi(IRQ_NUM);
     }
 }
+
+unsafe impl Sync for PitTimer {}
 
 impl Timer for PitTimer {
     fn get_uptime_ms(&self) -> u64 {

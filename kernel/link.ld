@@ -21,7 +21,13 @@ SECTIONS {
     *(COMMON)
   }
 
-  .stack ALIGN(16) : {
+  .stack : ALIGN(16) {
     KEEP(*(.stack))
+  }
+
+  .heap (NOLOAD) : ALIGN(4K) {
+    __heap_start = .;
+    . += 4M;
+    __heap_end = .;
   }
 }
