@@ -1,283 +1,375 @@
 error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|61|:|61|:|5|:|28|:|type `VideoDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `VideoDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:61:5[0m
+warning|:|src/arch.rs|:|10|:|10|:|11|:|15|:|associated function `take_arch_drivers` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `take_arch_drivers` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type VideoDriver = Vga;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
-
-|:|none
-error|:|src/arch/x86.rs|:|62|:|62|:|5|:|38|:|type `SerialDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `SerialDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:62:5[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Arch {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12massociated function in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn take_arch_drivers() -> ArchDrivers;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type SerialDriver = SerialDriver;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|63|:|63|:|5|:|33|:|type `TimerDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `TimerDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:63:5[0m
+warning|:|src/arch.rs|:|18|:|18|:|8|:|25|:|associated function `take_arch_drivers` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `take_arch_drivers` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type TimerDriver = PitTimer;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
-
-|:|none
-error|:|src/arch/x86.rs|:|61|:|61|:|5|:|28|:|type `VideoDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `VideoDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:61:5[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Arch {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12massociated function in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn take_arch_drivers() -> ArchDrivers;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type VideoDriver = Vga;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|62|:|62|:|5|:|38|:|type `SerialDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `SerialDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:62:5[0m
+warning|:|src/arch/x86/cpu.rs|:|61|:|61|:|15|:|19|:|function `halt` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `halt` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:61:15[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type SerialDriver = SerialDriver;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
+[0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn halt() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|63|:|63|:|5|:|33|:|type `TimerDriver` is not a member of trait `Arch`|:|[0m[1m[38;5;9merror[E0437][0m[0m[1m: type `TimerDriver` is not a member of trait `Arch`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:63:5[0m
+warning|:|src/arch/x86/cpu.rs|:|67|:|67|:|15|:|28|:|function `enable_paging` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `enable_paging` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:67:15[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    type TimerDriver = PitTimer;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot a member of trait `Arch`[0m
+[0m[1m[38;5;12m67[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn enable_paging(pd_address: u32) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|103|:|103|:|19|:|46|:|method `video` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `video` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:103:19[0m
+warning|:|src/arch/x86/drivers/vga.rs|:|113|:|113|:|12|:|15|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:115:5[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn video() -> &'static Mutex<Option<Vga>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Box<dyn VideoConsole>>`, found `&Mutex<Option<Vga>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:16:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn video() -> Option<Box<dyn VideoConsole>>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> core::option::Option<[0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>[0m[0m>`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<[0m[0mcore::option::Option<[0m[0m[1m[35march::x86::drivers::vga::Vga[0m[0m>[0m[0m[1m[35m>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[38;5;9m- [0m[0m    fn video() -> [0m[0m[38;5;9m&'static Mutex<Option<Vga>>[0m[0m {[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn video() -> [0m[0m[38;5;10mcore::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m113[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Vga {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+[0m[1m[38;5;12m114[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    vmem_ptr: *mut u16,[0m
+[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    video_type: VideoType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-note|:|src/arch.rs|:|16|:|16|:|19|:|48|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|103|:|103|:|19|:|46|:|change the output type to match the trait|:|none|:|core::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>>
-error|:|src/arch/x86.rs|:|107|:|107|:|20|:|56|:|method `serial` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `serial` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:107:20[0m
+warning|:|src/arch/x86/drivers/vga.rs|:|115|:|115|:|5|:|15|:|field `video_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `video_type` is never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:115:5[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn serial() -> &'static Mutex<Option<SerialDriver>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Box<dyn SerialConsole>>`, found `&Mutex<Option<SerialDriver>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:17:20[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn serial() -> Option<Box<dyn SerialConsole>>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> core::option::Option<[0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>[0m[0m>`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<[0m[0mcore::option::Option<[0m[0m[1m[35march::x86::drivers::serial::SerialDriver[0m[0m>[0m[0m[1m[35m>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[38;5;9m- [0m[0m    fn serial() -> [0m[0m[38;5;9m&'static Mutex<Option<SerialDriver>>[0m[0m {[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn serial() -> [0m[0m[38;5;10mcore::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m113[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Vga {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m---[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+[0m[1m[38;5;12m114[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    vmem_ptr: *mut u16,[0m
+[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    video_type: VideoType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-note|:|src/arch.rs|:|17|:|17|:|20|:|50|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|107|:|107|:|20|:|56|:|change the output type to match the trait|:|none|:|core::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>>
-error|:|src/arch/x86.rs|:|111|:|111|:|19|:|51|:|method `timer` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `timer` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:111:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn timer() -> &'static Mutex<Option<PitTimer>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Box<dyn Timer>`, found `&Mutex<Option<PitTimer>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn timer() -> Box<dyn Timer>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> [0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>[0m[0m`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<core::option::Option<arch::x86::drivers::pit::PitTimer>>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[38;5;9m- [0m[0m    fn timer() -> [0m[0m[38;5;9m&'static Mutex<Option<PitTimer>>[0m[0m {[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn timer() -> [0m[0m[38;5;10malloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-
-|:|none
-note|:|src/arch.rs|:|18|:|18|:|19|:|33|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|111|:|111|:|19|:|51|:|change the output type to match the trait|:|none|:|alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>
-error|:|src/arch/x86.rs|:|93|:|93|:|61|:|65|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:93:61[0m
+warning|:|src/arch/x86/pic.rs|:|60|:|60|:|8|:|16|:|function `mask_irq` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `mask_irq` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:60:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(ref mut video_console) = *Self::video().lock() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn mask_irq(mut irq: u8) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|95|:|95|:|18|:|24|:|type annotations needed|:|[0m[1m[38;5;9merror[E0282][0m[0m[1m: type annotations needed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:95:18[0m
+warning|:|src/arch/x86/pic.rs|:|96|:|96|:|8|:|18|:|function `unmask_all` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `unmask_all` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:96:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                .set_bg(Color::red())[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9mcannot infer type for type parameter `T` declared on the enum `Option`[0m
+[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn unmask_all() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|103|:|103|:|19|:|46|:|method `video` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `video` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:103:19[0m
+warning|:|src/arch/x86/pic.rs|:|115|:|115|:|8|:|31|:|function `get_spurious_irqs_count` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `get_spurious_irqs_count` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:115:8[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn video() -> &'static Mutex<Option<Vga>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Box<dyn VideoConsole>>`, found `&Mutex<Option<Vga>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:16:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn video() -> Option<Box<dyn VideoConsole>>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> core::option::Option<[0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>[0m[0m>`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<[0m[0mcore::option::Option<[0m[0m[1m[35march::x86::drivers::vga::Vga[0m[0m>[0m[0m[1m[35m>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[38;5;9m- [0m[0m    fn video() -> [0m[0m[38;5;9m&'static Mutex<Option<Vga>>[0m[0m {[0m
-[0m[1m[38;5;12m103[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn video() -> [0m[0m[38;5;10mcore::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn get_spurious_irqs_count() -> u32 {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
 
 |:|none
-note|:|src/arch.rs|:|16|:|16|:|19|:|48|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|103|:|103|:|19|:|46|:|change the output type to match the trait|:|none|:|core::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::VideoConsole + 'static)>>
-error|:|src/arch/x86.rs|:|107|:|107|:|20|:|56|:|method `serial` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `serial` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:107:20[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn serial() -> &'static Mutex<Option<SerialDriver>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<Box<dyn SerialConsole>>`, found `&Mutex<Option<SerialDriver>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:17:20[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn serial() -> Option<Box<dyn SerialConsole>>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> core::option::Option<[0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>[0m[0m>`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<[0m[0mcore::option::Option<[0m[0m[1m[35march::x86::drivers::serial::SerialDriver[0m[0m>[0m[0m[1m[35m>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[38;5;9m- [0m[0m    fn serial() -> [0m[0m[38;5;9m&'static Mutex<Option<SerialDriver>>[0m[0m {[0m
-[0m[1m[38;5;12m107[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn serial() -> [0m[0m[38;5;10mcore::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
+warning|:|src/boot/boot_info.rs|:|5|:|5|:|12|:|26|:|struct `MemoryMapEntry` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `MemoryMapEntry` is never constructed[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:5:12[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct MemoryMapEntry {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-note|:|src/arch.rs|:|17|:|17|:|20|:|50|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|107|:|107|:|20|:|56|:|change the output type to match the trait|:|none|:|core::option::Option<alloc::boxed::Box<(dyn drivers::traits::console::SerialConsole + 'static)>>
-error|:|src/arch/x86.rs|:|111|:|111|:|19|:|51|:|method `timer` has an incompatible type for trait|:|[0m[1m[38;5;9merror[E0053][0m[0m[1m: method `timer` has an incompatible type for trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:111:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn timer() -> &'static Mutex<Option<PitTimer>> {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Box<dyn Timer>`, found `&Mutex<Option<PitTimer>>`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;10mnote[0m[0m: type in trait[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:19[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn timer() -> Box<dyn Timer>;[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected signature `fn() -> [0m[0m[1m[35malloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>[0m[0m`[0m
-[0m               found signature `fn() -> [0m[0m[1m[35m&'static spin::mutex::Mutex<core::option::Option<arch::x86::drivers::pit::PitTimer>>[0m[0m`[0m
-[0m[1m[38;5;14mhelp[0m[0m: change the output type to match the trait[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[38;5;9m- [0m[0m    fn timer() -> [0m[0m[38;5;9m&'static Mutex<Option<PitTimer>>[0m[0m {[0m
-[0m[1m[38;5;12m111[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn timer() -> [0m[0m[38;5;10malloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>[0m[0m {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-
-|:|none
-note|:|src/arch.rs|:|18|:|18|:|19|:|33|:|type in trait|:|none|:|none
-help|:|src/arch/x86.rs|:|111|:|111|:|19|:|51|:|change the output type to match the trait|:|none|:|alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>
-error|:|src/kernel.rs|:|22|:|22|:|47|:|51|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:22:47[0m
+warning|:|src/boot/boot_info.rs|:|19|:|19|:|12|:|25|:|struct `BootInfoBlock` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `BootInfoBlock` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:19:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m22[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut binding = TargetArch::video().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct BootInfoBlock {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|25|:|25|:|48|:|52|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:25:48[0m
+warning|:|src/boot/boot_info.rs|:|41|:|41|:|1|:|19|:|associated items `copy_from_ptr` and `memory_map` are never used|:|[0m[1m[33mwarning[0m[0m[1m: associated items `copy_from_ptr` and `memory_map` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:42:19[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut binding = TargetArch::serial().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn SerialConsole>>`[0m
+[0m[1m[38;5;12m41[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl BootInfoBlock {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12massociated items in this implementation[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub unsafe fn copy_from_ptr(ptr: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn memory_map(&self) -> &[MemoryMapEntry] {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|27|:|27|:|43|:|47|:|no method named `lock` found for struct `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for struct `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:27:43[0m
+warning|:|src/boot/boot_info.rs|:|42|:|42|:|19|:|32|:|associated items `copy_from_ptr` and `memory_map` are never used|:|[0m[1m[33mwarning[0m[0m[1m: associated items `copy_from_ptr` and `memory_map` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:42:19[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m27[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let binding = TargetArch::timer().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: items from traits can only be used if the trait is implemented and in scope[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the following trait defines an item `lock`, perhaps you need to implement it:[0m
-[0m           candidate #1: `lock_api::mutex::RawMutex`[0m
+[0m[1m[38;5;12m41[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl BootInfoBlock {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12massociated items in this implementation[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub unsafe fn copy_from_ptr(ptr: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn memory_map(&self) -> &[MemoryMapEntry] {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|39|:|39|:|58|:|62|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:39:58[0m
+warning|:|src/boot/boot_info.rs|:|48|:|48|:|12|:|22|:|associated items `copy_from_ptr` and `memory_map` are never used|:|[0m[1m[33mwarning[0m[0m[1m: associated items `copy_from_ptr` and `memory_map` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:42:19[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(video_console) = TargetArch::video().lock().as_mut() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+[0m[1m[38;5;12m41[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl BootInfoBlock {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12massociated items in this implementation[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub unsafe fn copy_from_ptr(ptr: u32) -> Self {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn memory_map(&self) -> &[MemoryMapEntry] {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|46|:|46|:|60|:|64|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:46:60[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m46[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(serial_console) = TargetArch::serial().lock().as_mut() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                            [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn SerialConsole>>`[0m
+warning|:|src/drivers/traits/console.rs|:|5|:|5|:|11|:|23|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|93|:|93|:|61|:|65|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:93:61[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(ref mut video_console) = *Self::video().lock() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+warning|:|src/drivers/traits/console.rs|:|7|:|7|:|8|:|17|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
-error|:|src/arch/x86.rs|:|95|:|95|:|18|:|24|:|type annotations needed|:|[0m[1m[38;5;9merror[E0282][0m[0m[1m: type annotations needed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:95:18[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                .set_bg(Color::red())[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9mcannot infer type for type parameter `T` declared on the enum `Option`[0m
+warning|:|src/drivers/traits/console.rs|:|8|:|8|:|8|:|21|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|22|:|22|:|47|:|51|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:22:47[0m
+warning|:|src/drivers/traits/console.rs|:|11|:|11|:|11|:|23|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m22[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut binding = TargetArch::video().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|25|:|25|:|48|:|52|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:25:48[0m
+warning|:|src/drivers/traits/console.rs|:|12|:|12|:|8|:|22|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut binding = TargetArch::serial().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn SerialConsole>>`[0m
+[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|27|:|27|:|43|:|47|:|no method named `lock` found for struct `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for struct `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:27:43[0m
+warning|:|src/drivers/traits/console.rs|:|14|:|14|:|8|:|19|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m27[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let binding = TargetArch::timer().lock();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `alloc::boxed::Box<(dyn drivers::traits::timer::Timer + 'static)>`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: items from traits can only be used if the trait is implemented and in scope[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the following trait defines an item `lock`, perhaps you need to implement it:[0m
-[0m           candidate #1: `lock_api::mutex::RawMutex`[0m
+[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|39|:|39|:|58|:|62|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:39:58[0m
+warning|:|src/drivers/traits/console.rs|:|17|:|17|:|8|:|17|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(video_console) = TargetArch::video().lock().as_mut() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                          [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn VideoConsole>>`[0m
+[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-error|:|src/kernel.rs|:|46|:|46|:|60|:|64|:|no method named `lock` found for enum `Option` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no method named `lock` found for enum `Option` in the current scope[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:46:60[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m46[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(serial_console) = TargetArch::serial().lock().as_mut() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                            [0m[0m[1m[38;5;9m^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Option<Box<dyn SerialConsole>>`[0m
+warning|:|src/kernel.rs|:|7|:|7|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:8:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
 
 |:|none
+warning|:|src/kernel.rs|:|8|:|8|:|5|:|9|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:8:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
+
+|:|none
+warning|:|src/kernel/display/color.rs|:|39|:|39|:|1|:|26|:|methods `select_closest` and `select_nth` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `select_closest` and `select_nth` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:40:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> ColorPalette<'_> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-------------------------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_closest(&self, target: &Color) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_nth(&self, index: usize) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/kernel/display/color.rs|:|40|:|40|:|12|:|26|:|methods `select_closest` and `select_nth` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `select_closest` and `select_nth` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:40:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> ColorPalette<'_> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-------------------------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_closest(&self, target: &Color) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_nth(&self, index: usize) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/kernel/display/color.rs|:|60|:|60|:|12|:|22|:|methods `select_closest` and `select_nth` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `select_closest` and `select_nth` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:40:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> ColorPalette<'_> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-------------------------[0m[0m [0m[0m[1m[38;5;12mmethods in this implementation[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_closest(&self, target: &Color) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn select_nth(&self, index: usize) -> &Color {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/cpu.rs|:|8|:|8|:|11|:|23|:|passing pointers to nomem asm block|:|[0m[1m[33mwarning[0m[0m[1m: passing pointers to nomem asm block[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:8:11[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m          in(reg) idtr,[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `nomem` means that no memory write or read happens inside the asm! block[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: if this is intentional and no pointers are read or written to, consider allowing the lint[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#pointers_in_nomem_asm_block[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::pointers_in_nomem_asm_block)]` on by default[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/serial.rs|:|38|:|38|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:38:14[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0x03); // Set divisor to 3 (lo byte) 38400 baud[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m              [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::identity_op)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/serial.rs|:|38|:|38|:|14|:|22|:|consider reducing it to|:|none|:|port
+warning|:|src/arch/x86/drivers/serial.rs|:|45|:|45|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:45:14[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m45[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0xAE); // Test serial chip (send byte 0xAE and check if serial returns same byte)[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m              [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
+
+|:|none
+help|:|src/arch/x86/drivers/serial.rs|:|45|:|45|:|14|:|22|:|consider reducing it to|:|none|:|port
+warning|:|src/arch/x86/drivers/serial.rs|:|48|:|48|:|16|:|24|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:48:16[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if inb(port + 0) != 0xAE {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
+
+|:|none
+help|:|src/arch/x86/drivers/serial.rs|:|48|:|48|:|16|:|24|:|consider reducing it to|:|none|:|port
+warning|:|src/kernel/display/color.rs|:|39|:|39|:|6|:|8|:|this lifetime isn't used in the impl|:|[0m[1m[33mwarning[0m[0m[1m: this lifetime isn't used in the impl[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:39:6[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m39[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> ColorPalette<'_> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m      [0m[0m[1m[33m^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#extra_unused_lifetimes[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::extra_unused_lifetimes)]` on by default[0m
+
+|:|none
+warning|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|this expression creates a reference which is immediately dereferenced by the compiler|:|[0m[1m[33mwarning[0m[0m[1m: this expression creates a reference which is immediately dereferenced by the compiler[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:47:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m47[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        &closest[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `closest`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::needless_borrow)]` on by default[0m
+
+|:|none
+help|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|change this to|:|none|:|closest
+warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:256:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m256[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.move_cursor(0, 0);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_must_use)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m256[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mself.move_cursor(0, 0);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[38;5;10m+++++++[0m
+
+|:|none
+help|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|9|:|use `let _ = ...` to ignore the resulting value|:|none|:|let _ = 
+warning|:|src/arch/x86/drivers/vga.rs|:|318|:|318|:|9|:|31|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:318:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m318[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.move_cursor(0, 0);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m318[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mself.move_cursor(0, 0);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[38;5;10m+++++++[0m
+
+|:|none
+help|:|src/arch/x86/drivers/vga.rs|:|318|:|318|:|9|:|9|:|use `let _ = ...` to ignore the resulting value|:|none|:|let _ = 

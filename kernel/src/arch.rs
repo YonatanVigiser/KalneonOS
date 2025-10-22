@@ -10,10 +10,16 @@ use alloc::boxed::Box;
 pub trait Arch {
     fn init(boot_magic_val: usize, boot_info_ptr: usize) -> Self;
 
-    fn panic(&mut self, info: &PanicInfo) -> !;
+    fn panic(info: &PanicInfo) -> !;
 
-    // Arch-specific drivers access - returns references to static mutexes
-    fn video() -> ;
-    fn serial() -> Option<Box<dyn SerialConsole>>;
-    fn timer() -> Box<dyn Timer>;
+    // Arch-specific drivers access - returns static reference to arch drivers
+    fn arch_drivers() -> Option<&'static mut ArchDrivers>;
+
+    fn take_arch_drivers() -> ArchDrivers;
+}
+
+pub struct ArchDrivers {
+    pub video: Option<Box<dyn VideoConsole>>,
+    pub serial: Option<Box<dyn SerialConsole>>,
+    pub timer: Box<dyn Timer>,
 }

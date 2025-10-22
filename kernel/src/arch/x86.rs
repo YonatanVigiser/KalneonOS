@@ -5,26 +5,19 @@ pub mod interrupts;
 pub mod pic;
 pub mod heap;
 
-use super::Arch;
-
-use crate::drivers::traits::console::{VideoConsole,SerialConsole};
-use crate::drivers::traits::timer::Timer;
-
+use super::{Arch, ArchDrivers};
 
 use drivers::pit::PitTimer;
 use drivers::serial::SerialDriver;
 use drivers::vga::Vga;
 
-use core::fmt::Write;
 use core::panic::PanicInfo;
 
 use alloc::boxed::Box;
 
-
 // Early boot drivers references for IRQ handlers
-pub static VIDEO_DRIVER: Option<&mut dyn VideoConsole> = None;
-pub static SERIAL_DRIVER: Option<&mut dyn SerialConsole> = None;
-pub static TIMER_DRIVER: Option<&mut dyn Timer> = None;
+// This is initialized once during boot and then accessed by both IRQ handlers and kernel
+pub static mut ARCH_DRIVERS: Option<ArchDrivers> = None;
 
 pub struct ArchX86();
 
@@ -40,40 +33,59 @@ impl Arch for ArchX86 {
         pic::init();
 
         // Init early drivers
-        *VIDEO_DRIVER.lock() = Some(Vga::init(80, 25));
-        *SERIAL_DRIVER.lock() = SerialDriver::init();
-        *TIMER_DRIVER.lock() = Some(PitTimer::init());
+        unsafe {
+            ARCH_DRIVERS = Some(ArchDrivers {
+                video: Some(Box::new(Vga::init(80,25))),
+                serial: {
+                    if let Some(driver) = SerialDriver::init() {
+                        Some(Box::new(driver))
+                    } else {
+                        None
+                    }
+                },
+                timer: Box::new(PitTimer::init()),
+            });
+        }
+        if let Some(arch_drivers) = Self::arch_drivers() && let Some(video) = arch_drivers.video.as_mut() {
+            let _ = video.clear().write_str("Arch init is complete!");
+        }
 
         // Finish init - enable interrupts
         unsafe {
             cpu::sti();
         }
+
         Self()
     }
 
-    fn panic(&mut self, info: &PanicInfo) -> ! {
+    fn panic(info: &PanicInfo) -> ! {
         use crate::kernel::display::color::Color;
+        
         unsafe {
             cpu::cli();
         }
 
-        if let Some(ref mut video_console) = *Self::video().lock() {
-            video_console
-                .set_bg(Color::red())
-                .set_fg(Color::black())
-                .clear();
-            let _ = writeln!(video_console, "{}", info);
+        if let Some(arch_drivers) = Self::arch_drivers() && let Some(video) = arch_drivers.video.as_mut() {
+            video.set_bg(Color::red()).set_fg(Color::black()).clear();
+            let _ = writeln!(video, "{}", info);
         }
-        loop {}
+
+        loop {
+            core::hint::spin_loop();
+        }
     }
 
-    fn video() -> Option<Box<dyn VideoConsole>> {
+    fn arch_drivers() -> Option<&'static mut ArchDrivers> {
+        unsafe {
+            let ptr = core::ptr::addr_of_mut!(ARCH_DRIVERS);
+            (*ptr).as_mut()
+        }
     }
 
-    fn serial() -> Option<Box<dyn SerialConsole>> {
-    }
-
-    fn timer() -> Box<dyn Timer> {
-        &TIMER_DRIVER
+    fn take_arch_drivers() -> ArchDrivers {
+        unsafe {
+            let ptr = core::ptr::addr_of_mut!(ARCH_DRIVERS);
+            (*ptr).take().expect("Arch drivers aren't initilized!")
+        }
     }
 }

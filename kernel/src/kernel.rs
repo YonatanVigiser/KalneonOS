@@ -1,13 +1,8 @@
 pub mod display;
 
-use core::fmt::Write;
 
 use crate::arch::Arch;
 use display::color::Color;
-
-use crate::drivers::traits::console::InputConsole;
-use crate::drivers::traits::console::VideoConsole;
-use crate::drivers::traits::timer::Timer;
 
 pub struct Kernel {
     arch: TargetArch,
@@ -19,52 +14,52 @@ impl Kernel {
     }
 
     pub fn run(&mut self) -> ! {
-        let mut binding = TargetArch::video().lock();
-        let video = binding.as_mut().expect("Video driver wasn't init!");
-        let _ = video.clear().write_str("Waiting!\n");
-        let mut binding = TargetArch::serial().lock();
-        let serial = binding.as_mut().expect("Serial driver wasn't init!");
-        let binding = TargetArch::timer().lock();
-        let timer = binding.as_ref().expect("Timer driver wasn't init!");
-        timer.sleep(100);
-        writeln!(serial, "{}", timer.get_uptime_ms());
-        loop {
-            while serial.has_next_byte() {
-                write!(video, "{}", serial.read_byte().unwrap() as char);
+        // Access drivers through arch_drivers() - this is safe because we're the only
+        // non-interrupt code running, and interrupts don't hold references across calls
+        if let Some(arch_drivers) = TargetArch::arch_drivers() {
+            if let Some(video) = arch_drivers.video.as_mut() {
+                let _ = video.clear().write_str("Kernel start init!\n");
             }
+            let timer = arch_drivers.timer.as_mut();
+            timer.sleep(100);
+            if let Some(video) = arch_drivers.video.as_mut() {
+                let _ = writeln!(video, "{:?}", timer.get_uptime_ms());
+            }
+        }
+
+        loop {
+            core::hint::spin_loop();
         }
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        if let Some(video_console) = TargetArch::video().lock().as_mut() {
-            video_console
-                .set_bg(Color::red())
-                .set_fg(Color::black())
-                .clear();
-            let _ = writeln!(video_console, "{}", info);
+        if let Some(arch_drivers) = TargetArch::arch_drivers() {
+            if let Some(video) = arch_drivers.video.as_mut() {
+                video.set_bg(Color::red()).set_fg(Color::black()).clear();
+                let _ = writeln!(video, "{:?}", info);
+            }
+            if let Some(serial) = arch_drivers.serial.as_mut() {
+                let _ = writeln!(serial, "{:?}", info);
+            }
         }
-        if let Some(serial_console) = TargetArch::serial().lock().as_mut() {
-            let _ = writeln!(serial_console, "{}", info);
+
+        loop {
+            core::hint::spin_loop();
         }
-        loop {}
     }
 }
 
 use crate::TargetArch;
-use core::ptr::NonNull;
 
-static mut KERNEL: Option<NonNull<Kernel>> = None;
-static mut ARCH: Option<NonNull<TargetArch>> = None;
+pub static mut KERNEL: Option<Kernel> = None;
 
 pub fn kmain(arch: TargetArch) -> ! {
+    let kernel = Kernel::init(arch);
     unsafe {
-        ARCH = Some(NonNull::from(&arch));
+        KERNEL = Some(kernel);
+        let ptr = core::ptr::addr_of_mut!(KERNEL);
+        (*ptr).as_mut().unwrap().run()
     }
-    let mut kernel = Kernel::init(arch);
-    unsafe {
-        KERNEL = Some(NonNull::from(&kernel));
-    }
-    kernel.run()
 }
 
 use core::panic::PanicInfo;
@@ -72,12 +67,11 @@ use core::panic::PanicInfo;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     unsafe {
-        if let Some(mut kernel) = KERNEL {
-            kernel.as_mut().panic(info)
-        } else if let Some(mut arch) = ARCH {
-            arch.as_mut().panic(info)
+        let ptr = core::ptr::addr_of_mut!(KERNEL);
+        if let Some(kernel) = (*ptr).as_mut() {
+            kernel.panic(info)
         } else {
-            loop {}
+            TargetArch::panic(info)
         }
     }
 }
