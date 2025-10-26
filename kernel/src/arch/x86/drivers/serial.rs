@@ -64,20 +64,22 @@ impl SerialDriver {
 
     fn handle_irq_com1(_stack_info: &mut interrupts::InterruptStackFrame) {
         if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers.serial
-            .as_mut()
-            .expect("Serial driver wasn't initiliazed, but handler was called!")
-            .process_input();
+            arch_drivers
+                .serial
+                .as_mut()
+                .expect("Serial driver wasn't initiliazed, but handler was called!")
+                .process_input();
         }
         pic::send_eoi(COM1_IRQ_NUM);
     }
 
     fn handle_irq_com2(_stack_info: &mut interrupts::InterruptStackFrame) {
         if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers.serial
-            .as_mut()
-            .expect("Serial driver wasn't initiliazed, but handler was called!")
-            .process_input();
+            arch_drivers
+                .serial
+                .as_mut()
+                .expect("Serial driver wasn't initiliazed, but handler was called!")
+                .process_input();
         }
         pic::send_eoi(COM2_IRQ_NUM);
     }

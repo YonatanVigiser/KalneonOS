@@ -1,6 +1,5 @@
 pub mod display;
 
-
 use crate::arch::Arch;
 use display::color::Color;
 

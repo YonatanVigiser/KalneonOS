@@ -48,6 +48,6 @@ impl Timer for PitTimer {
 
     fn sleep(&self, ms: u64) {
         let target_time = self.get_uptime_ms() + ms;
-        while self.get_uptime_ms() < target_time { };
+        while self.get_uptime_ms() < target_time {}
     }
 }

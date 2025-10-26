@@ -80,6 +80,61 @@ warning|:|src/arch/x86/pic.rs|:|115|:|115|:|8|:|31|:|function `get_spurious_irqs
 [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
 
 |:|none
+warning|:|src/arch/x86/ps2.rs|:|19|:|19|:|7|:|18|:|constant `DEVICE_ECHO` is never used|:|[0m[1m[33mwarning[0m[0m[1m: constant `DEVICE_ECHO` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:19:7[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mconst DEVICE_ECHO: u8 = 0xEE;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|26|:|26|:|10|:|20|:|variant `ResetCPU` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variant `ResetCPU` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:38:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariant in this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|38|:|38|:|5|:|13|:|variant `ResetCPU` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variant `ResetCPU` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:38:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariant in this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|255|:|255|:|8|:|25|:|function `echo_device_port1` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port1` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:255:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m255[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port1() -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|289|:|289|:|8|:|25|:|function `echo_device_port2` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port2` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:289:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port2() -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|426|:|426|:|15|:|24|:|function `reset_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `reset_cpu` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:426:15[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m426[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn reset_cpu() -> ! {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/ps2.rs|:|434|:|434|:|15|:|23|:|function `kill_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `kill_cpu` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:434:15[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m434[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn kill_cpu() -> ! {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
 warning|:|src/boot/boot_info.rs|:|5|:|5|:|12|:|26|:|struct `MemoryMapEntry` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `MemoryMapEntry` is never constructed[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/boot/boot_info.rs:5:12[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
@@ -133,7 +188,7 @@ warning|:|src/boot/boot_info.rs|:|48|:|48|:|12|:|22|:|associated items `copy_fro
 warning|:|src/drivers/traits/console.rs|:|5|:|5|:|11|:|23|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
 [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
 [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
@@ -145,7 +200,7 @@ warning|:|src/drivers/traits/console.rs|:|5|:|5|:|11|:|23|:|methods `read_byte` 
 warning|:|src/drivers/traits/console.rs|:|7|:|7|:|8|:|17|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
 [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
 [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
@@ -157,7 +212,7 @@ warning|:|src/drivers/traits/console.rs|:|7|:|7|:|8|:|17|:|methods `read_byte` a
 warning|:|src/drivers/traits/console.rs|:|8|:|8|:|8|:|21|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole : Sync {[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
 [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
 [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
@@ -226,21 +281,21 @@ warning|:|src/drivers/traits/console.rs|:|17|:|17|:|8|:|17|:|methods `get_cursor
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/kernel.rs|:|7|:|7|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:8:5[0m
+warning|:|src/kernel.rs|:|6|:|6|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:7:5[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
 
 |:|none
-warning|:|src/kernel.rs|:|8|:|8|:|5|:|9|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:8:5[0m
+warning|:|src/kernel.rs|:|7|:|7|:|5|:|9|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:7:5[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
 
 |:|none
@@ -344,6 +399,21 @@ warning|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|this expression creat
 
 |:|none
 help|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|change this to|:|none|:|closest
+warning|:|src/arch/x86.rs|:|33|:|33|:|9|:|20|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:33:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        ps2::init();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_must_use)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mps2::init();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[38;5;10m+++++++[0m
+
+|:|none
+help|:|src/arch/x86.rs|:|33|:|33|:|9|:|9|:|use `let _ = ...` to ignore the resulting value|:|none|:|let _ = 
 warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
 [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:256:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
@@ -351,7 +421,6 @@ warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::resul
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_must_use)]` on by default[0m
 [0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m256[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mself.move_cursor(0, 0);[0m

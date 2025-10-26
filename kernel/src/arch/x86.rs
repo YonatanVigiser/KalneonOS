@@ -1,9 +1,10 @@
 pub mod cpu;
 pub mod drivers;
+pub mod heap;
 pub mod idt;
 pub mod interrupts;
 pub mod pic;
-pub mod heap;
+pub mod ps2;
 
 use super::{Arch, ArchDrivers};
 
@@ -29,13 +30,15 @@ impl Arch for ArchX86 {
         // Init heap
         heap::init_heap();
 
+        ps2::init();
+
         // Init intterupts:
         pic::init();
 
         // Init early drivers
         unsafe {
             ARCH_DRIVERS = Some(ArchDrivers {
-                video: Some(Box::new(Vga::init(80,25))),
+                video: Some(Box::new(Vga::init(80, 25))),
                 serial: {
                     if let Some(driver) = SerialDriver::init() {
                         Some(Box::new(driver))
@@ -46,7 +49,9 @@ impl Arch for ArchX86 {
                 timer: Box::new(PitTimer::init()),
             });
         }
-        if let Some(arch_drivers) = Self::arch_drivers() && let Some(video) = arch_drivers.video.as_mut() {
+        if let Some(arch_drivers) = Self::arch_drivers()
+            && let Some(video) = arch_drivers.video.as_mut()
+        {
             let _ = video.clear().write_str("Arch init is complete!");
         }
 
@@ -60,12 +65,14 @@ impl Arch for ArchX86 {
 
     fn panic(info: &PanicInfo) -> ! {
         use crate::kernel::display::color::Color;
-        
+
         unsafe {
             cpu::cli();
         }
 
-        if let Some(arch_drivers) = Self::arch_drivers() && let Some(video) = arch_drivers.video.as_mut() {
+        if let Some(arch_drivers) = Self::arch_drivers()
+            && let Some(video) = arch_drivers.video.as_mut()
+        {
             video.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video, "{}", info);
         }
