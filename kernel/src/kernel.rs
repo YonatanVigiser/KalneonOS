@@ -19,15 +19,17 @@ impl Kernel {
             if let Some(video) = arch_drivers.video.as_mut() {
                 let _ = video.clear().write_str("Kernel start init!\n");
             }
-            let timer = arch_drivers.timer.as_mut();
-            timer.sleep(100);
-            if let Some(video) = arch_drivers.video.as_mut() {
-                let _ = writeln!(video, "{:?}", timer.get_uptime_ms());
-            }
         }
 
         loop {
-            core::hint::spin_loop();
+            if let Some(arch_drivers) = TargetArch::arch_drivers() {
+                if let Some(keyboard) = arch_drivers.keyboard.as_mut() && let Some(video) = arch_drivers.video.as_mut() {
+                    if keyboard.has_next_key() {
+                        let _ = writeln!(video, "{:?}", keyboard.next_key());
+                    }
+                }
+            }
+            //core::hint::spin_loop();
         }
     }
 

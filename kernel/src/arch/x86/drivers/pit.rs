@@ -22,7 +22,6 @@ impl PitTimer {
         outb(DATA_PORT, RELOAD_VALUE as u8);
         outb(DATA_PORT, (RELOAD_VALUE >> 8) as u8);
         interrupts::register_interrupt_handler(IRQ_INT_NUM, Self::handle_irq);
-        pic::unmask_irq(IRQ_NUM);
 
         Self(0)
     }

@@ -14,6 +14,10 @@ use drivers::ps2_keyboard::PS2Keyboard;
 
 use core::panic::PanicInfo;
 
+use crate::drivers::traits::console::*;
+use crate::drivers::traits::console::keyboard::KeyboardDriver;
+use crate::drivers::traits::timer::Timer;
+
 use alloc::boxed::Box;
 
 // Early boot drivers references for IRQ handlers
@@ -21,6 +25,49 @@ use alloc::boxed::Box;
 pub static mut ARCH_DRIVERS: Option<ArchDrivers> = None;
 
 pub struct ArchX86();
+
+impl ArchX86 {
+    fn init_drivers() {
+        let video: Option<Box<dyn VideoConsole>> = Some(Box::new(Vga::init(80, 25)));
+
+        let timer: Box<dyn Timer> = Box::new(PitTimer::init());
+
+        // Init ps/2 drivers:
+        // Init the ps/2 controller
+        let mut keyboard_type = None;
+        let mut _mouse_type = None;
+        if let Ok(types) = drivers::ps2::init() {
+            (keyboard_type, _mouse_type) = types;
+        } else {
+            panic!("Opps!");
+        }
+
+        let keyboard: Option<Box<dyn KeyboardDriver>> = if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
+            Some(Box::new(driver))
+        } else {
+            None
+        };
+
+        let serial: Option<Box<dyn SerialConsole>> = if let Some(driver) = SerialDriver::init() {
+            Some(Box::new(driver))
+        } else {
+            None
+        };
+
+        unsafe { ARCH_DRIVERS = Some(ArchDrivers {
+            video,
+            serial,
+            keyboard,
+            timer,
+        });
+        }
+
+        pic::unmask_irq(0); // Timer
+        pic::unmask_irq(1); // Keyboard
+        pic::unmask_irq(4); // Serial port 1
+    }
+
+}
 
 impl Arch for ArchX86 {
     fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
@@ -33,38 +80,9 @@ impl Arch for ArchX86 {
         // Init intterupts:
         pic::init();
 
-        // Init the ps/2 controller
-        let mut keyboard_type = None;
-        let mut _mouse_type = None;
-        if let Ok(types) = drivers::ps2::init() {
-            (keyboard_type, _mouse_type) = types;
-        }
-
         // Init early drivers
-        unsafe {
-            ARCH_DRIVERS = Some(ArchDrivers {
-                video: Some(Box::new(Vga::init(80, 25))),
-                serial: {
-                    if let Some(driver) = SerialDriver::init() {
-                        Some(Box::new(driver))
-                    } else {
-                        None
-                    }
-                },
-                keyboard: {
-                    if let Some(keyboard_type) = keyboard_type {
-                        if let Ok(driver) = PS2Keyboard::init(keyboard_type) {
-                            Some(Box::new(driver))
-                        } else {
-                            None
-                        }
-                    } else {
-                        None
-                    }
-                },
-                timer: Box::new(PitTimer::init()),
-            });
-        }
+        Self::init_drivers();
+
         if let Some(arch_drivers) = Self::arch_drivers()
             && let Some(video) = arch_drivers.video.as_mut()
         {

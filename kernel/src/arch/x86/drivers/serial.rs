@@ -23,11 +23,9 @@ impl SerialDriver {
         if let Some(result) = Self::try_init_port(COM1_IO_PORT) {
             driver = Some(result);
             interrupts::register_interrupt_handler(COM1_IRQ_INT_NUM, Self::handle_irq_com1);
-            pic::unmask_irq(COM1_IRQ_NUM);
         } else if let Some(result) = Self::try_init_port(COM2_IO_PORT) {
             driver = Some(result);
             interrupts::register_interrupt_handler(COM2_IRQ_INT_NUM, Self::handle_irq_com2);
-            pic::unmask_irq(COM2_IRQ_NUM);
         }
         driver
     }

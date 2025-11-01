@@ -9,7 +9,7 @@ const DUAL_PORT_CONFIG: u8 = 0b00000100;
 
 const SELF_TEST_SUCCESS: u8 = 0x55;
 
-const TIMEOUT_COUNT: u32 = 10000;
+const TIMEOUT_COUNT: u32 = 10_000_000;
 
 const DEVICE_RESET: u8 = 0xFF;
 const DEVICE_RESEND_COMMAND: u8 = 0xFE;
@@ -26,6 +26,7 @@ pub static PORT1_SUPPORTED: AtomicBool = AtomicBool::new(false);
 pub static PORT2_SUPPORTED: AtomicBool = AtomicBool::new(false);
 
 #[repr(u8)]
+#[derive(Clone, Copy, Debug)]
 pub enum PS2Command {
     ReadConfig = 0x20,
     ReloadConfig = 0x60,
@@ -41,13 +42,13 @@ pub enum PS2Command {
     ResetCPU = 0xFE,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum PS2DeviceType {
     ATKeyboard,
     StandardMouse,
     ScrollwheelMouse,
     FiveButtonsMouse,
-    MF2Mouse,
+    MF2Keyboard,
     ShortKeyboard,
     NCD97Keyboard,
     Key122Keyboard,
@@ -62,6 +63,7 @@ impl PS2DeviceType {
     pub fn is_keyboard(&self) -> bool {
         match self {
             Self::ATKeyboard => true,
+            Self::MF2Keyboard => true,
             Self::ShortKeyboard => true,
             Self::NCD97Keyboard => true,
             Self::Key122Keyboard => true,
@@ -85,7 +87,7 @@ impl PS2DeviceType {
             (Some(0x00), _) => Self::StandardMouse,
             (Some(0x03), _) => Self::ScrollwheelMouse,
             (Some(0x04), _) => Self::FiveButtonsMouse,
-            (Some(0xAB), Some(0x83) | Some(0xC1)) => Self::MF2Mouse,
+            (Some(0xAB), Some(0x83) | Some(0xC1)) => Self::MF2Keyboard,
             (Some(0xAB), Some(0x84)) => Self::ShortKeyboard,
             (Some(0xAB), Some(0x85)) => Self::NCD97Keyboard,
             (Some(0xAB), Some(0x86)) => Self::Key122Keyboard,
@@ -122,6 +124,7 @@ pub fn init() -> Result<(Option<PS2DeviceType>, Option<PS2DeviceType>), ()> {
     let port1_test = test_port1();
     // Test second port
     let mut port2_test = false;
+    /* Uncomment when a proper mouse driver is implemented
     // Test if supported before testing status
     send_command(PS2Command::EnableSecondPort);
     if read_config_byte() & 0x20 == 0 {
@@ -131,18 +134,25 @@ pub fn init() -> Result<(Option<PS2DeviceType>, Option<PS2DeviceType>), ()> {
     } else {
         send_command(PS2Command::DisableSecondPort);
     }
+    */
     let mut config = read_config_byte();
     if port1_test {
         send_command(PS2Command::EnableFirstPort);
         config |= 0x01;
-        reset_device_port1()?;
-        PORT1_SUPPORTED.store(true, Ordering::Release);
+        PORT1_SUPPORTED.store(true, Ordering::Release); // So reset wouldn't fail
+        if let Err(_) = reset_device_port1() {
+            PORT1_SUPPORTED.store(false, Ordering::Release);
+            return Err(());
+        }
     }
     if port2_test {
         send_command(PS2Command::EnableSecondPort);
         config |= 0x02;
-        reset_device_port2()?;
-        PORT2_SUPPORTED.store(true, Ordering::Release);
+        PORT2_SUPPORTED.store(true, Ordering::Release); // So reset wouldn't fail
+        if let Err(_) = reset_device_port2() {
+            PORT2_SUPPORTED.store(false, Ordering::Release);
+            return Err(());
+        }
     }
     reload_config(config);
     // Identify connected devices
@@ -379,14 +389,14 @@ pub fn reset_device_port1() -> Result<(), ()> {
     /* Disable scanning on both devices */
     disable_scanning_both_ports();
 
+    // Drain any stale data
+    drain_data_buffer();
+
     // Send reset command - renable scanning on failure
     if send_device_data_port1(DEVICE_RESET).is_err() {
         enable_scanning_both_ports();
         return Err(());
     }
-
-    // Drain any stale data
-    drain_data_buffer();
 
     // Read response bytes
     let first_byte = read_data_with_timeout();
@@ -407,14 +417,14 @@ pub fn reset_device_port2() -> Result<(), ()> {
     /* Disable scanning on both devices */
     disable_scanning_both_ports();
 
+    // Drain any stale data
+    drain_data_buffer();
+
     // Send reset command - renable scanning on failure
     if send_device_data_port2(DEVICE_RESET).is_err() {
         enable_scanning_both_ports();
         return Err(());
     }
-
-    // Drain any stale data
-    drain_data_buffer();
 
     // Read response bytes
     let first_byte = read_data_with_timeout();
@@ -434,6 +444,9 @@ pub fn reset_device_port2() -> Result<(), ()> {
 pub fn identify_devices() -> (Option<PS2DeviceType>, Option<PS2DeviceType>) {
     // Disable scanning
     disable_scanning_both_ports();
+    
+    // Drain data buffer
+    drain_data_buffer();
 
     let first_port_type = {
         if PORT1_SUPPORTED.load(Ordering::Acquire) && let Ok(_) = send_command_device_port1(DEVICE_IDENTIFY, None) {
