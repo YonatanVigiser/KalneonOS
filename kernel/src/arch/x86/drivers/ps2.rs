@@ -3,13 +3,13 @@ use crate::arch::x86::cpu::{inb, outb};
 const COMMAND_PORT: u16 = 0x64;
 const DATA_PORT: u16 = 0x60;
 // Configuration byte for single port
-const CONFIG: u8 = 0b00010100;
+const CONFIG: u8 = 0b00100100;
 // Configuration byte for dual port
 const DUAL_PORT_CONFIG: u8 = 0b00000100;
 
 const SELF_TEST_SUCCESS: u8 = 0x55;
 
-const TIMEOUT_COUNT: u32 = 1000;
+const TIMEOUT_COUNT: u32 = 10000;
 
 const DEVICE_RESET: u8 = 0xFF;
 const DEVICE_RESEND_COMMAND: u8 = 0xFE;
@@ -61,6 +61,7 @@ pub enum PS2DeviceType {
 impl PS2DeviceType {
     pub fn is_keyboard(&self) -> bool {
         match self {
+            Self::ATKeyboard => true,
             Self::ShortKeyboard => true,
             Self::NCD97Keyboard => true,
             Self::Key122Keyboard => true,
@@ -73,7 +74,7 @@ impl PS2DeviceType {
     }
 
     pub fn is_mouse(&self) -> bool {
-        self.is_keyboard() && if let Self::Unknown = self { false } else { true }
+        !self.is_keyboard() && !matches!(self, Self::Unknown)
     }
 }
 
@@ -109,7 +110,7 @@ pub fn init() -> Result<(Option<PS2DeviceType>, Option<PS2DeviceType>), ()> {
     drain_data_buffer();
     // Perform self test of the controller
     let config = read_config_byte();
-    let config = config & 0b01000100;
+    let config = config & 0b00100111;
     reload_config(config);
     send_command(PS2Command::TestController);
     if read_data() != SELF_TEST_SUCCESS {
@@ -134,14 +135,14 @@ pub fn init() -> Result<(Option<PS2DeviceType>, Option<PS2DeviceType>), ()> {
     if port1_test {
         send_command(PS2Command::EnableFirstPort);
         config |= 0x01;
-        PORT1_SUPPORTED.store(true, Ordering::Release);
         reset_device_port1()?;
+        PORT1_SUPPORTED.store(true, Ordering::Release);
     }
     if port2_test {
         send_command(PS2Command::EnableSecondPort);
         config |= 0x02;
-        PORT2_SUPPORTED.store(true, Ordering::Release);
         reset_device_port2()?;
+        PORT2_SUPPORTED.store(true, Ordering::Release);
     }
     reload_config(config);
     // Identify connected devices
@@ -214,8 +215,8 @@ pub fn read_data() -> u8 {
 }
 
 /* Read from data port with timeout. If timeout passed return error. */
-pub fn read_data_with_timeout(timeout: u32) -> Result<u8, ()> {
-    wait_for_read_with_timeout(timeout)?;
+pub fn read_data_with_timeout() -> Result<u8, ()> {
+    wait_for_read_with_timeout(TIMEOUT_COUNT)?;
     Ok(inb(DATA_PORT))
 }
 
@@ -256,11 +257,11 @@ pub fn test_port2() -> bool {
 pub fn disable_scanning_both_ports() {
     if PORT1_SUPPORTED.load(Ordering::Acquire) {
         let _ = send_device_data_port1(DEVICE_DISABLE_SCANNING);
-        let _ = read_data_with_timeout(TIMEOUT_COUNT);
+        let _ = read_data_with_timeout();
     }
     if PORT2_SUPPORTED.load(Ordering::Acquire) {
         let _ = send_device_data_port2(DEVICE_DISABLE_SCANNING);
-        let _ = read_data_with_timeout(TIMEOUT_COUNT);
+        let _ = read_data_with_timeout();
     }
 }
 
@@ -268,16 +269,16 @@ pub fn disable_scanning_both_ports() {
 pub fn enable_scanning_both_ports() {
     if PORT1_SUPPORTED.load(Ordering::Acquire) {
         let _ = send_device_data_port1(DEVICE_ENABLE_SCANNING);
-        let _ = read_data_with_timeout(TIMEOUT_COUNT);
+        let _ = read_data_with_timeout();
     }
     if PORT2_SUPPORTED.load(Ordering::Acquire) {
         let _ = send_device_data_port2(DEVICE_ENABLE_SCANNING);
-        let _ = read_data_with_timeout(TIMEOUT_COUNT);
+        let _ = read_data_with_timeout();
     }
 }
 
 /* Checks the connection to the device at port 1. Returns true if connected.
- * Note: IRQ must be masked for port 1, and must be unmaksed for port 2 */
+ * Note: IRQ must be masked for port 1, and must be unmasked for port 2 */
 pub fn echo_device_port1() -> bool {
     // Send echo command
     if send_device_data_port1(DEVICE_ECHO).is_err() {
@@ -285,7 +286,7 @@ pub fn echo_device_port1() -> bool {
     }
 
     // Check for echo response
-    let result = if let Ok(response) = read_data_with_timeout(TIMEOUT_COUNT)
+    let result = if let Ok(response) = read_data_with_timeout()
         && response == DEVICE_ECHO
     {
         true
@@ -297,7 +298,7 @@ pub fn echo_device_port1() -> bool {
 }
 
 /* Checks the connection to the device at port 2. Returns true if connected.
- * Note: IRQ must be masked for port 2, and most be unmaksed for port 1 */
+ * Note: IRQ must be masked for port 2, and most be unmasked for port 1 */
 pub fn echo_device_port2() -> bool {
     // Send echo command
     if send_device_data_port2(DEVICE_ECHO).is_err() {
@@ -305,7 +306,7 @@ pub fn echo_device_port2() -> bool {
     }
 
     // Check for echo response
-    let result = if let Ok(response) = read_data_with_timeout(TIMEOUT_COUNT)
+    let result = if let Ok(response) = read_data_with_timeout()
         && response == DEVICE_ECHO
     {
         true
@@ -333,12 +334,15 @@ pub fn send_device_data_port2(data: u8) -> Result<(), ()> {
     write_data_with_timeout(data, TIMEOUT_COUNT)
 }
 
-/* Send command to a ps/2 device, with a wait for ACK from device */
-pub fn send_command_device_port1(command: u8) -> Result<(), ()> {
+/* Send command to a ps/2 device with optional data byte, with a wait for ACK from device */
+pub fn send_command_device_port1(command: u8, data: Option<u8>) -> Result<(), ()> {
     let mut retrys = 0;
     while retrys < DEVICE_MAX_RETRYS {
         send_device_data_port1(command)?;
-        let response = read_data_with_timeout(TIMEOUT_COUNT)?;
+        if let Some(data) = data {
+            send_device_data_port1(data)?;
+        }
+        let response = read_data_with_timeout()?;
         if response == DEVICE_ACK {
             return Ok(());
         } else if response == DEVICE_RESEND_COMMAND {
@@ -350,12 +354,15 @@ pub fn send_command_device_port1(command: u8) -> Result<(), ()> {
     Err(())
 }
 
-/* Send command to a ps/2 device, with a wait for ACK from device */
-pub fn send_command_device_port2(command: u8) -> Result<(), ()> {
+/* Send command to a ps/2 device with optional data byte, with a wait for ACK from device */
+pub fn send_command_device_port2(command: u8, data: Option<u8>) -> Result<(), ()> {
     let mut retrys = 0;
     while retrys < DEVICE_MAX_RETRYS {
         send_device_data_port2(command)?;
-        let response = read_data_with_timeout(TIMEOUT_COUNT)?;
+        if let Some(data) = data {
+            send_device_data_port2(data)?;
+        }
+        let response = read_data_with_timeout()?;
         if response == DEVICE_ACK {
             return Ok(());
         } else if response == DEVICE_RESEND_COMMAND {
@@ -366,7 +373,6 @@ pub fn send_command_device_port2(command: u8) -> Result<(), ()> {
     }
     Err(())
 }
-
 
 /* Performs a device reset on port 1 */
 pub fn reset_device_port1() -> Result<(), ()> {
@@ -383,8 +389,8 @@ pub fn reset_device_port1() -> Result<(), ()> {
     drain_data_buffer();
 
     // Read response bytes
-    let first_byte = read_data_with_timeout(TIMEOUT_COUNT);
-    let second_byte = read_data_with_timeout(TIMEOUT_COUNT);
+    let first_byte = read_data_with_timeout();
+    let second_byte = read_data_with_timeout();
 
     // Re-enable scanning
     enable_scanning_both_ports();
@@ -407,10 +413,12 @@ pub fn reset_device_port2() -> Result<(), ()> {
         return Err(());
     }
 
+    // Drain any stale data
+    drain_data_buffer();
 
     // Read response bytes
-    let first_byte = read_data_with_timeout(TIMEOUT_COUNT);
-    let second_byte = read_data_with_timeout(TIMEOUT_COUNT);
+    let first_byte = read_data_with_timeout();
+    let second_byte = read_data_with_timeout();
 
     // Re-enable scanning
     enable_scanning_both_ports();
@@ -422,15 +430,15 @@ pub fn reset_device_port2() -> Result<(), ()> {
     }
 }
 
-/* This is used to identify the device's types. Must be called when both ports are enabled */
+/* This is used to identify the device's types. Must be called when all supported ports are enabled */
 pub fn identify_devices() -> (Option<PS2DeviceType>, Option<PS2DeviceType>) {
     // Disable scanning
     disable_scanning_both_ports();
 
     let first_port_type = {
-        if PORT1_SUPPORTED.load(Ordering::Acquire) && let Ok(_) = send_command_device_port1(DEVICE_IDENTIFY) {
-            let first_byte = read_data_with_timeout(TIMEOUT_COUNT).ok();
-            let second_byte = read_data_with_timeout(TIMEOUT_COUNT).ok();
+        if PORT1_SUPPORTED.load(Ordering::Acquire) && let Ok(_) = send_command_device_port1(DEVICE_IDENTIFY, None) {
+            let first_byte = read_data_with_timeout().ok();
+            let second_byte = read_data_with_timeout().ok();
             Some(PS2DeviceType::from(first_byte, second_byte))
         } else {
             None
@@ -438,9 +446,9 @@ pub fn identify_devices() -> (Option<PS2DeviceType>, Option<PS2DeviceType>) {
     };
 
     let second_port_type = {
-        if PORT2_SUPPORTED.load(Ordering::Acquire) && let Ok(_) = send_command_device_port2(DEVICE_IDENTIFY) {
-            let first_byte = read_data_with_timeout(TIMEOUT_COUNT).ok();
-            let second_byte = read_data_with_timeout(TIMEOUT_COUNT).ok();
+        if PORT2_SUPPORTED.load(Ordering::Acquire) && let Ok(_) = send_command_device_port2(DEVICE_IDENTIFY, None) {
+            let first_byte = read_data_with_timeout().ok();
+            let second_byte = read_data_with_timeout().ok();
             Some(PS2DeviceType::from(first_byte, second_byte))
         } else {
             None
