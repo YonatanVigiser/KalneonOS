@@ -1,6 +1,7 @@
 pub mod x86;
 
 use crate::drivers::traits::console::{SerialConsole, VideoConsole};
+use crate::drivers::traits::console::keyboard::KeyboardDriver;
 use crate::drivers::traits::timer::Timer;
 
 use core::panic::PanicInfo;
@@ -21,5 +22,6 @@ pub trait Arch {
 pub struct ArchDrivers {
     pub video: Option<Box<dyn VideoConsole>>,
     pub serial: Option<Box<dyn SerialConsole>>,
+    pub keyboard: Option<Box<dyn KeyboardDriver>>,
     pub timer: Box<dyn Timer>,
 }

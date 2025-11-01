@@ -4,13 +4,13 @@ pub mod heap;
 pub mod idt;
 pub mod interrupts;
 pub mod pic;
-pub mod ps2;
 
 use super::{Arch, ArchDrivers};
 
 use drivers::pit::PitTimer;
 use drivers::serial::SerialDriver;
 use drivers::vga::Vga;
+use drivers::ps2_keyboard::PS2Keyboard;
 
 use core::panic::PanicInfo;
 
@@ -30,10 +30,15 @@ impl Arch for ArchX86 {
         // Init heap
         heap::init_heap();
 
-        ps2::init();
-
         // Init intterupts:
         pic::init();
+
+        // Init the ps/2 controller
+        let mut keyboard_type = None;
+        let mut _mouse_type = None;
+        if let Ok(types) = drivers::ps2::init() {
+            (keyboard_type, _mouse_type) = types;
+        }
 
         // Init early drivers
         unsafe {
@@ -42,6 +47,17 @@ impl Arch for ArchX86 {
                 serial: {
                     if let Some(driver) = SerialDriver::init() {
                         Some(Box::new(driver))
+                    } else {
+                        None
+                    }
+                },
+                keyboard: {
+                    if let Some(keyboard_type) = keyboard_type {
+                        if let Ok(driver) = PS2Keyboard::init(keyboard_type) {
+                            Some(Box::new(driver))
+                        } else {
+                            None
+                        }
                     } else {
                         None
                     }

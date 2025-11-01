@@ -1,3 +1,5 @@
+pub mod keyboard;
+
 use crate::kernel::display::color::Color;
 
 pub trait OutputConsole: core::fmt::Write + Sync {}
