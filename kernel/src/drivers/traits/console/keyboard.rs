@@ -107,6 +107,43 @@ pub enum Key {
     Comma,
     Dot,
     Slash,
+    Count, // This is only a symbol used to count the number of supported keys. Must ALWAYS remain
+           // last!
+}
+
+impl Key {
+    // Returns if part of the normal chars
+    pub fn is_char(&self) -> bool {
+        match self {
+            Self::A => true,
+            Self::B => true,
+            Self::C => true,
+            Self::D => true,
+            Self::E => true,
+            Self::F => true,
+            Self::G => true,
+            Self::H => true,
+            Self::I => true,
+            Self::J => true,
+            Self::K => true,
+            Self::L => true,
+            Self::M => true,
+            Self::N => true,
+            Self::O => true,
+            Self::P => true,
+            Self::Q => true,
+            Self::R => true,
+            Self::S => true,
+            Self::T => true,
+            Self::U => true,
+            Self::V => true,
+            Self::W => true,
+            Self::X => true,
+            Self::Y => true,
+            Self::Z => true,
+            _ => false
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -116,11 +153,11 @@ pub enum KeyEvent {
 }
 
 /* Highest byte - Pressed / Released */
-impl Into<u8> for KeyEvent {
-    fn into(self) -> u8 {
-        match self {
-            Self::KeyPressed(key) => key as u8,
-            Self::KeyReleased(key) => (key as u8) | 0x80, 
+impl From<KeyEvent> for u8 {
+    fn from(value: KeyEvent) -> Self {
+        match value {
+            KeyEvent::KeyPressed(key) => key as u8,
+            KeyEvent::KeyReleased(key) => (key as u8) | 0x80, 
         }
     }
 }

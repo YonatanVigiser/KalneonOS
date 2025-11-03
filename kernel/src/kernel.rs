@@ -1,15 +1,18 @@
 pub mod display;
+pub mod io;
 
 use crate::arch::Arch;
 use display::color::Color;
+use io::keyboard_manager::KeyboardManager;
 
 pub struct Kernel {
     arch: TargetArch,
+    keyboard_manager: KeyboardManager,
 }
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        Self { arch }
+        Self { arch, keyboard_manager: KeyboardManager::init(&mut TargetArch::arch_drivers()) }
     }
 
     pub fn run(&mut self) -> ! {
@@ -22,6 +25,12 @@ impl Kernel {
         }
 
         loop {
+            self.periodic();
+        }
+    }
+
+    fn periodic(&mut self) {
+            
             if let Some(arch_drivers) = TargetArch::arch_drivers() {
                 if let Some(keyboard) = arch_drivers.keyboard.as_mut() && let Some(video) = arch_drivers.video.as_mut() {
                     if keyboard.has_next_key() {
@@ -29,8 +38,6 @@ impl Kernel {
                     }
                 }
             }
-            //core::hint::spin_loop();
-        }
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {

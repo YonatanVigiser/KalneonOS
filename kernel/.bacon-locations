@@ -1,72 +1,251 @@
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|96|:|96|:|5|:|6|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
 
 |:|none
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|93|:|93|:|56|:|57|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|233|:|5|:|51|:|unused import: `crate::drivers::traits::console::OutputConsole`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `crate::drivers::traits::console::OutputConsole`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:233:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m233[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::drivers::traits::console::OutputConsole;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|94|:|94|:|32|:|33|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|234|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|233|:|5|:|51|:|unused import: `crate::drivers::traits::console::OutputConsole`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `crate::drivers::traits::console::OutputConsole`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:233:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m233[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::drivers::traits::console::OutputConsole;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|96|:|96|:|5|:|6|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|234|:|1|:|1|:|remove the whole `use` item|:|none|:|
+error|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
 
 |:|none
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|93|:|93|:|56|:|57|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
+error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
 
 |:|none
-error|:|src/arch/x86/drivers/ps2_keyboard.rs|:|94|:|94|:|32|:|33|:|mismatched closing delimiter: `}`|:|[0m[1m[38;5;9merror[0m[0m[1m: mismatched closing delimiter: `}`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:94:32[0m
+help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
+help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|42|:|42|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
+error|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|43|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mclosing delimiter possibly meant for this[0m
-[0m[1m[38;5;12m94[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        self.command_send_queue([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9munclosed delimiter[0m
-[0m[1m[38;5;12m95[0m[0m [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    }[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mmismatched closing delimiter[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
+help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|43|:|43|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
+error|:|src/kernel/io/keyboard_manager.rs|:|76|:|76|:|13|:|16|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:76:13[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            key[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<u8>`, found `Key`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<u8>[0m[0m`[0m
+[0m              found enum `[0m[0m[1m[35mdrivers::traits::console::keyboard::Key[0m[0m`[0m
+
+|:|none
+error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied|:|[0m[1m[38;5;9merror[E0277][0m[0m[1m: the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:15:62[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Self { arch, keyboard_manager: KeyboardManager::init(&mut TargetArch::arch_drivers()) }[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mthe trait `drivers::traits::console::keyboard::KeyboardDriver` is not implemented for `core::option::Option<&'static mut arch::ArchDrivers>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: the trait `drivers::traits::console::keyboard::KeyboardDriver` [0m[0m[1m[35mis[0m[0m implemented for `[0m[0m[1m[35march::x86::drivers::ps2_keyboard::PS2Keyboard[0m[0m`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: required for the cast from `&mut core::option::Option<&'static mut arch::ArchDrivers>` to `&'static mut (dyn drivers::traits::console::keyboard::KeyboardDriver + 'static)`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-20a2f28d03e39dee.long-type-10372878912684112359.txt'[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: consider using `--verbose` to print the full type name to the console[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m126[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut port2_test = false;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|
+error|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
+help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|42|:|42|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
+error|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|43|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
+[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
+[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
+help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|43|:|43|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
+warning|:|src/arch/x86.rs|:|37|:|37|:|17|:|30|:|value assigned to `keyboard_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: value assigned to `keyboard_type` is never read[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:37:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut keyboard_type = None;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: maybe it is overwritten before being read?[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_assignments)]` on by default[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|76|:|76|:|13|:|16|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:76:13[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            key[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<u8>`, found `Key`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<u8>[0m[0m`[0m
+[0m              found enum `[0m[0m[1m[35mdrivers::traits::console::keyboard::Key[0m[0m`[0m
+
+|:|none
+error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied|:|[0m[1m[38;5;9merror[E0277][0m[0m[1m: the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:15:62[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Self { arch, keyboard_manager: KeyboardManager::init(&mut TargetArch::arch_drivers()) }[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mthe trait `drivers::traits::console::keyboard::KeyboardDriver` is not implemented for `core::option::Option<&'static mut arch::ArchDrivers>`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: the trait `drivers::traits::console::keyboard::KeyboardDriver` [0m[0m[1m[35mis[0m[0m implemented for `[0m[0m[1m[35march::x86::drivers::ps2_keyboard::PS2Keyboard[0m[0m`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: required for the cast from `&mut core::option::Option<&'static mut arch::ArchDrivers>` to `&'static mut (dyn drivers::traits::console::keyboard::KeyboardDriver + 'static)`[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-b9b35c1b03dd8c08.long-type-3378808424848271034.txt'[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: consider using `--verbose` to print the full type name to the console[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m126[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut port2_test = false;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|
+warning|:|src/arch/x86.rs|:|37|:|37|:|17|:|30|:|value assigned to `keyboard_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: value assigned to `keyboard_type` is never read[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:37:17[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut keyboard_type = None;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: maybe it is overwritten before being read?[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_assignments)]` on by default[0m
 
 |:|none
