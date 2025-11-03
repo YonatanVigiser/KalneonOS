@@ -113,7 +113,7 @@ pub enum Key {
 
 impl Key {
     // Returns if part of the normal chars
-    pub fn is_char(&self) -> bool {
+    pub fn is_alphabetic(&self) -> bool {
         match self {
             Self::A => true,
             Self::B => true,
@@ -141,8 +141,81 @@ impl Key {
             Self::X => true,
             Self::Y => true,
             Self::Z => true,
-            _ => false
+            _ => false,
         }
+    }
+
+    pub fn is_number(&self) -> bool {
+        match self {
+            Self::Num0 => true,
+            Self::Num1 => true,
+            Self::Num2 => true,
+            Self::Num3 => true,
+            Self::Num4 => true,
+            Self::Num5 => true,
+            Self::Num6 => true,
+            Self::Num7 => true,
+            Self::Num8 => true,
+            Self::Num9 => true,
+            Self::Keypad0 => true,
+            Self::Keypad1 => true,
+            Self::Keypad2 => true,
+            Self::Keypad3 => true,
+            Self::Keypad4 => true,
+            Self::Keypad5 => true,
+            Self::Keypad6 => true,
+            Self::Keypad7 => true,
+            Self::Keypad8 => true,
+            Self::Keypad9 => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_keypad(&self) -> bool {
+        match self {
+            Self::Keypad0 => true,
+            Self::Keypad1 => true,
+            Self::Keypad2 => true,
+            Self::Keypad3 => true,
+            Self::Keypad4 => true,
+            Self::Keypad5 => true,
+            Self::Keypad6 => true,
+            Self::Keypad7 => true,
+            Self::Keypad8 => true,
+            Self::Keypad9 => true,
+            Self::KeypadDot => true,
+            Self::KeypadSlash => true,
+            Self::KeypadEnter => true,
+            Self::KeypadAsteriks => true,
+            Self::KeypadPlusSign => true,
+            Self::KeypadMinusSign => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_symbol(&self) -> bool {
+        match self {
+            Self::KeypadDot => true,
+            Self::KeypadSlash => true,
+            Self::KeypadAsteriks => true,
+            Self::KeypadPlusSign => true,
+            Self::KeypadMinusSign => true,
+            Self::BackTick => true,
+            Self::MinusSign => true,
+            Self::EqualSign => true,
+            Self::Backslash => true,
+            Self::ClosingBrackets => true,
+            Self::Semicolon => true,
+            Self::Apostrophe => true,
+            Self::Comma => true,
+            Self::Dot => true,
+            Self::Slash => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_printable(&self) -> bool {
+        self.is_number() || self.is_alphabetic() || self.is_symbol() || matches!(self, Self::Enter | Self::KeypadEnter | Self::Space | Self::Tab | Self::Delete | Self::Backspace)
     }
 }
 

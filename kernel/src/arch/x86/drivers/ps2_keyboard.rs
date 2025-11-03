@@ -236,6 +236,7 @@ impl PS2Keyboard {
         if !keyboard_type.is_keyboard() {
             return Err(());
         }
+
         let mut driver = Self {
             events_queue: VecDeque::new(),
             current_state: PS2KeyboardState::Default,
@@ -243,6 +244,8 @@ impl PS2Keyboard {
             keyboard_type,
             last_connection_time: 0,
         };
+
+        panic!("he");
 
         driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;
         driver.send_command(SET_TYPEMATIC_RATE_COMMAND, Some(SET_TYPEMATIC_RATE_VALUE))?;
