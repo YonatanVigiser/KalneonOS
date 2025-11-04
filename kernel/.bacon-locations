@@ -1,3 +1,207 @@
+error|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|missing parameters for function definition|:|[0m[1m[38;5;9merror[0m[0m[1m: missing parameters for function definition[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:230:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: add a parameter list[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    fn is[0m[0m[38;5;10m()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[38;5;10m++[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|add a parameter list|:|none|:|()
+error|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|232|:|232|:|5|:|7|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|107|:|107|:|16|:|17|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|274|:|274|:|1|:|2|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|8|:|10|:|there is a keyword `as` with a similar name|:|none|:|as
+error|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|missing parameters for function definition|:|[0m[1m[38;5;9merror[0m[0m[1m: missing parameters for function definition[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:230:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: add a parameter list[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    fn is[0m[0m[38;5;10m()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[38;5;10m++[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|add a parameter list|:|none|:|()
+error|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|10|:|10|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|232|:|232|:|5|:|7|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|107|:|107|:|16|:|17|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|274|:|274|:|1|:|2|:|expected one of `->`, `<`, `where`, or `{`, found keyword `fn`|:|[0m[1m[38;5;9merror[0m[0m[1m: expected one of `->`, `<`, `where`, or `{`, found keyword `fn`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:232:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mwhile parsing this item list starting here[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mexpected one of `->`, `<`, `where`, or `{`[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_convertable_to_ascii(key: Key) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^[0m[0m [0m[0m[1m[38;5;9munexpected token[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-[0m[0m [0m[0m[1m[38;5;12mthe item list ends here[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a keyword `as` with a similar name[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;9m- [0m[0m    fn [0m[0m[38;5;9mis[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[38;5;10m+ [0m[0m    fn [0m[0m[38;5;10mas[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|230|:|230|:|8|:|10|:|there is a keyword `as` with a similar name|:|none|:|as
 error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
 
 |:|none
@@ -21,86 +225,492 @@ warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|233|:|5|:|51|:|unused imp
 
 |:|none
 help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|234|:|1|:|1|:|remove the whole `use` item|:|none|:|
-error|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|250|:|250|:|9|:|87|:|unreachable statement|:|[0m[1m[33mwarning[0m[0m[1m: unreachable statement[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:250:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        panic!("he");[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12many code following this expression is unreachable[0m
+[0m[1m[38;5;12m249[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33munreachable statement[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unreachable_code)]` on by default[0m
 
 |:|none
-error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|248|:|248|:|9|:|21|:|unreachable statement|:|[0m[1m[33mwarning[0m[0m[1m: unreachable statement[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:250:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        panic!("he");[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12many code following this expression is unreachable[0m
+[0m[1m[38;5;12m249[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33munreachable statement[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unreachable_code)]` on by default[0m
 
 |:|none
-help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
-help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|42|:|42|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
-error|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|43|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|250|:|250|:|9|:|87|:|unreachable statement|:|[0m[1m[33mwarning[0m[0m[1m: unreachable statement[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:250:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        panic!("he");[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12many code following this expression is unreachable[0m
+[0m[1m[38;5;12m249[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33munreachable statement[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unreachable_code)]` on by default[0m
 
 |:|none
-error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|248|:|248|:|9|:|21|:|unreachable statement|:|[0m[1m[33mwarning[0m[0m[1m: unreachable statement[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:250:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        panic!("he");[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12many code following this expression is unreachable[0m
+[0m[1m[38;5;12m249[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33munreachable statement[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unreachable_code)]` on by default[0m
 
 |:|none
-help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
-help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|43|:|43|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
-error|:|src/kernel/io/keyboard_manager.rs|:|76|:|76|:|13|:|16|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:76:13[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            key[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<u8>`, found `Key`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<u8>[0m[0m`[0m
-[0m              found enum `[0m[0m[1m[35mdrivers::traits::console::keyboard::Key[0m[0m`[0m
+error|:|src/kernel/io/keyboard_manager.rs|:|109|:|109|:|19|:|42|:|no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:109:19[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `is_convertable_to_ascii` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if !Self::is_convertable_to_ascii(key) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
 
 |:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|5|:|5|:|1|:|19|:|no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:109:19[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `is_convertable_to_ascii` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if !Self::is_convertable_to_ascii(key) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|108|:|108|:|5|:|88|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|134|:|134|:|5|:|72|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|198|:|198|:|5|:|57|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|214|:|214|:|5|:|60|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|129|:|129|:|26|:|42|:|no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:129:26[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `match_symbol_key` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Self::match_symbol_key(key, shift);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|5|:|5|:|1|:|19|:|no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:129:26[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `match_symbol_key` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Self::match_symbol_key(key, shift);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|108|:|108|:|5|:|88|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|134|:|134|:|5|:|72|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|198|:|198|:|5|:|57|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|214|:|214|:|5|:|60|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|25|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|25|:|39|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|20|:|40|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|25|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|25|:|39|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|20|:|40|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|33|:|69|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|28|:|32|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|33|:|69|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|28|:|70|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|33|:|65|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|28|:|32|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|33|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|28|:|66|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|29|:|64|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:29[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:24[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m-----------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|24|:|28|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:29[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:24[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m-----------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|29|:|64|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|24|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|25|:|64|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|25|:|64|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|20|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
 error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied|:|[0m[1m[38;5;9merror[E0277][0m[0m[1m: the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:15:62[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
@@ -109,10 +719,188 @@ error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDri
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: the trait `drivers::traits::console::keyboard::KeyboardDriver` [0m[0m[1m[35mis[0m[0m implemented for `[0m[0m[1m[35march::x86::drivers::ps2_keyboard::PS2Keyboard[0m[0m`[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: required for the cast from `&mut core::option::Option<&'static mut arch::ArchDrivers>` to `&'static mut (dyn drivers::traits::console::keyboard::KeyboardDriver + 'static)`[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-20a2f28d03e39dee.long-type-10372878912684112359.txt'[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-20a2f28d03e39dee.long-type-1093029708572544181.txt'[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: consider using `--verbose` to print the full type name to the console[0m
 
 |:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|109|:|109|:|19|:|42|:|no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:109:19[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `is_convertable_to_ascii` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if !Self::is_convertable_to_ascii(key) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|5|:|5|:|1|:|19|:|no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `is_convertable_to_ascii` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:109:19[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `is_convertable_to_ascii` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if !Self::is_convertable_to_ascii(key) {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|108|:|108|:|5|:|88|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|134|:|134|:|5|:|72|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|198|:|198|:|5|:|57|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|214|:|214|:|5|:|60|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|17|:|23|:|unused variable: `driver`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `driver`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:240:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m240[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut driver = Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_driver`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|17|:|23|:|if this is intentional, prefix it with an underscore|:|none|:|_driver
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|13|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:240:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m240[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut driver = Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|13|:|17|:|remove this `mut`|:|none|:|
+error|:|src/kernel/io/keyboard_manager.rs|:|129|:|129|:|26|:|42|:|no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:129:26[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `match_symbol_key` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Self::match_symbol_key(key, shift);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|5|:|5|:|1|:|19|:|no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope|:|[0m[1m[38;5;9merror[E0599][0m[0m[1m: no variant or associated item named `match_symbol_key` found for enum `kernel::io::keyboard_manager::AsciiChar` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:129:26[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mvariant or associated item `match_symbol_key` not found for this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Self::match_symbol_key(key, shift);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvariant or associated item not found in `kernel::io::keyboard_manager::AsciiChar`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::from_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num[0m
+[0m      kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:108:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn from_key(key: Key, shift: bool, caps_lock: bool, num_lock: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_num(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_number_key_to_symbol(key: Key) -> Option<Self> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|108|:|108|:|5|:|88|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|134|:|134|:|5|:|72|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|198|:|198|:|5|:|57|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
+note|:|src/kernel/io/keyboard_manager.rs|:|214|:|214|:|5|:|60|:|if you're trying to build a new `kernel::io::keyboard_manager::AsciiChar` consider using one of the following associated functions:
+kernel::io::keyboard_manager::AsciiChar::from_key
+kernel::io::keyboard_manager::AsciiChar::match_alphabetic_key
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_num
+kernel::io::keyboard_manager::AsciiChar::match_number_key_to_symbol|:|none|:|none
 warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
 [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
@@ -120,81 +908,56 @@ warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not n
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
 
 |:|none
 help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|
-error|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|42|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+error|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|25|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
 
 |:|none
-error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:65:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyPressed(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, true),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                         [0m[0m[38;5;10m+[0m
+error|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:351:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m351[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 65);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
 
 |:|none
-help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
-help|:|src/kernel/io/keyboard_manager.rs|:|65|:|65|:|42|:|42|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
-error|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|43|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
-
-|:|none
-error|:|src/kernel/io/keyboard_manager.rs|:|64|:|64|:|19|:|41|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:66:17[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            match self.driver.next_key() {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `core::option::Option<drivers::traits::console::keyboard::KeyEvent>`[0m
-[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyPressed(key) => self.state.update(key, true),[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                KeyEvent::KeyReleased(key) => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<KeyEvent>`, found `KeyEvent`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<[0m[0mdrivers::traits::console::keyboard::KeyEvent[0m[0m[1m[35m>[0m[0m`[0m
-[0m              found enum `drivers::traits::console::keyboard::KeyEvent`[0m
-[0m[1m[38;5;14mhelp[0m[0m: try wrapping the pattern in `core::prelude::v1::Some`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                [0m[0m[38;5;10mcore::prelude::v1::Some([0m[0mKeyEvent::KeyReleased(key)[0m[0m[38;5;10m)[0m[0m => self.state.update(key, false),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[38;5;10m++++++++++++++++++++++++[0m[0m                          [0m[0m[38;5;10m+[0m
-
-|:|none
-help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|17|:|17|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|core::prelude::v1::Some(
-help|:|src/kernel/io/keyboard_manager.rs|:|66|:|66|:|43|:|43|:|try wrapping the pattern in `core::prelude::v1::Some`|:|none|:|)
+help|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|25|:|39|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|351|:|351|:|20|:|40|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
 warning|:|src/arch/x86.rs|:|37|:|37|:|17|:|30|:|value assigned to `keyboard_type` is never read|:|[0m[1m[33mwarning[0m[0m[1m: value assigned to `keyboard_type` is never read[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:37:17[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
@@ -205,16 +968,241 @@ warning|:|src/arch/x86.rs|:|37|:|37|:|17|:|30|:|value assigned to `keyboard_type
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_assignments)]` on by default[0m
 
 |:|none
-error|:|src/kernel/io/keyboard_manager.rs|:|76|:|76|:|13|:|16|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:76:13[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            key[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mexpected `Option<u8>`, found `Key`[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected enum `[0m[0m[1m[35mcore::option::Option<u8>[0m[0m`[0m
-[0m              found enum `[0m[0m[1m[35mdrivers::traits::console::keyboard::Key[0m[0m`[0m
+error|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|25|:|39|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
 
 |:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:354:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(key as u8 + 97);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|25|:|39|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|354|:|354|:|20|:|40|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|33|:|69|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|28|:|32|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:359:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(Self::match_num_to_ascii_symbol(key));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|33|:|69|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|359|:|359|:|28|:|70|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|33|:|65|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|28|:|32|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:361:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m361[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Some(key as u8 - Key::Num0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m--------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|33|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|361|:|361|:|28|:|66|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|29|:|64|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:29[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:24[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m-----------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|24|:|28|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:29[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:364:24[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Some(key as u8 - Key::Keypad0 as u8 + 48);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m-----------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|29|:|64|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|24|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|25|:|64|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+error|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|20|:|24|:|mismatched types|:|[0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:25[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `AsciiChar`, found `u8`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;12marguments to this enum variant are incorrect[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: the type constructed contains `u8` due to the type of the argument passed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:368:20[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m368[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            return Some(Self::match_symbol_to_ascii(key, shift));[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;14m^^^^^[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[38;5;14m^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12mthis argument influences the type of `Some`[0m
+[0m[1m[38;5;10mnote[0m[0m: tuple variant defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs:601:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m601[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Some(#[stable(feature = "rust1", since = "1.0.0")] T),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;10m^^^^[0m
+
+|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|25|:|64|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+help|:|src/kernel/io/keyboard_manager.rs|:|368|:|368|:|20|:|65|:|the type constructed contains `u8` due to the type of the argument passed|:|none|:|none
+note|:|/home/yonatan/.rustup/toolchains/nightly-aarch64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/option.rs|:|601|:|601|:|5|:|9|:|tuple variant defined here|:|none|:|none
 error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied|:|[0m[1m[38;5;9merror[E0277][0m[0m[1m: the trait bound `Option<&mut ArchDrivers>: KeyboardDriver` is not satisfied[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:15:62[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
@@ -223,10 +1211,32 @@ error|:|src/kernel.rs|:|15|:|15|:|62|:|93|:|the trait bound `Option<&mut ArchDri
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: the trait `drivers::traits::console::keyboard::KeyboardDriver` [0m[0m[1m[35mis[0m[0m implemented for `[0m[0m[1m[35march::x86::drivers::ps2_keyboard::PS2Keyboard[0m[0m`[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: required for the cast from `&mut core::option::Option<&'static mut arch::ArchDrivers>` to `&'static mut (dyn drivers::traits::console::keyboard::KeyboardDriver + 'static)`[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-b9b35c1b03dd8c08.long-type-3378808424848271034.txt'[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: the full name for the type has been written to '/home/yonatan/projects/KalneonOS/kernel/../build/kernel/i386-kalneon_os/debug/deps/kernel-b9b35c1b03dd8c08.long-type-6234620251729625991.txt'[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: consider using `--verbose` to print the full type name to the console[0m
 
 |:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|17|:|23|:|unused variable: `driver`|:|[0m[1m[33mwarning[0m[0m[1m: unused variable: `driver`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:240:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m240[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut driver = Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_driver`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|17|:|23|:|if this is intentional, prefix it with an underscore|:|none|:|_driver
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|13|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:240:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m240[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut driver = Self {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|240|:|240|:|13|:|17|:|remove this `mut`|:|none|:|
 warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
 [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
@@ -234,8 +1244,6 @@ warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not n
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
 
 |:|none
 help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|
