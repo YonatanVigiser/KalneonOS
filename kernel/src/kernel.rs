@@ -12,7 +12,7 @@ pub struct Kernel {
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        Self { arch, keyboard_manager: KeyboardManager::init(&mut TargetArch::arch_drivers()) }
+        Self { arch, keyboard_manager: KeyboardManager::init() }
     }
 
     pub fn run(&mut self) -> ! {

@@ -214,8 +214,20 @@ impl Key {
         }
     }
 
+    pub fn is_space(&self) -> bool {
+        match self {
+            Self::Enter | Self::KeypadEnter => true,
+            Self::Space => true,
+            Self::Tab => true,
+            Self::Delete => true,
+            Self::Backspace => true,
+            Self::Esc => true,
+            _ => false,
+        }
+    }
+
     pub fn is_printable(&self) -> bool {
-        self.is_number() || self.is_alphabetic() || self.is_symbol() || matches!(self, Self::Enter | Self::KeypadEnter | Self::Space | Self::Tab | Self::Delete | Self::Backspace)
+        self.is_number() || self.is_alphabetic() || self.is_symbol() || self.is_space()
     }
 }
 

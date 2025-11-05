@@ -5,6 +5,7 @@ use crate::drivers::traits::console::keyboard::{Key, KeyEvent, KeyboardDriver};
 pub enum AsciiChar {
     Backspace = 8,
     Tab = 9,
+    LineFeed = 10,
     Esc = 27,
     Space = 32,
     ExclamationMark = 33,
@@ -70,7 +71,7 @@ pub enum AsciiChar {
     ClosingBrackets = 93,
     CaretSymbol = 94,
     Underscore = 95,
-    Backtick = 96,
+    BackTick = 96,
     a = 97,
     b = 98,
     c = 99,
@@ -128,68 +129,83 @@ impl AsciiChar {
         if key.is_symbol() {
             return Self::match_symbol_key(key, shift);
         }
+        if key.is_space() {
+            return Self::match_space_key(key);
+        }
         None
+    }
+
+    fn match_space_key(key: Key) -> Option<Self> {
+        match key {
+            Key::Enter | Key::KeypadEnter => Some(Self::LineFeed),
+            Key::Space => Some(Self::Space),
+            Key::Tab => Some(Self::Tab),
+            Key::Delete => Some(Self::Delete),
+            Key::Backspace => Some(Self::Backspace),
+            Key::Esc => Some(Self::Esc),
+            _ => None,
+        }
     }
 
     fn match_alphabetic_key(key: Key, capitalize: bool) -> Option<Self> {
         if capitalize {
             match key {
-                Key::A => Some(AsciiChar::A),
-                Key::B => Some(AsciiChar::B),
-                Key::C => Some(AsciiChar::C),
-                Key::D => Some(AsciiChar::D),
-                Key::E => Some(AsciiChar::E),
-                Key::F => Some(AsciiChar::F),
-                Key::G => Some(AsciiChar::G),
-                Key::H => Some(AsciiChar::H),
-                Key::I => Some(AsciiChar::I),
-                Key::J => Some(AsciiChar::J),
-                Key::K => Some(AsciiChar::K),
-                Key::L => Some(AsciiChar::L),
-                Key::M => Some(AsciiChar::M),
-                Key::N => Some(AsciiChar::N),
-                Key::O => Some(AsciiChar::O),
-                Key::P => Some(AsciiChar::P),
-                Key::Q => Some(AsciiChar::Q),
-                Key::R => Some(AsciiChar::R),
-                Key::S => Some(AsciiChar::S),
-                Key::T => Some(AsciiChar::T),
-                Key::U => Some(AsciiChar::U),
-                Key::V => Some(AsciiChar::V),
-                Key::W => Some(AsciiChar::W),
-                Key::X => Some(AsciiChar::X),
-                Key::Y => Some(AsciiChar::Y),
-                Key::Z => Some(AsciiChar::Z),
+                Key::A => Some(Self::A),
+                Key::B => Some(Self::B),
+                Key::C => Some(Self::C),
+                Key::D => Some(Self::D),
+                Key::E => Some(Self::E),
+                Key::F => Some(Self::F),
+                Key::G => Some(Self::G),
+                Key::H => Some(Self::H),
+                Key::I => Some(Self::I),
+                Key::J => Some(Self::J),
+                Key::K => Some(Self::K),
+                Key::L => Some(Self::L),
+                Key::M => Some(Self::M),
+                Key::N => Some(Self::N),
+                Key::O => Some(Self::O),
+                Key::P => Some(Self::P),
+                Key::Q => Some(Self::Q),
+                Key::R => Some(Self::R),
+                Key::S => Some(Self::S),
+                Key::T => Some(Self::T),
+                Key::U => Some(Self::U),
+                Key::V => Some(Self::V),
+                Key::W => Some(Self::W),
+                Key::X => Some(Self::X),
+                Key::Y => Some(Self::Y),
+                Key::Z => Some(Self::Z),
                 _ => None,
             }
         } else {
             match key {
-                Key::A => Some(AsciiChar::a),
-                Key::B => Some(AsciiChar::b),
-                Key::C => Some(AsciiChar::c),
-                Key::D => Some(AsciiChar::d),
-                Key::E => Some(AsciiChar::e),
-                Key::F => Some(AsciiChar::f),
-                Key::G => Some(AsciiChar::g),
-                Key::H => Some(AsciiChar::h),
-                Key::I => Some(AsciiChar::i),
-                Key::J => Some(AsciiChar::j),
-                Key::K => Some(AsciiChar::k),
-                Key::L => Some(AsciiChar::l),
-                Key::M => Some(AsciiChar::m),
-                Key::N => Some(AsciiChar::n),
-                Key::O => Some(AsciiChar::o),
-                Key::P => Some(AsciiChar::p),
-                Key::Q => Some(AsciiChar::q),
-                Key::R => Some(AsciiChar::r),
-                Key::S => Some(AsciiChar::s),
-                Key::T => Some(AsciiChar::t),
-                Key::U => Some(AsciiChar::u),
-                Key::V => Some(AsciiChar::v),
-                Key::W => Some(AsciiChar::w),
-                Key::X => Some(AsciiChar::x),
-                Key::Y => Some(AsciiChar::y),
-                Key::Z => Some(AsciiChar::z),
+                Key::A => Some(Self::a),
+                Key::B => Some(Self::b),
+                Key::C => Some(Self::c),
+                Key::D => Some(Self::d),
+                Key::E => Some(Self::e),
+                Key::F => Some(Self::f),
+                Key::G => Some(Self::g),
+                Key::H => Some(Self::h),
+                Key::I => Some(Self::i),
+                Key::J => Some(Self::j),
+                Key::K => Some(Self::k),
+                Key::L => Some(Self::l),
+                Key::M => Some(Self::m),
+                Key::N => Some(Self::n),
+                Key::O => Some(Self::o),
+                Key::P => Some(Self::p),
+                Key::Q => Some(Self::q),
+                Key::R => Some(Self::r),
+                Key::S => Some(Self::s),
+                Key::T => Some(Self::t),
+                Key::U => Some(Self::u),
+                Key::V => Some(Self::v),
+                Key::W => Some(Self::w),
+                Key::X => Some(Self::x),
+                Key::Y => Some(Self::y),
+                Key::Z => Some(Self::z),
                 _ => None,
             }
         }
@@ -227,7 +243,37 @@ impl AsciiChar {
         }
     }
 
-    fn is
+    fn match_symbol_key(key: Key, shift: bool) -> Option<Self> {
+        if shift {
+            match key {
+                Key::BackTick => Some(Self::TildeSign),
+                Key::MinusSign => Some(Self::Underscore),
+                Key::EqualSign | Key::KeypadPlusSign => Some(Self::Plus),
+                Key::Backslash => Some(Self::VerticalBar),
+                Key::Slash => Some(Self::QuestionMark),
+                Key::Dot => Some(Self::GreaterThan),
+                Key::Comma => Some(Self::LessThan),
+                Key::Semicolon => Some(Self::Colon),
+                Key::OpeningBrackets => Some(Self::OpeningBrace),
+                Key::ClosingBrackets => Some(Self::ClosingBrace),
+                _ => None,
+            }
+        } else {
+            match key {
+                Key::BackTick => Some(Self::BackTick),
+                Key::MinusSign => Some(Self::Minus),
+                Key::EqualSign => Some(Self::EqualSign),
+                Key::Backslash => Some(Self::Backslash),
+                Key::Slash => Some(Self::Slash),
+                Key::Dot => Some(Self::Dot),
+                Key::Comma => Some(Self::Comma),
+                Key::Semicolon => Some(Self::Semicolon),
+                Key::OpeningBrackets => Some(Self::OpeningBrackets),
+                Key::ClosingBrackets => Some(Self::ClosingBrackets),
+                _ => None,
+            }
+        }
+    }
 
     fn is_convertable_to_ascii(key: Key) -> bool {
         match key {
@@ -307,14 +353,15 @@ impl KeyboardState {
         self.pressed_keys[key as usize]
     }
 }
+use alloc::boxed::Box;
 
 pub struct KeyboardManager {
-    driver: &'static mut dyn KeyboardDriver,
+    driver: Box<dyn KeyboardDriver>,
     state: KeyboardState,
 }
 
 impl KeyboardManager {
-    pub fn init(driver: &'static mut dyn KeyboardDriver) -> Self {
+    pub fn init() -> Self {
         let state = KeyboardState {
             caps_lock: false,
             num_lock: false,
@@ -322,6 +369,7 @@ impl KeyboardManager {
             pressed_keys: [false; Key::Count as usize],
             last_ascii_key_pressed: None,
         };
+        let driver = crate::TargetArch::arch_drivers().expect("Arch drivers are not initlialized!").keyboard.expect("Keyboard driver are nto initlialized!");
         let mut manager = Self {
             driver,
             state,
@@ -345,66 +393,7 @@ impl KeyboardManager {
 
     pub fn next_ascii(&self) -> Option<AsciiChar> {
         let shift = self.state.is_pressed(Key::LeftShift) | self.state.is_pressed(Key::RightShift);
-        let caps_lock = self.state.caps_lock;
         let key = self.state.last_ascii_key_pressed?;
-        if (shift ^ caps_lock) && key.is_alphabetic() {
-            return Some(key as u8 + 65);
-        }
-        if key.is_alphabetic() {
-            return Some(key as u8 + 97);
-        }
-        if key.is_number() {
-            if !key.is_keypad() {
-                if shift {
-                    return Some(Self::match_num_to_ascii_symbol(key));
-                } else {
-                    return Some(key as u8 - Key::Num0 as u8 + 48);
-                }
-            } else if self.state.num_lock {
-                return Some(key as u8 - Key::Keypad0 as u8 + 48);
-            }
-        }
-        if key.is_symbol() {
-            return Some(Self::match_symbol_to_ascii(key, shift));
-        }
-        None
-    }
-
-    fn match_symbol_to_ascii(key: Key, shift: bool) -> u8 {
-        if shift {
-            match key {
-                Key::BackTick => 126,
-                Key::EqualSign => 43,
-                Key::MinusSign => 95,
-                Key::Backslash => 124,
-                Key::OpeningBrackets => 123,
-                Key::ClosingBrackets => 125,
-                _ => 0
-            }
-        } else {
-            match key {
-                Key::Dot | Key::KeypadDot => 46,
-                Key::Slash | Key::KeypadSlash => 47,
-                Key::KeypadAsteriks => 42,
-                Key::KeypadPlusSign => 45,
-                _ => 0,
-            }
-        }
-    }
-
-    fn match_num_to_ascii_symbol(key: Key) -> u8 {
-        match key {
-            Key::Num0 => 41,
-            Key::Num1 => 33,
-            Key::Num2 => 64,
-            Key::Num3 => 35,
-            Key::Num4 => 36,
-            Key::Num5 => 37,
-            Key::Num6 => 94,
-            Key::Num7 => 38,
-            Key::Num8 => 42,
-            Key::Num9 => 40,
-            _ => 0,
-        }
+        return AsciiChar::from_key(key, shift, self.state.caps_lock, self.state.num_lock);
     }
 }
