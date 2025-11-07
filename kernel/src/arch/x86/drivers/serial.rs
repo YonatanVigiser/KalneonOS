@@ -1,8 +1,8 @@
 use crate::arch::x86::cpu::{inb, outb};
 use crate::arch::x86::{interrupts, pic};
-use heapless::spsc::Queue;
-
 use crate::arch::Arch;
+use crate::TargetArch;
+use heapless::spsc::Queue;
 
 const COM1_IO_PORT: u16 = 0x3F8;
 const COM2_IO_PORT: u16 = 0x2F8;
@@ -23,11 +23,9 @@ impl SerialDriver {
         if let Some(result) = Self::try_init_port(COM1_IO_PORT) {
             driver = Some(result);
             interrupts::register_interrupt_handler(COM1_IRQ_INT_NUM, Self::handle_irq_com1);
-            pic::unmask_irq(COM1_IRQ_NUM);
         } else if let Some(result) = Self::try_init_port(COM2_IO_PORT) {
             driver = Some(result);
             interrupts::register_interrupt_handler(COM2_IRQ_INT_NUM, Self::handle_irq_com2);
-            pic::unmask_irq(COM2_IRQ_NUM);
         }
         driver
     }
@@ -63,24 +61,12 @@ impl SerialDriver {
     }
 
     fn handle_irq_com1(_stack_info: &mut interrupts::InterruptStackFrame) {
-        if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers
-                .serial
-                .as_mut()
-                .expect("Serial driver wasn't initiliazed, but handler was called!")
-                .process_input();
-        }
+        TargetArch::with_serial(|serial| serial.process_input());
         pic::send_eoi(COM1_IRQ_NUM);
     }
 
     fn handle_irq_com2(_stack_info: &mut interrupts::InterruptStackFrame) {
-        if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers
-                .serial
-                .as_mut()
-                .expect("Serial driver wasn't initiliazed, but handler was called!")
-                .process_input();
-        }
+        TargetArch::with_serial(|serial| serial.process_input());
         pic::send_eoi(COM2_IRQ_NUM);
     }
 

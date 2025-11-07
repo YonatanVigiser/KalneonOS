@@ -22,15 +22,12 @@ impl PitTimer {
         outb(DATA_PORT, RELOAD_VALUE as u8);
         outb(DATA_PORT, (RELOAD_VALUE >> 8) as u8);
         interrupts::register_interrupt_handler(IRQ_INT_NUM, Self::handle_irq);
-        pic::unmask_irq(IRQ_NUM);
 
         Self(0)
     }
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
-        if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers.timer.tick();
-        }
+        crate::TargetArch::with_timer(|timer| timer.tick());
         pic::send_eoi(IRQ_NUM);
     }
 }
@@ -44,10 +41,5 @@ impl Timer for PitTimer {
 
     fn tick(&mut self) {
         self.0 += 1;
-    }
-
-    fn sleep(&self, ms: u64) {
-        let target_time = self.get_uptime_ms() + ms;
-        while self.get_uptime_ms() < target_time {}
     }
 }

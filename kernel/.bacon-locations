@@ -1,35 +1,61 @@
 error|:|src/main.rs|:|1|:|1|:|1|:|1|:|can't find crate for `test`|:|[0m[1m[38;5;9merror[E0463][0m[0m[1m: can't find crate for `test`[0m
 
 |:|none
-warning|:|src/arch.rs|:|10|:|10|:|11|:|15|:|associated function `take_arch_drivers` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `take_arch_drivers` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:8[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Arch {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12massociated function in this trait[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn take_arch_drivers() -> ArchDrivers;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|233|:|5|:|51|:|unused import: `crate::drivers::traits::console::OutputConsole`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `crate::drivers::traits::console::OutputConsole`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:233:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m233[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::drivers::traits::console::OutputConsole;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
-warning|:|src/arch.rs|:|18|:|18|:|8|:|25|:|associated function `take_arch_drivers` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `take_arch_drivers` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch.rs:18:8[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Arch {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12massociated function in this trait[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn take_arch_drivers() -> ArchDrivers;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|234|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|233|:|5|:|51|:|unused import: `crate::drivers::traits::console::OutputConsole`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `crate::drivers::traits::console::OutputConsole`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:233:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m233[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::drivers::traits::console::OutputConsole;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|233|:|234|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/kernel.rs|:|5|:|5|:|5|:|26|:|unused import: `display::color::Color`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `display::color::Color`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:5:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse display::color::Color;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|src/kernel.rs|:|5|:|6|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/kernel.rs|:|5|:|5|:|5|:|26|:|unused import: `display::color::Color`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `display::color::Color`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:5:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse display::color::Color;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|src/kernel.rs|:|5|:|6|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m126[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut port2_test = false;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|
 warning|:|src/arch/x86/cpu.rs|:|61|:|61|:|15|:|19|:|function `halt` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `halt` is never used[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:61:15[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn halt() {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
 warning|:|src/arch/x86/cpu.rs|:|67|:|67|:|15|:|28|:|function `enable_paging` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `enable_paging` is never used[0m
@@ -59,11 +85,185 @@ warning|:|src/arch/x86/drivers/vga.rs|:|115|:|115|:|5|:|15|:|field `video_type` 
 [0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/arch/x86/pic.rs|:|60|:|60|:|8|:|16|:|function `mask_irq` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `mask_irq` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/pic.rs:60:8[0m
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|9|:|9|:|7|:|40|:|constant `CONNECTION_TIME_TEST_THRESHOLD_MS` is never used|:|[0m[1m[33mwarning[0m[0m[1m: constant `CONNECTION_TIME_TEST_THRESHOLD_MS` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:9:7[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mconst CONNECTION_TIME_TEST_THRESHOLD_MS: u64 = 2000; // 2 seconds[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|225|:|225|:|12|:|23|:|fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read|:|[0m[1m[33mwarning[0m[0m[1m: fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:226:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct PS2Keyboard {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mfields in this struct[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    keyboard_type: PS2DeviceType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m227[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_state: PS2KeyboardState,[0m
+[0m[1m[38;5;12m228[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_leds_state: LedsState,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    events_queue: VecDeque<KeyEvent>,[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    last_connection_time: u64,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|226|:|226|:|5|:|18|:|fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read|:|[0m[1m[33mwarning[0m[0m[1m: fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:226:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct PS2Keyboard {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mfields in this struct[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    keyboard_type: PS2DeviceType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m227[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_state: PS2KeyboardState,[0m
+[0m[1m[38;5;12m228[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_leds_state: LedsState,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    events_queue: VecDeque<KeyEvent>,[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    last_connection_time: u64,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|228|:|228|:|5|:|23|:|fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read|:|[0m[1m[33mwarning[0m[0m[1m: fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:226:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct PS2Keyboard {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mfields in this struct[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    keyboard_type: PS2DeviceType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m227[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_state: PS2KeyboardState,[0m
+[0m[1m[38;5;12m228[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_leds_state: LedsState,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    events_queue: VecDeque<KeyEvent>,[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    last_connection_time: u64,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|230|:|230|:|5|:|25|:|fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read|:|[0m[1m[33mwarning[0m[0m[1m: fields `keyboard_type`, `current_leds_state`, and `last_connection_time` are never read[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:226:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct PS2Keyboard {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mfields in this struct[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    keyboard_type: PS2DeviceType,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m227[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_state: PS2KeyboardState,[0m
+[0m[1m[38;5;12m228[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    current_leds_state: LedsState,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    events_queue: VecDeque<KeyEvent>,[0m
+[0m[1m[38;5;12m230[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    last_connection_time: u64,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|8|:|8|:|7|:|23|:|constant `DUAL_PORT_CONFIG` is never used|:|[0m[1m[33mwarning[0m[0m[1m: constant `DUAL_PORT_CONFIG` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:8:7[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mconst DUAL_PORT_CONFIG: u8 = 0b00000100;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|20|:|20|:|7|:|18|:|constant `DEVICE_ECHO` is never used|:|[0m[1m[33mwarning[0m[0m[1m: constant `DEVICE_ECHO` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:20:7[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn mask_irq(mut irq: u8) {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^[0m
+[0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mconst DEVICE_ECHO: u8 = 0xEE;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|30|:|30|:|10|:|20|:|variants `TestSecondPort` and `ResetCPU` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `TestSecondPort` and `ResetCPU` are never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:36:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    TestSecondPort = 0xA9,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `PS2Command` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|36|:|36|:|5|:|19|:|variants `TestSecondPort` and `ResetCPU` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `TestSecondPort` and `ResetCPU` are never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:36:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    TestSecondPort = 0xA9,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `PS2Command` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|42|:|42|:|5|:|13|:|variants `TestSecondPort` and `ResetCPU` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `TestSecondPort` and `ResetCPU` are never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:36:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    TestSecondPort = 0xA9,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `PS2Command` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|62|:|62|:|1|:|19|:|method `is_mouse` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `is_mouse` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:78:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl PS2DeviceType {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn is_mouse(&self) -> bool {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|78|:|78|:|12|:|20|:|method `is_mouse` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `is_mouse` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:78:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl PS2DeviceType {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn is_mouse(&self) -> bool {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|261|:|261|:|8|:|18|:|function `test_port2` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `test_port2` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:261:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m261[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn test_port2() -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|292|:|292|:|8|:|25|:|function `echo_device_port1` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port1` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:292:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m292[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port1() -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|312|:|312|:|8|:|25|:|function `echo_device_port2` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port2` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:312:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m312[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port2() -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|478|:|478|:|15|:|24|:|function `reset_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `reset_cpu` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:478:15[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m478[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn reset_cpu() -> ! {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|486|:|486|:|15|:|23|:|function `kill_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `kill_cpu` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:486:15[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m486[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn kill_cpu() -> ! {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^[0m
 
 |:|none
 warning|:|src/arch/x86/pic.rs|:|96|:|96|:|8|:|18|:|function `unmask_all` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `unmask_all` is never used[0m
@@ -78,61 +278,6 @@ warning|:|src/arch/x86/pic.rs|:|115|:|115|:|8|:|31|:|function `get_spurious_irqs
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn get_spurious_irqs_count() -> u32 {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|19|:|19|:|7|:|18|:|constant `DEVICE_ECHO` is never used|:|[0m[1m[33mwarning[0m[0m[1m: constant `DEVICE_ECHO` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:19:7[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mconst DEVICE_ECHO: u8 = 0xEE;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|26|:|26|:|10|:|20|:|variant `ResetCPU` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variant `ResetCPU` is never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:38:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariant in this enum[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|38|:|38|:|5|:|13|:|variant `ResetCPU` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variant `ResetCPU` is never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:38:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum PS2Command {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----------[0m[0m [0m[0m[1m[38;5;12mvariant in this enum[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ResetCPU = 0xFE,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|255|:|255|:|8|:|25|:|function `echo_device_port1` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port1` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:255:8[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m255[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port1() -> bool {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|289|:|289|:|8|:|25|:|function `echo_device_port2` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `echo_device_port2` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:289:8[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn echo_device_port2() -> bool {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|426|:|426|:|15|:|24|:|function `reset_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `reset_cpu` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:426:15[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m426[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn reset_cpu() -> ! {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^^[0m
-
-|:|none
-warning|:|src/arch/x86/ps2.rs|:|434|:|434|:|15|:|23|:|function `kill_cpu` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `kill_cpu` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/ps2.rs:434:15[0m
-[0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m434[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub unsafe fn kill_cpu() -> ! {[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^^^[0m
 
 |:|none
 warning|:|src/boot/boot_info.rs|:|5|:|5|:|12|:|26|:|struct `MemoryMapEntry` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `MemoryMapEntry` is never constructed[0m
@@ -185,118 +330,198 @@ warning|:|src/boot/boot_info.rs|:|48|:|48|:|12|:|22|:|associated items `copy_fro
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/traits/console.rs|:|5|:|5|:|11|:|23|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/traits/console.rs|:|7|:|7|:|8|:|17|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/traits/console.rs|:|8|:|8|:|8|:|21|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:7:8[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
-[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/traits/console.rs|:|11|:|11|:|11|:|23|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
+warning|:|src/drivers/traits/console.rs|:|7|:|7|:|11|:|23|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:9:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync + Send {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m [0m[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m [0m[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console.rs|:|9|:|9|:|8|:|17|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:9:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync + Send {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m [0m[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m [0m[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console.rs|:|10|:|10|:|8|:|21|:|methods `read_byte` and `has_next_byte` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `read_byte` and `has_next_byte` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:9:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait InputConsole: Sync + Send {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m [0m[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn process_input(&mut self);[0m
+[0m [0m[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn read_byte(&mut self) -> Option<u8>;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn has_next_byte(&self) -> bool;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console.rs|:|13|:|13|:|11|:|23|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:14:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/traits/console.rs|:|12|:|12|:|8|:|22|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
+warning|:|src/drivers/traits/console.rs|:|14|:|14|:|8|:|22|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:14:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/traits/console.rs|:|14|:|14|:|8|:|19|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
+warning|:|src/drivers/traits/console.rs|:|16|:|16|:|8|:|19|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:14:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/traits/console.rs|:|17|:|17|:|8|:|17|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:12:8[0m
+warning|:|src/drivers/traits/console.rs|:|19|:|19|:|8|:|17|:|methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `get_cursor_pos`, `move_cursor`, and `scroll_up` are never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console.rs:14:8[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait VideoConsole: OutputConsole {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
-[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_cursor_pos(&self) -> (usize, usize);[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
-[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn clear(&mut self) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/kernel.rs|:|6|:|6|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:7:5[0m
+warning|:|src/drivers/traits/console/keyboard.rs|:|267|:|267|:|11|:|25|:|methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:271:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait KeyboardDriver : InputConsole {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_connected(&mut self) -> bool;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m272[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m273[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_leds_state(&self) -> LedsState;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console/keyboard.rs|:|271|:|271|:|8|:|20|:|methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:271:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait KeyboardDriver : InputConsole {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_connected(&mut self) -> bool;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m272[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m273[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_leds_state(&self) -> LedsState;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console/keyboard.rs|:|273|:|273|:|8|:|22|:|methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:271:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait KeyboardDriver : InputConsole {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_connected(&mut self) -> bool;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m272[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m273[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_leds_state(&self) -> LedsState;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/drivers/traits/console/keyboard.rs|:|274|:|274|:|8|:|22|:|methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `is_connected`, `get_leds_state`, and `set_leds_state` are never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:271:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait KeyboardDriver : InputConsole {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mmethods in this trait[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn is_connected(&mut self) -> bool;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m272[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m273[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_leds_state(&self) -> LedsState;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+[0m[1m[38;5;12m274[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn set_leds_state(&mut self, new_state: LedsState);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|src/kernel.rs|:|8|:|8|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:9:5[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
 
 |:|none
-warning|:|src/kernel.rs|:|7|:|7|:|5|:|9|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:7:5[0m
+warning|:|src/kernel.rs|:|9|:|9|:|5|:|9|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:9:5[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Kernel {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
-[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
+[0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
+
+|:|none
+warning|:|src/kernel.rs|:|13|:|13|:|1|:|12|:|method `sleep` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `sleep` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:37:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Kernel {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn sleep(&self, ms: u64) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^[0m
+
+|:|none
+warning|:|src/kernel.rs|:|37|:|37|:|8|:|13|:|method `sleep` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `sleep` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:37:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Kernel {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn sleep(&self, ms: u64) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^[0m
 
 |:|none
 warning|:|src/kernel/display/color.rs|:|39|:|39|:|1|:|26|:|methods `select_closest` and `select_nth` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `select_closest` and `select_nth` are never used[0m
@@ -335,6 +560,26 @@ warning|:|src/kernel/display/color.rs|:|60|:|60|:|12|:|22|:|methods `select_clos
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
+warning|:|src/kernel/io/keyboard_manager.rs|:|377|:|377|:|1|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:395:12[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m395[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
+
+|:|none
+warning|:|src/kernel/io/keyboard_manager.rs|:|395|:|395|:|12|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:395:12[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m395[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
+
+|:|none
 warning|:|src/arch/x86/cpu.rs|:|8|:|8|:|11|:|23|:|passing pointers to nomem asm block|:|[0m[1m[33mwarning[0m[0m[1m: passing pointers to nomem asm block[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/cpu.rs:8:11[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
@@ -347,37 +592,472 @@ warning|:|src/arch/x86/cpu.rs|:|8|:|8|:|11|:|23|:|passing pointers to nomem asm 
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::pointers_in_nomem_asm_block)]` on by default[0m
 
 |:|none
-warning|:|src/arch/x86/drivers/serial.rs|:|38|:|38|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:38:14[0m
+warning|:|src/arch/x86/drivers/serial.rs|:|36|:|36|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:36:14[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0x03); // Set divisor to 3 (lo byte) 38400 baud[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0x03); // Set divisor to 3 (lo byte) 38400 baud[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m              [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::identity_op)]` on by default[0m
 
 |:|none
-help|:|src/arch/x86/drivers/serial.rs|:|38|:|38|:|14|:|22|:|consider reducing it to|:|none|:|port
-warning|:|src/arch/x86/drivers/serial.rs|:|45|:|45|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:45:14[0m
+help|:|src/arch/x86/drivers/serial.rs|:|36|:|36|:|14|:|22|:|consider reducing it to|:|none|:|port
+warning|:|src/arch/x86/drivers/serial.rs|:|43|:|43|:|14|:|22|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:43:14[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m45[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0xAE); // Test serial chip (send byte 0xAE and check if serial returns same byte)[0m
+[0m[1m[38;5;12m43[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        outb(port + 0, 0xAE); // Test serial chip (send byte 0xAE and check if serial returns same byte)[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m              [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
 
 |:|none
-help|:|src/arch/x86/drivers/serial.rs|:|45|:|45|:|14|:|22|:|consider reducing it to|:|none|:|port
-warning|:|src/arch/x86/drivers/serial.rs|:|48|:|48|:|16|:|24|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:48:16[0m
+help|:|src/arch/x86/drivers/serial.rs|:|43|:|43|:|14|:|22|:|consider reducing it to|:|none|:|port
+warning|:|src/arch/x86/drivers/serial.rs|:|46|:|46|:|16|:|24|:|this operation has no effect|:|[0m[1m[33mwarning[0m[0m[1m: this operation has no effect[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/serial.rs:46:16[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if inb(port + 0) != 0xAE {[0m
+[0m[1m[38;5;12m46[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if inb(port + 0) != 0xAE {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider reducing it to: `port`[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#identity_op[0m
 
 |:|none
-help|:|src/arch/x86/drivers/serial.rs|:|48|:|48|:|16|:|24|:|consider reducing it to|:|none|:|port
+help|:|src/arch/x86/drivers/serial.rs|:|46|:|46|:|16|:|24|:|consider reducing it to|:|none|:|port
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|166|:|166|:|21|:|116|:|unnecessary closure used to substitute value for `Option::None`|:|[0m[1m[33mwarning[0m[0m[1m: unnecessary closure used to substitute value for `Option::None`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:166:21[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_lazy_evaluations[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_lazy_evaluations)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `ok_or` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[38;5;9m- [0m[0m                    regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).[0m[0m[38;5;9mok_or_else(|| Self::Default)[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[38;5;10m+ [0m[0m                    regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).[0m[0m[38;5;10mok_or(Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|166|:|166|:|88|:|116|:|use `ok_or` instead|:|none|:|ok_or(Self::Default)
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|166|:|166|:|59|:|86|:|redundant closure|:|[0m[1m[33mwarning[0m[0m[1m: redundant closure[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:166:59[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace the closure with the function itself: `KeyEvent::KeyPressed`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_closure[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::redundant_closure)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|166|:|166|:|59|:|86|:|replace the closure with the function itself|:|none|:|KeyEvent::KeyPressed
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|170|:|170|:|17|:|113|:|unnecessary closure used to substitute value for `Option::None`|:|[0m[1m[33mwarning[0m[0m[1m: unnecessary closure used to substitute value for `Option::None`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:170:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_lazy_evaluations[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `ok_or` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[38;5;9m- [0m[0m                regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).[0m[0m[38;5;9mok_or_else(|| Self::Default)[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[38;5;10m+ [0m[0m                regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).[0m[0m[38;5;10mok_or(Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|170|:|170|:|85|:|113|:|use `ok_or` instead|:|none|:|ok_or(Self::Default)
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|170|:|170|:|55|:|83|:|redundant closure|:|[0m[1m[33mwarning[0m[0m[1m: redundant closure[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:170:55[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                regular_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                       [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace the closure with the function itself: `KeyEvent::KeyReleased`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_closure[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|170|:|170|:|55|:|83|:|replace the closure with the function itself|:|none|:|KeyEvent::KeyReleased
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|178|:|178|:|21|:|111|:|unnecessary closure used to substitute value for `Option::None`|:|[0m[1m[33mwarning[0m[0m[1m: unnecessary closure used to substitute value for `Option::None`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:178:21[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_lazy_evaluations[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `ok_or` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[38;5;9m- [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).[0m[0m[38;5;9mok_or_else(|| Self::Default)[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[38;5;10m+ [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).[0m[0m[38;5;10mok_or(Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|178|:|178|:|83|:|111|:|use `ok_or` instead|:|none|:|ok_or(Self::Default)
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|178|:|178|:|54|:|81|:|redundant closure|:|[0m[1m[33mwarning[0m[0m[1m: redundant closure[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:178:54[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyPressed(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace the closure with the function itself: `KeyEvent::KeyPressed`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_closure[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|178|:|178|:|54|:|81|:|replace the closure with the function itself|:|none|:|KeyEvent::KeyPressed
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|185|:|185|:|21|:|112|:|unnecessary closure used to substitute value for `Option::None`|:|[0m[1m[33mwarning[0m[0m[1m: unnecessary closure used to substitute value for `Option::None`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:185:21[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m185[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_lazy_evaluations[0m
+[0m[1m[38;5;14mhelp[0m[0m: use `ok_or` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m185[0m[0m [0m[0m[38;5;9m- [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).[0m[0m[38;5;9mok_or_else(|| Self::Default)[0m
+[0m[1m[38;5;12m185[0m[0m [0m[0m[38;5;10m+ [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).[0m[0m[38;5;10mok_or(Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|185|:|185|:|84|:|112|:|use `ok_or` instead|:|none|:|ok_or(Self::Default)
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|185|:|185|:|54|:|82|:|redundant closure|:|[0m[1m[33mwarning[0m[0m[1m: redundant closure[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:185:54[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m185[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    e0_scancode_to_key(scancode).map(|k| KeyEvent::KeyReleased(k)).ok_or_else(|| Self::Default)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                      [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace the closure with the function itself: `KeyEvent::KeyReleased`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_closure[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|185|:|185|:|54|:|82|:|replace the closure with the function itself|:|none|:|KeyEvent::KeyReleased
+warning|:|src/arch/x86/drivers/ps2_keyboard.rs|:|267|:|271|:|13|:|14|:|this `if` statement can be collapsed|:|[0m[1m[33mwarning[0m[0m[1m: this `if` statement can be collapsed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2_keyboard.rs:267:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m            if let Some(data) = data {[0m
+[0m[1m[38;5;12m268[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                if ps2::send_device_data_port1(data).is_err() {[0m
+[0m[1m[38;5;12m269[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                    continue; // Retry on send failure[0m
+[0m[1m[38;5;12m270[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                }[0m
+[0m[1m[38;5;12m271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_____________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#collapsible_if[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::collapsible_if)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: collapse nested if block[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m267[0m[0m [0m[0m[38;5;10m~ [0m[0m            if let Some(data) = data[0m
+[0m[1m[38;5;12m268[0m[0m [0m[0m[38;5;10m~ [0m[0m                [0m[0m[38;5;10m&&[0m[0m ps2::send_device_data_port1(data).is_err() {[0m
+[0m[1m[38;5;12m269[0m[0m [0m[0m[1m[38;5;12m|[0m[0m                     continue; // Retry on send failure[0m
+[0m[1m[38;5;12m270[0m[0m [0m[0m[38;5;10m~ [0m[0m                }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|267|:|267|:|37|:|39|:|collapse nested if block|:|none|:|
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|270|:|271|:|18|:|14|:|collapse nested if block|:|none|:|
+help|:|src/arch/x86/drivers/ps2_keyboard.rs|:|268|:|268|:|17|:|19|:|collapse nested if block|:|none|:|&&
+warning|:|src/arch/x86/drivers/ps2.rs|:|64|:|75|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:64:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m64[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::ATKeyboard => true,[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::MF2Keyboard => true,[0m
+[0m[1m[38;5;12m67[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::ShortKeyboard => true,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m75[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::ATKeyboard | Self::MF2Keyboard | Self::ShortKeyboard | Self::NCD97Keyboard | Self::Key122Keyboard | Self::JapaneseGKeyboard | Self::JapanesePKeyboard | Self::JapaneseAKeyboard | Self::NCDSunKeyboard)`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::match_like_matches_macro)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|64|:|75|:|9|:|10|:|try|:|none|:|matches!(self, Self::ATKeyboard | Self::MF2Keyboard | Self::ShortKeyboard | Self::NCD97Keyboard | Self::Key122Keyboard | Self::JapaneseGKeyboard | Self::JapanesePKeyboard | Self::JapaneseAKeyboard | Self::NCDSunKeyboard)
+warning|:|src/arch/x86/drivers/ps2.rs|:|143|:|143|:|16|:|22|:|redundant pattern matching, consider using `is_err()`|:|[0m[1m[33mwarning[0m[0m[1m: redundant pattern matching, consider using `is_err()`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:143:16[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m143[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Err(_) = reset_device_port1() {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m-------[0m[0m[1m[33m^^^^^^[0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;12mhelp: try: `if reset_device_port1().is_err()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_pattern_matching[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::redundant_pattern_matching)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|143|:|143|:|9|:|45|:|try|:|none|:|if reset_device_port1().is_err()
+warning|:|src/arch/x86/drivers/ps2.rs|:|152|:|152|:|16|:|22|:|redundant pattern matching, consider using `is_err()`|:|[0m[1m[33mwarning[0m[0m[1m: redundant pattern matching, consider using `is_err()`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:152:16[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m152[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Err(_) = reset_device_port2() {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m-------[0m[0m[1m[33m^^^^^^[0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;12mhelp: try: `if reset_device_port2().is_err()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_pattern_matching[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|152|:|152|:|9|:|45|:|try|:|none|:|if reset_device_port2().is_err()
+warning|:|src/arch/x86/drivers/ps2.rs|:|299|:|305|:|5|:|7|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:307:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m299[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m    let result = if let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m301[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    {[0m
+[0m[1m[38;5;12m302[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        true[0m
+[0m[1m[38;5;12m303[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    } else {[0m
+[0m[1m[38;5;12m304[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        false[0m
+[0m[1m[38;5;12m305[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m306[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m307[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m    result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::let_and_return)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m299[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m
+[0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m301[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m[0m[38;5;10mif let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m302[0m[0m [0m[0m[38;5;10m+         && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m303[0m[0m [0m[0m[38;5;10m+     {[0m
+[0m[1m[38;5;12m304[0m[0m [0m[0m[38;5;10m+         true[0m
+[0m[1m[38;5;12m305[0m[0m [0m[0m[38;5;10m+     } else {[0m
+[0m[1m[38;5;12m306[0m[0m [0m[0m[38;5;10m+         false[0m
+[0m[1m[38;5;12m307[0m[0m [0m[0m[38;5;10m+     }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|307|:|307|:|5|:|11|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:307:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m299[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m    let result = if let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m301[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    {[0m
+[0m[1m[38;5;12m302[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        true[0m
+[0m[1m[38;5;12m303[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    } else {[0m
+[0m[1m[38;5;12m304[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        false[0m
+[0m[1m[38;5;12m305[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m306[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m307[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m    result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::let_and_return)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m299[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m
+[0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m301[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m[0m[38;5;10mif let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m302[0m[0m [0m[0m[38;5;10m+         && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m303[0m[0m [0m[0m[38;5;10m+     {[0m
+[0m[1m[38;5;12m304[0m[0m [0m[0m[38;5;10m+         true[0m
+[0m[1m[38;5;12m305[0m[0m [0m[0m[38;5;10m+     } else {[0m
+[0m[1m[38;5;12m306[0m[0m [0m[0m[38;5;10m+         false[0m
+[0m[1m[38;5;12m307[0m[0m [0m[0m[38;5;10m+     }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|299|:|305|:|5|:|7|:|return the expression directly|:|none|:|
+help|:|src/arch/x86/drivers/ps2.rs|:|307|:|307|:|5|:|11|:|return the expression directly|:|none|:|if let Ok(response) = read_data_with_timeout()
+        && response == DEVICE_ECHO
+    {
+        true
+    } else {
+        false
+    }
+warning|:|src/arch/x86/drivers/ps2.rs|:|319|:|325|:|5|:|7|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:327:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m    let result = if let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    {[0m
+[0m[1m[38;5;12m322[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        true[0m
+[0m[1m[38;5;12m323[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    } else {[0m
+[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        false[0m
+[0m[1m[38;5;12m325[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m326[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m327[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m    result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m319[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m[0m[38;5;10mif let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m322[0m[0m [0m[0m[38;5;10m+         && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m323[0m[0m [0m[0m[38;5;10m+     {[0m
+[0m[1m[38;5;12m324[0m[0m [0m[0m[38;5;10m+         true[0m
+[0m[1m[38;5;12m325[0m[0m [0m[0m[38;5;10m+     } else {[0m
+[0m[1m[38;5;12m326[0m[0m [0m[0m[38;5;10m+         false[0m
+[0m[1m[38;5;12m327[0m[0m [0m[0m[38;5;10m+     }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+warning|:|src/arch/x86/drivers/ps2.rs|:|327|:|327|:|5|:|11|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:327:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m    let result = if let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    {[0m
+[0m[1m[38;5;12m322[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        true[0m
+[0m[1m[38;5;12m323[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    } else {[0m
+[0m[1m[38;5;12m324[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        false[0m
+[0m[1m[38;5;12m325[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m326[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m327[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m    result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m319[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m[0m[38;5;10mif let Ok(response) = read_data_with_timeout()[0m
+[0m[1m[38;5;12m322[0m[0m [0m[0m[38;5;10m+         && response == DEVICE_ECHO[0m
+[0m[1m[38;5;12m323[0m[0m [0m[0m[38;5;10m+     {[0m
+[0m[1m[38;5;12m324[0m[0m [0m[0m[38;5;10m+         true[0m
+[0m[1m[38;5;12m325[0m[0m [0m[0m[38;5;10m+     } else {[0m
+[0m[1m[38;5;12m326[0m[0m [0m[0m[38;5;10m+         false[0m
+[0m[1m[38;5;12m327[0m[0m [0m[0m[38;5;10m+     }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|319|:|325|:|5|:|7|:|return the expression directly|:|none|:|
+help|:|src/arch/x86/drivers/ps2.rs|:|327|:|327|:|5|:|11|:|return the expression directly|:|none|:|if let Ok(response) = read_data_with_timeout()
+        && response == DEVICE_ECHO
+    {
+        true
+    } else {
+        false
+    }
+warning|:|src/arch/x86.rs|:|146|:|149|:|13|:|15|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:151:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m146[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m            let result = {[0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let mut guard = VIDEO.lock();[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                guard.as_mut().map(|video| f(video.as_mut()))[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______________-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m146[0m[0m [0m[0m[38;5;10m~ [0m[0m            [0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[38;5;10m~ [0m[0m            [0m[0m[38;5;10m{[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[38;5;10m+                 let mut guard = VIDEO.lock();[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[38;5;10m+                 guard.as_mut().map(|video| f(video.as_mut()))[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[38;5;10m+             }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+warning|:|src/arch/x86.rs|:|151|:|151|:|13|:|19|:|returning the result of a `let` binding from a block|:|[0m[1m[33mwarning[0m[0m[1m: returning the result of a `let` binding from a block[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:151:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m146[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m/[0m[0m [0m[0m            let result = {[0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let mut guard = VIDEO.lock();[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                guard.as_mut().map(|video| f(video.as_mut()))[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m|______________-[0m[0m [0m[0m[1m[38;5;12munnecessary `let` binding[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            result[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[33m^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#let_and_return[0m
+[0m[1m[38;5;14mhelp[0m[0m: return the expression directly[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m146[0m[0m [0m[0m[38;5;10m~ [0m[0m            [0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[38;5;10m~ [0m[0m            [0m[0m[38;5;10m{[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[38;5;10m+                 let mut guard = VIDEO.lock();[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[38;5;10m+                 guard.as_mut().map(|video| f(video.as_mut()))[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[38;5;10m+             }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+|:|none
+help|:|src/arch/x86.rs|:|146|:|149|:|13|:|15|:|return the expression directly|:|none|:|
+help|:|src/arch/x86.rs|:|151|:|151|:|13|:|19|:|return the expression directly|:|none|:|{
+                let mut guard = VIDEO.lock();
+                guard.as_mut().map(|video| f(video.as_mut()))
+            }
+warning|:|src/drivers/traits/console/keyboard.rs|:|117|:|145|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:117:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m117[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m118[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::A => true,[0m
+[0m[1m[38;5;12m119[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::B => true,[0m
+[0m[1m[38;5;12m120[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::C => true,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m144[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m145[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::A | Self::B | Self::C | Self::D | Self::E | Self::F | Self::G | Self::H | Self::I | Self::J | Self::K | Self::L | Self::M | Self::N | Self::O | Self::P | Self::Q | Self::R | Self::S | Self::T | Self::U | Self::V | Self::W | Self::X | Self::Y | Self::Z)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+
+|:|none
+help|:|src/drivers/traits/console/keyboard.rs|:|117|:|145|:|9|:|10|:|try|:|none|:|matches!(self, Self::A | Self::B | Self::C | Self::D | Self::E | Self::F | Self::G | Self::H | Self::I | Self::J | Self::K | Self::L | Self::M | Self::N | Self::O | Self::P | Self::Q | Self::R | Self::S | Self::T | Self::U | Self::V | Self::W | Self::X | Self::Y | Self::Z)
+warning|:|src/drivers/traits/console/keyboard.rs|:|149|:|171|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:149:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Num0 => true,[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Num1 => true,[0m
+[0m[1m[38;5;12m152[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Num2 => true,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m171[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::Num0 | Self::Num1 | Self::Num2 | Self::Num3 | Self::Num4 | Self::Num5 | Self::Num6 | Self::Num7 | Self::Num8 | Self::Num9 | Self::Keypad0 | Self::Keypad1 | Self::Keypad2 | Self::Keypad3 | Self::Keypad4 | Self::Keypad5 | Self::Keypad6 | Self::Keypad7 | Self::Keypad8 | Self::Keypad9)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+
+|:|none
+help|:|src/drivers/traits/console/keyboard.rs|:|149|:|171|:|9|:|10|:|try|:|none|:|matches!(self, Self::Num0 | Self::Num1 | Self::Num2 | Self::Num3 | Self::Num4 | Self::Num5 | Self::Num6 | Self::Num7 | Self::Num8 | Self::Num9 | Self::Keypad0 | Self::Keypad1 | Self::Keypad2 | Self::Keypad3 | Self::Keypad4 | Self::Keypad5 | Self::Keypad6 | Self::Keypad7 | Self::Keypad8 | Self::Keypad9)
+warning|:|src/drivers/traits/console/keyboard.rs|:|175|:|193|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:175:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m175[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m176[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Keypad0 => true,[0m
+[0m[1m[38;5;12m177[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Keypad1 => true,[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Keypad2 => true,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m192[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m193[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::Keypad0 | Self::Keypad1 | Self::Keypad2 | Self::Keypad3 | Self::Keypad4 | Self::Keypad5 | Self::Keypad6 | Self::Keypad7 | Self::Keypad8 | Self::Keypad9 | Self::KeypadDot | Self::KeypadSlash | Self::KeypadEnter | Self::KeypadAsteriks | Self::KeypadPlusSign | Self::KeypadMinusSign)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+
+|:|none
+help|:|src/drivers/traits/console/keyboard.rs|:|175|:|193|:|9|:|10|:|try|:|none|:|matches!(self, Self::Keypad0 | Self::Keypad1 | Self::Keypad2 | Self::Keypad3 | Self::Keypad4 | Self::Keypad5 | Self::Keypad6 | Self::Keypad7 | Self::Keypad8 | Self::Keypad9 | Self::KeypadDot | Self::KeypadSlash | Self::KeypadEnter | Self::KeypadAsteriks | Self::KeypadPlusSign | Self::KeypadMinusSign)
+warning|:|src/drivers/traits/console/keyboard.rs|:|197|:|214|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:197:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m197[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::KeypadDot => true,[0m
+[0m[1m[38;5;12m199[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::KeypadSlash => true,[0m
+[0m[1m[38;5;12m200[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::KeypadAsteriks => true,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m213[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m214[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::KeypadDot | Self::KeypadSlash | Self::KeypadAsteriks | Self::KeypadPlusSign | Self::KeypadMinusSign | Self::BackTick | Self::MinusSign | Self::EqualSign | Self::Backslash | Self::ClosingBrackets | Self::Semicolon | Self::Apostrophe | Self::Comma | Self::Dot | Self::Slash)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+
+|:|none
+help|:|src/drivers/traits/console/keyboard.rs|:|197|:|214|:|9|:|10|:|try|:|none|:|matches!(self, Self::KeypadDot | Self::KeypadSlash | Self::KeypadAsteriks | Self::KeypadPlusSign | Self::KeypadMinusSign | Self::BackTick | Self::MinusSign | Self::EqualSign | Self::Backslash | Self::ClosingBrackets | Self::Semicolon | Self::Apostrophe | Self::Comma | Self::Dot | Self::Slash)
+warning|:|src/drivers/traits/console/keyboard.rs|:|218|:|226|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/console/keyboard.rs:218:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m218[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match self {[0m
+[0m[1m[38;5;12m219[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Enter | Self::KeypadEnter => true,[0m
+[0m[1m[38;5;12m220[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Space => true,[0m
+[0m[1m[38;5;12m221[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Self::Tab => true,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => false,[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `matches!(self, Self::Enter | Self::KeypadEnter | Self::Space | Self::Tab | Self::Delete | Self::Backspace | Self::Esc)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
+
+|:|none
+help|:|src/drivers/traits/console/keyboard.rs|:|218|:|226|:|9|:|10|:|try|:|none|:|matches!(self, Self::Enter | Self::KeypadEnter | Self::Space | Self::Tab | Self::Delete | Self::Backspace | Self::Esc)
 warning|:|src/kernel/display/color.rs|:|39|:|39|:|6|:|8|:|this lifetime isn't used in the impl|:|[0m[1m[33mwarning[0m[0m[1m: this lifetime isn't used in the impl[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/display/color.rs:39:6[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
@@ -399,21 +1079,22 @@ warning|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|this expression creat
 
 |:|none
 help|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|change this to|:|none|:|closest
-warning|:|src/arch/x86.rs|:|33|:|33|:|9|:|20|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86.rs:33:9[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        ps2::init();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_must_use)]` on by default[0m
-[0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mps2::init();[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[38;5;10m+++++++[0m
+warning|:|src/kernel/io/keyboard_manager.rs|:|283|:|321|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:283:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m283[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match key {[0m
+[0m[1m[38;5;12m284[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::CapsLock => false,[0m
+[0m[1m[38;5;12m285[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftShift => false,[0m
+[0m[1m[38;5;12m286[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftControl => false,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => true,[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
 
 |:|none
-help|:|src/arch/x86.rs|:|33|:|33|:|9|:|9|:|use `let _ = ...` to ignore the resulting value|:|none|:|let _ = 
+help|:|src/kernel/io/keyboard_manager.rs|:|283|:|321|:|9|:|10|:|try|:|none|:|!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)
 warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
 [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:256:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
@@ -421,6 +1102,7 @@ warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::resul
 [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this `Result` may be an `Err` variant, which should be handled[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_must_use)]` on by default[0m
 [0m[1m[38;5;14mhelp[0m[0m: use `let _ = ...` to ignore the resulting value[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m256[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[38;5;10mlet _ = [0m[0mself.move_cursor(0, 0);[0m
@@ -442,3 +1124,15 @@ warning|:|src/arch/x86/drivers/vga.rs|:|318|:|318|:|9|:|31|:|unused `core::resul
 
 |:|none
 help|:|src/arch/x86/drivers/vga.rs|:|318|:|318|:|9|:|9|:|use `let _ = ...` to ignore the resulting value|:|none|:|let _ = 
+warning|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|23|:|variable does not need to be mutable|:|[0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/ps2.rs:126:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m126[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut port2_test = false;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+
+|:|none
+help|:|src/arch/x86/drivers/ps2.rs|:|126|:|126|:|9|:|13|:|remove this `mut`|:|none|:|

@@ -1,47 +1,47 @@
 pub mod display;
+pub mod io;
 
 use crate::arch::Arch;
 use display::color::Color;
+use io::keyboard_manager::KeyboardManager;
 
 pub struct Kernel {
     arch: TargetArch,
+    keyboard_manager: KeyboardManager,
 }
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        Self { arch }
+        Self { arch, keyboard_manager: KeyboardManager::init() }
     }
 
     pub fn run(&mut self) -> ! {
         // Access drivers through arch_drivers() - this is safe because we're the only
         // non-interrupt code running, and interrupts don't hold references across calls
-        if let Some(arch_drivers) = TargetArch::arch_drivers() {
-            if let Some(video) = arch_drivers.video.as_mut() {
-                let _ = video.clear().write_str("Kernel start init!\n");
-            }
-            let timer = arch_drivers.timer.as_mut();
-            timer.sleep(100);
-            if let Some(video) = arch_drivers.video.as_mut() {
-                let _ = writeln!(video, "{:?}", timer.get_uptime_ms());
-            }
-        }
+        TargetArch::with_video(|video| {
+            let _ = video.clear().write_str("Kernel start init!\n");
+        });
 
         loop {
+            self.periodic();
+        }
+    }
+
+    fn periodic(&mut self) {
+        self.keyboard_manager.update();
+        if let Some(next_ascii) = self.keyboard_manager.next_ascii() {
+            TargetArch::with_video(|video| write!(video, "{}", next_ascii as u8 as char));
+        }
+    }
+
+    fn sleep(&self, ms: u64) {
+        let target_time = ms + TargetArch::with_timer(|timer| timer.get_uptime_ms()).unwrap(); 
+        while TargetArch::with_timer(|timer| timer.get_uptime_ms()).unwrap() < target_time { 
             core::hint::spin_loop();
         }
     }
 
-    pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        if let Some(arch_drivers) = TargetArch::arch_drivers() {
-            if let Some(video) = arch_drivers.video.as_mut() {
-                video.set_bg(Color::red()).set_fg(Color::black()).clear();
-                let _ = writeln!(video, "{:?}", info);
-            }
-            if let Some(serial) = arch_drivers.serial.as_mut() {
-                let _ = writeln!(serial, "{:?}", info);
-            }
-        }
-
+    pub fn panic(&mut self, _info: &PanicInfo) -> ! {
         loop {
             core::hint::spin_loop();
         }
