@@ -34,6 +34,13 @@ impl Kernel {
         }
     }
 
+    fn sleep(&self, ms: u64) {
+        let target_time = ms + TargetArch::with_timer(|timer| timer.get_uptime_ms()).unwrap(); 
+        while TargetArch::with_timer(|timer| timer.get_uptime_ms()).unwrap() < target_time { 
+            core::hint::spin_loop();
+        }
+    }
+
     pub fn panic(&mut self, _info: &PanicInfo) -> ! {
         loop {
             core::hint::spin_loop();

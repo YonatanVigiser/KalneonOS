@@ -486,24 +486,6 @@ warning|:|src/drivers/traits/console/keyboard.rs|:|274|:|274|:|8|:|22|:|methods 
 [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/drivers/traits/timer.rs|:|1|:|1|:|11|:|16|:|method `get_uptime_ms` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_uptime_ms` is never used[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/timer.rs:2:8[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m1[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Timer: Sync + Send {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m-----[0m[0m [0m[0m[1m[38;5;12mmethod in this trait[0m
-[0m[1m[38;5;12m2[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_uptime_ms(&self) -> u64;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/drivers/traits/timer.rs|:|2|:|2|:|8|:|21|:|method `get_uptime_ms` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_uptime_ms` is never used[0m
-[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/drivers/traits/timer.rs:2:8[0m
-[0m  [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m1[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Timer: Sync + Send {[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;12m-----[0m[0m [0m[0m[1m[38;5;12mmethod in this trait[0m
-[0m[1m[38;5;12m2[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn get_uptime_ms(&self) -> u64;[0m
-[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^[0m
-
-|:|none
 warning|:|src/kernel.rs|:|8|:|8|:|12|:|18|:|field `arch` is never read|:|[0m[1m[33mwarning[0m[0m[1m: field `arch` is never read[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:9:5[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
@@ -520,6 +502,26 @@ warning|:|src/kernel.rs|:|9|:|9|:|5|:|9|:|field `arch` is never read|:|[0m[1m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
 [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    arch: TargetArch,[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^[0m
+
+|:|none
+warning|:|src/kernel.rs|:|13|:|13|:|1|:|12|:|method `sleep` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `sleep` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:37:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Kernel {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn sleep(&self, ms: u64) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^[0m
+
+|:|none
+warning|:|src/kernel.rs|:|37|:|37|:|8|:|13|:|method `sleep` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `sleep` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel.rs:37:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Kernel {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn sleep(&self, ms: u64) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^[0m
 
 |:|none
 warning|:|src/kernel/display/color.rs|:|39|:|39|:|1|:|26|:|methods `select_closest` and `select_nth` are never used|:|[0m[1m[33mwarning[0m[0m[1m: methods `select_closest` and `select_nth` are never used[0m
@@ -558,62 +560,23 @@ warning|:|src/kernel/display/color.rs|:|60|:|60|:|12|:|22|:|methods `select_clos
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
 
 |:|none
-warning|:|src/kernel/io/keyboard_manager.rs|:|7|:|7|:|10|:|19|:|variants `DoubleQuote` and `SingleQuote` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `DoubleQuote` and `SingleQuote` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:14:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    DoubleQuote = 34,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    SingleQuote = 39,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/kernel/io/keyboard_manager.rs|:|14|:|14|:|5|:|16|:|variants `DoubleQuote` and `SingleQuote` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `DoubleQuote` and `SingleQuote` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:14:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    DoubleQuote = 34,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    SingleQuote = 39,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/kernel/io/keyboard_manager.rs|:|19|:|19|:|5|:|16|:|variants `DoubleQuote` and `SingleQuote` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `DoubleQuote` and `SingleQuote` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:14:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m [0m[0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum AsciiChar {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    DoubleQuote = 34,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-[0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    SingleQuote = 39,[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
-
-|:|none
-warning|:|src/kernel/io/keyboard_manager.rs|:|364|:|364|:|1|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:380:12[0m
+warning|:|src/kernel/io/keyboard_manager.rs|:|377|:|377|:|1|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:395:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m380[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
+[0m[1m[38;5;12m395[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
-warning|:|src/kernel/io/keyboard_manager.rs|:|380|:|380|:|12|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:380:12[0m
+warning|:|src/kernel/io/keyboard_manager.rs|:|395|:|395|:|12|:|21|:|method `get_state` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `get_state` is never used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:395:12[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m364[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl KeyboardManager {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m--------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m380[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
+[0m[1m[38;5;12m395[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn get_state(&self) -> &KeyboardState {[0m
 [0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^[0m
 
 |:|none
@@ -1116,22 +1079,22 @@ warning|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|this expression creat
 
 |:|none
 help|:|src/kernel/display/color.rs|:|47|:|47|:|9|:|17|:|change this to|:|none|:|closest
-warning|:|src/kernel/io/keyboard_manager.rs|:|281|:|320|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
-[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:281:9[0m
+warning|:|src/kernel/io/keyboard_manager.rs|:|283|:|321|:|9|:|10|:|match expression looks like `matches!` macro|:|[0m[1m[33mwarning[0m[0m[1m: match expression looks like `matches!` macro[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/kernel/io/keyboard_manager.rs:283:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m281[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match key {[0m
-[0m[1m[38;5;12m282[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::CapsLock => false,[0m
-[0m[1m[38;5;12m283[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftShift => false,[0m
-[0m[1m[38;5;12m284[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftControl => false,[0m
+[0m[1m[38;5;12m283[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        match key {[0m
+[0m[1m[38;5;12m284[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::CapsLock => false,[0m
+[0m[1m[38;5;12m285[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftShift => false,[0m
+[0m[1m[38;5;12m286[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            Key::LeftControl => false,[0m
 [0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
-[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => true,[0m
-[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
-[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::Enter | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)`[0m
+[0m[1m[38;5;12m320[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            _ => true,[0m
+[0m[1m[38;5;12m321[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m[0m [0m[0m[1m[33mhelp: try: `!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)`[0m
 [0m    [0m[0m[1m[38;5;12m|[0m
 [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#match_like_matches_macro[0m
 
 |:|none
-help|:|src/kernel/io/keyboard_manager.rs|:|281|:|320|:|9|:|10|:|try|:|none|:|!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::Enter | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)
+help|:|src/kernel/io/keyboard_manager.rs|:|283|:|321|:|9|:|10|:|try|:|none|:|!matches!(key, Key::CapsLock | Key::LeftShift | Key::LeftControl | Key::LeftWin | Key::LeftAlt | Key::RightShift | Key::RightControl | Key::RightWin | Key::RightAlt | Key::Apps | Key::F1 | Key::F2 | Key::F3 | Key::F4 | Key::F5 | Key::F6 | Key::F7 | Key::F8 | Key::F9 | Key::F10 | Key::F11 | Key::F12 | Key::PrintScreen | Key::Scroll | Key::Pause | Key::Insert | Key::Home | Key::PageUp | Key::Delete | Key::End | Key::PageDown | Key::UpArrow | Key::LeftArrow | Key::DownArrow | Key::RightArrow | Key::NumLock)
 warning|:|src/arch/x86/drivers/vga.rs|:|256|:|256|:|9|:|31|:|unused `core::result::Result` that must be used|:|[0m[1m[33mwarning[0m[0m[1m: unused `core::result::Result` that must be used[0m
 [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/arch/x86/drivers/vga.rs:256:9[0m
 [0m    [0m[0m[1m[38;5;12m|[0m

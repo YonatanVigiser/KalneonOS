@@ -1,7 +1,7 @@
 use super::InputConsole;
 
 #[repr(u8)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Key {
     A,
     B,
