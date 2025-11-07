@@ -6,22 +6,20 @@ use crate::drivers::traits::timer::Timer;
 
 use core::panic::PanicInfo;
 
-use alloc::boxed::Box;
-
 pub trait Arch {
     fn init(boot_magic_val: usize, boot_info_ptr: usize) -> Self;
 
     fn panic(info: &PanicInfo) -> !;
 
-    // Arch-specific drivers access - returns static reference to arch drivers
-    fn arch_drivers() -> Option<&'static mut ArchDrivers>;
+    fn with_keyboard<F, R>(f: F) -> Option<R> 
+        where F: FnOnce(&mut dyn KeyboardDriver) -> R;
 
-    fn take_arch_drivers() -> ArchDrivers;
-}
+    fn with_timer<F, R>(f: F) -> Option<R> 
+        where F: FnOnce(&mut dyn Timer) -> R;
 
-pub struct ArchDrivers {
-    pub video: Option<Box<dyn VideoConsole>>,
-    pub serial: Option<Box<dyn SerialConsole>>,
-    pub keyboard: Option<Box<dyn KeyboardDriver>>,
-    pub timer: Box<dyn Timer>,
+    fn with_serial<F, R>(f: F) -> Option<R> 
+        where F: FnOnce(&mut dyn SerialConsole) -> R;
+
+    fn with_video<F, R>(f: F) -> Option<R> 
+        where F: FnOnce(&mut dyn VideoConsole) -> R;
 }

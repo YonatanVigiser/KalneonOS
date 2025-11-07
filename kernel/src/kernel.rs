@@ -18,11 +18,9 @@ impl Kernel {
     pub fn run(&mut self) -> ! {
         // Access drivers through arch_drivers() - this is safe because we're the only
         // non-interrupt code running, and interrupts don't hold references across calls
-        if let Some(arch_drivers) = TargetArch::arch_drivers() {
-            if let Some(video) = arch_drivers.video.as_mut() {
-                let _ = video.clear().write_str("Kernel start init!\n");
-            }
-        }
+        TargetArch::with_video(|video| {
+            let _ = video.clear().write_str("Kernel start init!\n");
+        });
 
         loop {
             self.periodic();
@@ -30,27 +28,13 @@ impl Kernel {
     }
 
     fn periodic(&mut self) {
-            
-            if let Some(arch_drivers) = TargetArch::arch_drivers() {
-                if let Some(keyboard) = arch_drivers.keyboard.as_mut() && let Some(video) = arch_drivers.video.as_mut() {
-                    if keyboard.has_next_key() {
-                        let _ = writeln!(video, "{:?}", keyboard.next_key());
-                    }
-                }
-            }
+        self.keyboard_manager.update();
+        if let Some(next_ascii) = self.keyboard_manager.next_ascii() {
+            TargetArch::with_video(|video| write!(video, "{}", next_ascii as u8 as char));
+        }
     }
 
-    pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        if let Some(arch_drivers) = TargetArch::arch_drivers() {
-            if let Some(video) = arch_drivers.video.as_mut() {
-                video.set_bg(Color::red()).set_fg(Color::black()).clear();
-                let _ = writeln!(video, "{:?}", info);
-            }
-            if let Some(serial) = arch_drivers.serial.as_mut() {
-                let _ = writeln!(serial, "{:?}", info);
-            }
-        }
-
+    pub fn panic(&mut self, _info: &PanicInfo) -> ! {
         loop {
             core::hint::spin_loop();
         }

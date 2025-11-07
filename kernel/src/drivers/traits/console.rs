@@ -2,9 +2,9 @@ pub mod keyboard;
 
 use crate::kernel::display::color::Color;
 
-pub trait OutputConsole: core::fmt::Write + Sync {}
+pub trait OutputConsole: core::fmt::Write + Sync + Send {}
 
-pub trait InputConsole: Sync {
+pub trait InputConsole: Sync + Send {
     fn process_input(&mut self);
     fn read_byte(&mut self) -> Option<u8>;
     fn has_next_byte(&self) -> bool;

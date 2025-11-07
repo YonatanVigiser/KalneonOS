@@ -5,8 +5,6 @@ pub mod idt;
 pub mod interrupts;
 pub mod pic;
 
-use super::{Arch, ArchDrivers};
-
 use drivers::pit::PitTimer;
 use drivers::serial::SerialDriver;
 use drivers::vga::Vga;
@@ -18,48 +16,35 @@ use crate::drivers::traits::console::*;
 use crate::drivers::traits::console::keyboard::KeyboardDriver;
 use crate::drivers::traits::timer::Timer;
 
+use spin::Mutex;
 use alloc::boxed::Box;
 
-// Early boot drivers references for IRQ handlers
-// This is initialized once during boot and then accessed by both IRQ handlers and kernel
-pub static mut ARCH_DRIVERS: Option<ArchDrivers> = None;
+// Drivers:
+pub static KEYBOARD: Mutex<Option<Box<dyn KeyboardDriver>>> = Mutex::new(None);
+pub static TIMER: Mutex<Option<Box<dyn Timer>>> = Mutex::new(None);
+pub static VIDEO: Mutex<Option<Box<dyn VideoConsole>>> = Mutex::new(None);
+pub static SERIAL: Mutex<Option<Box<dyn SerialConsole>>> = Mutex::new(None);
 
 pub struct ArchX86();
 
 impl ArchX86 {
     fn init_drivers() {
-        let video: Option<Box<dyn VideoConsole>> = Some(Box::new(Vga::init(80, 25)));
-
-        let timer: Box<dyn Timer> = Box::new(PitTimer::init());
+        *VIDEO.lock() = Some(Box::from(Vga::init(80, 25)));
+        if let Some(serial) = SerialDriver::init() {
+            *SERIAL.lock() = Some(Box::from(serial));
+        }
+        *TIMER.lock() = Some(Box::from(PitTimer::init()));
 
         // Init ps/2 drivers:
         // Init the ps/2 controller
-        let mut keyboard_type = None;
-        let mut _mouse_type = None;
         if let Ok(types) = drivers::ps2::init() {
-            (keyboard_type, _mouse_type) = types;
+            let (keyboard_type, _mouse_type) = types;
+
+            if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
+                *KEYBOARD.lock() = Some(Box::from(driver));
+            }
         } else {
             panic!("Opps!");
-        }
-
-        let keyboard: Option<Box<dyn KeyboardDriver>> = if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
-            Some(Box::new(driver))
-        } else {
-            None
-        };
-
-        let serial: Option<Box<dyn SerialConsole>> = if let Some(driver) = SerialDriver::init() {
-            Some(Box::new(driver))
-        } else {
-            None
-        };
-
-        unsafe { ARCH_DRIVERS = Some(ArchDrivers {
-            video,
-            serial,
-            keyboard,
-            timer,
-        });
         }
 
         pic::unmask_irq(0); // Timer
@@ -68,6 +53,8 @@ impl ArchX86 {
     }
 
 }
+
+use super::Arch;
 
 impl Arch for ArchX86 {
     fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
@@ -83,11 +70,9 @@ impl Arch for ArchX86 {
         // Init early drivers
         Self::init_drivers();
 
-        if let Some(arch_drivers) = Self::arch_drivers()
-            && let Some(video) = arch_drivers.video.as_mut()
-        {
+        Self::with_video(|video| {
             let _ = video.clear().write_str("Arch init is complete!");
-        }
+        });
 
         // Finish init - enable interrupts
         unsafe {
@@ -104,29 +89,65 @@ impl Arch for ArchX86 {
             cpu::cli();
         }
 
-        if let Some(arch_drivers) = Self::arch_drivers()
-            && let Some(video) = arch_drivers.video.as_mut()
-        {
+        Self::with_video(|video| {
             video.set_bg(Color::red()).set_fg(Color::black()).clear();
             let _ = writeln!(video, "{}", info);
-        }
+        });
 
         loop {
             core::hint::spin_loop();
         }
     }
 
-    fn arch_drivers() -> Option<&'static mut ArchDrivers> {
-        unsafe {
-            let ptr = core::ptr::addr_of_mut!(ARCH_DRIVERS);
-            (*ptr).as_mut()
-        }
+    fn with_keyboard<F, R>(f: F) -> Option<R>
+        where F: FnOnce(&mut dyn KeyboardDriver) -> R {
+            pic::mask_irq(1);
+
+            let result = {
+                let mut guard = KEYBOARD.lock();
+                guard.as_mut().map(|keyboard| f(keyboard.as_mut()))
+            };
+
+            pic::unmask_irq(1);
+
+            result
     }
 
-    fn take_arch_drivers() -> ArchDrivers {
-        unsafe {
-            let ptr = core::ptr::addr_of_mut!(ARCH_DRIVERS);
-            (*ptr).take().expect("Arch drivers aren't initilized!")
-        }
+    fn with_timer<F, R>(f: F) -> Option<R>
+        where F: FnOnce(&mut dyn Timer) -> R {
+            pic::mask_irq(0);
+
+            let result = {
+                let mut guard = TIMER.lock();
+                guard.as_mut().map(|timer| f(timer.as_mut()))
+            };
+
+            pic::unmask_irq(0);
+
+            result
+    }
+
+    fn with_serial<F, R>(f: F) -> Option<R>
+        where F: FnOnce(&mut dyn SerialConsole) -> R {
+            pic::mask_irq(3);
+
+            let result = {
+                let mut guard = SERIAL.lock();
+                guard.as_mut().map(|serial| f(serial.as_mut()))
+            };
+
+            pic::unmask_irq(3);
+
+            result
+    }
+
+    fn with_video<F, R>(f: F) -> Option<R>
+        where F: FnOnce(&mut dyn VideoConsole) -> R {
+            let result = {
+                let mut guard = VIDEO.lock();
+                guard.as_mut().map(|video| f(video.as_mut()))
+            };
+
+            result
     }
 }

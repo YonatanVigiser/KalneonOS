@@ -245,8 +245,6 @@ impl PS2Keyboard {
             last_connection_time: 0,
         };
 
-        panic!("he");
-
         driver.send_command(SET_SCANCODE_SET2_COMMAND, Some(SET_SCANCODE_SET2_DATA))?;
         driver.send_command(SET_TYPEMATIC_RATE_COMMAND, Some(SET_TYPEMATIC_RATE_VALUE))?;
         driver.send_command(SET_LEDS_STATE_COMMAND, Some(Self::leds_state_to_raw_data(LedsState::default())))?;
@@ -298,9 +296,7 @@ impl PS2Keyboard {
     }
 
     fn irq_handler(_stack_frame: &mut InterruptStackFrame) {
-        if let Some(arch_drivers) = crate::TargetArch::arch_drivers() {
-            arch_drivers.keyboard.as_mut().expect("Keyboard driver isn't found in Arch Drivers!").process_input();
-        }
+        crate::TargetArch::with_keyboard(|keyboard| keyboard.process_input());
         pic::send_eoi(IRQ_NUM);
     }
 }
@@ -339,7 +335,7 @@ impl KeyboardDriver for PS2Keyboard {
 
     fn is_connected(&mut self) -> bool {
         pic::mask_irq(IRQ_NUM);
-        let current_uptime = crate::TargetArch::arch_drivers().expect("Timer driver is not initialized!").timer.get_uptime_ms();
+        let current_uptime = crate::TargetArch::with_timer(|timer| timer.get_uptime_ms()).expect("Timer Driver was not initlialized!");
 
         let connected = if current_uptime > self.last_connection_time + CONNECTION_TIME_TEST_THRESHOLD_MS {
             ps2::echo_device_port1()

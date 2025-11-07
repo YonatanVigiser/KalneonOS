@@ -1,4 +1,6 @@
-use crate::drivers::traits::console::keyboard::{Key, KeyEvent, KeyboardDriver};
+use crate::drivers::traits::console::keyboard::{Key, KeyEvent};
+use crate::arch::Arch;
+use crate::TargetArch;
 
 #[repr(u8)]
 #[allow(non_camel_case_types)]
@@ -353,13 +355,12 @@ impl KeyboardState {
         self.pressed_keys[key as usize]
     }
 }
-use alloc::boxed::Box;
 
 pub struct KeyboardManager {
-    driver: Box<dyn KeyboardDriver>,
     state: KeyboardState,
 }
 
+const DRIVER_NOT_INIT: &str = "Keyboard Driver not initialized!";
 impl KeyboardManager {
     pub fn init() -> Self {
         let state = KeyboardState {
@@ -369,9 +370,7 @@ impl KeyboardManager {
             pressed_keys: [false; Key::Count as usize],
             last_ascii_key_pressed: None,
         };
-        let driver = crate::TargetArch::arch_drivers().expect("Arch drivers are not initlialized!").keyboard.expect("Keyboard driver are nto initlialized!");
         let mut manager = Self {
-            driver,
             state,
         };
         manager.update();
@@ -383,8 +382,8 @@ impl KeyboardManager {
     }
 
     pub fn update(&mut self) {
-        while self.driver.has_next_key() {
-            match self.driver.next_key().expect("Keyboard reports having key but didn't provide one!") {
+        while TargetArch::with_keyboard(|keyboard| keyboard.has_next_key()).expect(DRIVER_NOT_INIT) {
+            match TargetArch::with_keyboard(|keyboard| keyboard.next_key()).expect(DRIVER_NOT_INIT).expect("Keyboard reports having key but didn't provide one!") {
                 KeyEvent::KeyPressed(key) => self.state.update(key, true),
                 KeyEvent::KeyReleased(key) => self.state.update(key, false),
             };
@@ -394,6 +393,6 @@ impl KeyboardManager {
     pub fn next_ascii(&self) -> Option<AsciiChar> {
         let shift = self.state.is_pressed(Key::LeftShift) | self.state.is_pressed(Key::RightShift);
         let key = self.state.last_ascii_key_pressed?;
-        return AsciiChar::from_key(key, shift, self.state.caps_lock, self.state.num_lock);
+        AsciiChar::from_key(key, shift, self.state.caps_lock, self.state.num_lock)
     }
 }
