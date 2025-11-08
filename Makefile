@@ -1,39 +1,67 @@
-BUILD_DIR=build
-BOOT_DIR=boot
-KERNEL_DIR=kernel
-MBR=$(BUILD_DIR)/$(BOOT_DIR)/mbr.bin
-BOOT_0=$(BUILD_DIR)/$(BOOT_DIR)/boot0.bin
-BOOT_1=$(BUILD_DIR)/$(BOOT_DIR)/boot1.bin
-KERNEL=$(BUILD_DIR)/$(KERNEL_DIR)/kernel.bin
-DISK_SIZE=3000
-IMAGE_NAME=$(BUILD_DIR)/disk.img
+BUILD_DIR := build
+BOOT_DIR := boot
+KERNEL_DIR := kernel
+RUST_MODE ?= debug
 
-all: clean image
+KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/kernel-x86.bin
+KERNEL_X86 := $(BUILD_DIR)/$(KERNEL_DIR)/i386-kalneon_os/$(RUST_MODE)/kernel
+KERNEL_X64 := $(BUILD_DIR)/$(KERNEL_DIR)/x86_64-kalneon_os/$(RUST_MODE)/kernel
 
-.PHONY:
-build_dir:
-	mkdir -p $(BUILD_DIR)
-	mkdir -p $(BUILD_DIR)/$(BOOT_DIR)
-	mkdir -p $(BUILD_DIR)/$(KERNEL_DIR)
+MBR_BIN := $(BUILD_DIR)/legacy/mbr.bin
+BOOT0_BIN := $(BUILD_DIR)/legacy/boot0.bin
+BOOT1_BIN := $(BUILD_DIR)/legacy/boot1.bin
+DISK_SIZE := 3000
 
-.PHONY:
-boot: build_dir
-	make -C $(BOOT_DIR)
+IMAGE_X86_LEGACY := $(BUILD_DIR)/kalneonos-x86-legacy.img
+ISO_X86 := $(BUILD_DIR)/kalneonos-x86.iso
+ISO_X64 := $(BUILD_DIR)/kalneonos-x64.iso
 
-.PHONY:
-kernel: build_dir
-	make -C $(KERNEL_DIR)
+GRUB_CFG_FILE := $(BOOT_DIR)/grub.cfg
 
-.PHONY:
-image: boot kernel
-	dd if=/dev/zero of=$(IMAGE_NAME) bs=512 count=$(DISK_SIZE)
-	echo "1,,83,*" | sfdisk $(IMAGE_NAME)
-	dd conv=notrunc if=$(MBR) 	 of=$(IMAGE_NAME) bs=446 count=1 seek=0
-	dd conv=notrunc if=$(BOOT_0) of=$(IMAGE_NAME) bs=512 count=1 seek=1
-	dd conv=notrunc if=$(BOOT_1) of=$(IMAGE_NAME) bs=512 count=17 seek=2
-	dd conv=notrunc if=$(KERNEL) of=$(IMAGE_NAME) bs=512 count=2048 seek=19
+.PHONY: all x86-legacy x86 x64 clean
 
-.PHONY:
+all: x64 x86 
+
+x86-legacy: $(IMAGE_X86_LEGACY)
+
+$(IMAGE_X86_LEGACY): $(KERNEL_X86_BIN) $(MBR_BIN) $(BOOT0_BIN) $(BOOT1_BIN)
+	dd if=/dev/zero of=$@ bs=512 count=$(DISK_SIZE)
+	echo "1,,83,*" | sfdisk $@
+	dd conv=notrunc if=$(MBR_BIN)   of=$@ bs=446 count=1 seek=0
+	dd conv=notrunc if=$(BOOT0_BIN) of=$@ bs=512 count=1 seek=1
+	dd conv=notrunc if=$(BOOT1_BIN) of=$@ bs=512 count=17 seek=2
+	dd conv=notrunc if=$(KERNEL_X86_BIN) of=$@ bs=512 count=2048 seek=19
+
+$(MBR_BIN) $(BOOT0_BIN) $(BOOT1_BIN):
+	$(MAKE) -C $(BOOT_DIR)/legacy
+
+$(KERNEL_X86_BIN): $(KERNEL_X86)
+	@mkdir -p $(dir $@)
+	objcopy -O binary $< $@
+
+x86: $(ISO_X86)
+
+$(ISO_X86): $(KERNEL_X86)
+	@mkdir -p $(BUILD_DIR)/isodir-x86/boot/grub
+	cp $< $(BUILD_DIR)/isodir-x86/boot/kernel
+	cp $(GRUB_CFG_FILE) $(BUILD_DIR)/isodir-x86/boot/grub/grub.cfg
+	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x86
+
+x64: $(ISO_X64)
+
+$(ISO_X64): $(KERNEL_X64)
+	@mkdir -p $(BUILD_DIR)/isodir-x64/boot/grub
+	cp $< $(BUILD_DIR)/isodir-x64/boot/kernel
+	cp $(GRUB_CFG_FILE) $(BUILD_DIR)/isodir-x64/boot/grub/grub.cfg
+	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x64
+
+$(KERNEL_X86):
+	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json
+
+$(KERNEL_X64):
+	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/x86_64-kalneon_os.json
+
 clean:
-	rm -rf $(BUILD_DIR)/$(BOOT_DIR)
+	rm -rf $(BUILD_DIR)
+	cd $(KERNEL_DIR) && cargo clean
 

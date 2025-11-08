@@ -11,6 +11,7 @@
   "linker-flavor": "ld.lld",
   "llvm-target": "i386-unknown-none",
   "panic-strategy": "abort",
+  "code-model": "kernel",
   "pre-link-args": {
     "ld.lld": ["-Tlink.ld"]
   }
