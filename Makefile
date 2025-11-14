@@ -3,9 +3,9 @@ BOOT_DIR := boot
 KERNEL_DIR := kernel
 RUST_MODE ?= debug
 
-KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/kernel-x86.bin
-KERNEL_X86 := $(BUILD_DIR)/$(KERNEL_DIR)/i386-kalneon_os/$(RUST_MODE)/kernel
-KERNEL_X64 := $(BUILD_DIR)/$(KERNEL_DIR)/x86_64-kalneon_os/$(RUST_MODE)/kernel
+KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/
+KERNEL_X86 := $(BUILD_DIR)/$(KERNEL_DIR)/i386-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
+KERNEL_X64 := $(BUILD_DIR)/$(KERNEL_DIR)/x86_64-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
 
 MBR_BIN := $(BUILD_DIR)/legacy/mbr.bin
 BOOT0_BIN := $(BUILD_DIR)/legacy/boot0.bin
@@ -62,6 +62,6 @@ $(KERNEL_X64):
 	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/x86_64-kalneon_os.json
 
 clean:
-	rm -rf $(BUILD_DIR)
 	cd $(KERNEL_DIR) && cargo clean
+	rm -rf $(BUILD_DIR)
 

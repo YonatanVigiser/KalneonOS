@@ -12,6 +12,10 @@ extern crate alloc;
 
 use arch::Arch;
 
+#[unsafe(link_section = ".text.multiboot")]
+#[used]
+static MULTIBOOT_HEADER: [u8; 80] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
+
 #[cfg(target_arch = "x86")]
 pub type TargetArch = arch::x86::ArchX86;
 

@@ -3,10 +3,9 @@ ENTRY(_start)
 SECTIONS {
   . = 0x00200000;
 
-  .text : {
+  .text : ALIGN(8) {
+    KEEP(*(.text.multiboot))
     KEEP(*(.text._start))
-    . = ALIGN(8)
-    KEEP(*(.multiboot))
     *(.text*)
   }
 
