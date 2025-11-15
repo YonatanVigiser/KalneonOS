@@ -45,7 +45,7 @@ $(ISO_X86): $(KERNEL_X86)
 	@mkdir -p $(BUILD_DIR)/isodir-x86/boot/grub
 	cp $< $(BUILD_DIR)/isodir-x86/boot/kernel
 	cp $(GRUB_CFG_FILE) $(BUILD_DIR)/isodir-x86/boot/grub/grub.cfg
-	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x86
+	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x86 -d /usr/lib/grub/i386-pc
 
 x64: $(ISO_X64)
 
@@ -53,7 +53,7 @@ $(ISO_X64): $(KERNEL_X64)
 	@mkdir -p $(BUILD_DIR)/isodir-x64/boot/grub
 	cp $< $(BUILD_DIR)/isodir-x64/boot/kernel
 	cp $(GRUB_CFG_FILE) $(BUILD_DIR)/isodir-x64/boot/grub/grub.cfg
-	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x64
+	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x64 -d /usr/lib/grub/x86_64-efi
 
 $(KERNEL_X86):
 	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json

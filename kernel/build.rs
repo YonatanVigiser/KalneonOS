@@ -56,12 +56,6 @@ fn build_mutliboot_header() {
     };
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
-            .relocatable_tag(RelocatableHeaderTag::new(
-                    HeaderTagFlag::Required,
-                    KERNEL_MIN_ADDRESS,
-                    KERNEL_MAX_ADDRESS,
-                    KERNEL_ALIGMENT,
-                    RelocatableHeaderTagPreference::None))
             .information_request_tag(InformationRequestHeaderTag::new(
                     HeaderTagFlag::Optional,
                     &[
@@ -91,6 +85,20 @@ fn build_mutliboot_header() {
 
         fs::write(&header_path, header_bytes)
             .expect("Failed to write multiboot header");
+
+        // The terminating tag
+        let end_tag: [u8; 8] = [
+            0x00, 0x00,  // type = 0
+            0x00, 0x00,  // flags = 0  
+            0x08, 0x00, 0x00, 0x00,  // size = 8
+        ];
+
+        let mut file = fs::OpenOptions::new()
+            .append(true)
+            .open(&header_path)
+            .expect("Failed to write multiboot header");
+        use std::io::Write;
+        file.write_all(&end_tag).expect("Failed to write multiboot header");
 
         println!("cargo:rerun-if-changed=build.rs");
         println!("cargo:warning=Multiboot header written to: {}", header_path.display());

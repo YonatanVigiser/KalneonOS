@@ -20,10 +20,7 @@ SECTIONS {
   .bss : {
     *(.bss*)
     *(COMMON)
-  }
-
-  .stack : ALIGN(16) {
-    KEEP(*(.stack))
+    *(.stack*)
   }
 
   .heap (NOLOAD) : ALIGN(4K) {

@@ -14,12 +14,9 @@ use arch::Arch;
 
 #[unsafe(link_section = ".text.multiboot")]
 #[used]
-static MULTIBOOT_HEADER: [u8; 80] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
+static MULTIBOOT_HEADER: [u8; 64] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
-#[cfg(target_arch = "x86")]
-pub type TargetArch = arch::x86::ArchX86;
-
-#[cfg(target_arch = "x86_64")]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub type TargetArch = arch::x86::ArchX86;
 
 #[unsafe(no_mangle)]

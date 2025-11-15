@@ -12,7 +12,6 @@ _start:
   ; Load a simple GDT:
   lgdt [rel gdt_desc]
 
-  ; Reload cs - in 64-bit we need a far return
   push 0x08
   lea rax, [rel .reload_seg]
   push rax
@@ -26,6 +25,9 @@ _start:
   mov fs, ax
   mov gs, ax
   mov ss, ax
+
+  mov edi, eax
+  mov rsi, rbx
 
   ; Jump to kernel main
   call main
@@ -69,7 +71,7 @@ gdt_desc:
   dw gdt_end - gdt - 1
   dq gdt
 
-section .bss
+section .bss.stack
 align 16
 stack: resb 0x10000
 stack_top:
