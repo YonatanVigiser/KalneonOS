@@ -3,7 +3,7 @@ BOOT_DIR := boot
 KERNEL_DIR := kernel
 RUST_MODE ?= debug
 
-KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/
+KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/legacy/kernel.bin
 KERNEL_X86 := $(BUILD_DIR)/$(KERNEL_DIR)/i386-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
 KERNEL_X64 := $(BUILD_DIR)/$(KERNEL_DIR)/x86_64-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
 
@@ -20,7 +20,7 @@ GRUB_CFG_FILE := $(BOOT_DIR)/grub.cfg
 
 .PHONY: all x86-legacy x86 x64 clean
 
-all: x64 x86 
+all: x64 x86
 
 x86-legacy: $(IMAGE_X86_LEGACY)
 
@@ -35,9 +35,9 @@ $(IMAGE_X86_LEGACY): $(KERNEL_X86_BIN) $(MBR_BIN) $(BOOT0_BIN) $(BOOT1_BIN)
 $(MBR_BIN) $(BOOT0_BIN) $(BOOT1_BIN):
 	$(MAKE) -C $(BOOT_DIR)/legacy
 
-$(KERNEL_X86_BIN): $(KERNEL_X86)
+$(KERNEL_X86_BIN):
 	@mkdir -p $(dir $@)
-	objcopy -O binary $< $@
+	cd $(KERNEL_DIR) && LEGACY_BOOT=true cargo-objcopy $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json -- -O binary ../$@
 
 x86: $(ISO_X86)
 

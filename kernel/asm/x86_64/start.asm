@@ -10,12 +10,11 @@ _start:
   mov rsp, stack_top
 
   ; Load a simple GDT:
-  lgdt [rel gdt_desc]
+  lgdt [gdt_desc]
 
   push 0x08
-  lea rax, [rel .reload_seg]
-  push rax
-  retfq
+  push .reload_seg
+  retf
 
 .reload_seg:
   ; Reload the segments
@@ -43,7 +42,6 @@ gdt:
 
 gdt_null:
   dq 0x0
-  dq 0x0
 
 ; 64-bit code segment
 gdt_code:
@@ -53,7 +51,6 @@ gdt_code:
   db 10011010b ; Access byte (Present, Ring 0, Code, Execute/Read)
   db 10101111b ; Limit (16-19) + Flags (Granularity, Long mode)
   db 0x00      ; Base (24-31)
-  dq 0x0       ; Base (32-63) + Reserved
 
 ; 64-bit data segment
 gdt_data:
@@ -61,9 +58,8 @@ gdt_data:
   dw 0x0000    ; Base (0-15)
   db 0x00      ; Base (16-23)
   db 10010010b ; Access byte (Present, Ring 0, Data, Read/Write)
-  db 10101111b ; Limit (16-19) + Flags
+  db 11001111b ; Limit (16-19) + Flags
   db 0x00      ; Base (24-31)
-  dq 0x0       ; Base (32-63) + Reserved
 
 gdt_end:
 

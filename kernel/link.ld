@@ -1,7 +1,7 @@
 ENTRY(_start)
 
 SECTIONS {
-  . = 0x00200000;
+  . = 0x00100000;
 
   .text : ALIGN(8) {
     KEEP(*(.text.multiboot))
