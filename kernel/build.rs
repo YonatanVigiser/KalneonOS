@@ -44,15 +44,6 @@ fn compile_asm_files() {
 }
 
 fn build_mutliboot_header() {
-    let legacy_boot = std::env::var("LEGACY_BOOT").unwrap_or("false".to_string());
-    println!("cargo:rerun-if-env-changed=LEGACY_BOOT");
-
-    if legacy_boot == "true" {
-        println!("cargo:rustc-cfg=legacy_boot");
-        println!("cargo:warning=Legacy boot mode enabled - ignoring the multiboot2 header");
-    }
-    println!("cargo::rustc-check-cfg=cfg(legacy_boot)");
-
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     use multiboot2_header::*;
     let arch_header_tag = match target_arch.as_str() {
@@ -62,12 +53,6 @@ fn build_mutliboot_header() {
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
             .efi_bs_tag(EfiBootServiceHeaderTag::new(HeaderTagFlag::Optional))
-            .framebuffer_tag(FramebufferHeaderTag::new(
-                HeaderTagFlag::Optional,
-                1024,  // width
-                768,   // height
-                32,    // depth (bits per pixel)
-            ))
             .information_request_tag(InformationRequestHeaderTag::new(
                     HeaderTagFlag::Optional,
                     &[

@@ -14,7 +14,6 @@ use arch::Arch;
 
 #[unsafe(link_section = ".text.multiboot")]
 #[used]
-#[cfg(not(legacy_boot))]
 static MULTIBOOT_HEADER: [u8; 96] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
