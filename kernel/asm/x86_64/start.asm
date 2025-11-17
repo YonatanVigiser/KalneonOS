@@ -6,15 +6,10 @@ _start:
   ; Disable interrupts:
   cli
 
-  ; Load a temp "valid" stack for init:
-  mov rsp, stack_top
-
   ; Load a simple GDT:
   lgdt [gdt_desc]
 
-  push 0x08
-  push .reload_seg
-  retf
+  jmp 0x08::.reload_seg
 
 .reload_seg:
   ; Reload the segments
@@ -25,7 +20,10 @@ _start:
   mov gs, ax
   mov ss, ax
 
-  mov edi, eax
+  ; Load a temp "valid" stack for init:
+  mov rsp, stack_top
+
+  mov rdi, rax
   mov rsi, rbx
 
   ; Jump to kernel main
