@@ -5,24 +5,29 @@ pub mod io;
 use crate::arch::Arch;
 use display::color::Color;
 use io::keyboard_manager::KeyboardManager;
+use memory::frame_allocator::FrameAllocator;
 
 pub struct Kernel {
     arch: TargetArch,
+    frame_allocator: FrameAllocator,
     keyboard_manager: KeyboardManager,
 }
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        Self { arch, keyboard_manager: KeyboardManager::init() }
+        let mut frame_allocator = FrameAllocator::new(usize::MAX);
+        TargetArch::with_video(|video| {
+            let _ = writeln!(video.clear(), "Kernel start init!");
+            let _ = writeln!(video, "{:?}", frame_allocator.alloc().unwrap().start());
+        });
+        Self {
+            arch,
+            frame_allocator,
+            keyboard_manager: KeyboardManager::init()
+        }
     }
 
     pub fn run(&mut self) -> ! {
-        // Access drivers through arch_drivers() - this is safe because we're the only
-        // non-interrupt code running, and interrupts don't hold references across calls
-        TargetArch::with_video(|video| {
-            let _ = video.clear().write_str("Kernel start init!\n");
-        });
-
         loop {
             self.periodic();
         }

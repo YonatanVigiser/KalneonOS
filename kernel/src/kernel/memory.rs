@@ -1,4 +1,3 @@
-pub mod map;
-pub mod region;
+pub mod frame;
+pub mod frame_allocator;
 
-pub const BLOCK_SIZE: u32 = 4096;
