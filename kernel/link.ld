@@ -27,7 +27,7 @@ SECTIONS {
 
   .heap (NOLOAD) : ALIGN(4K) {
     __heap_start = .;
-    . += 4M;
+    . += 1M;
     __heap_end = .;
   }
 }

@@ -69,5 +69,5 @@ gdt_desc:
 
 section .stack
 align 16
-stack: resb 0x10000
+stack: resb 0x100000
 stack_top:
