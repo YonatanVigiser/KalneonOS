@@ -15,11 +15,15 @@ pub struct Kernel {
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        let mut frame_allocator = FrameAllocator::new(usize::MAX);
         TargetArch::with_video(|video| {
             let _ = writeln!(video.clear(), "Kernel start init!");
-            let _ = writeln!(video, "{:?}", frame_allocator.alloc().unwrap().start());
         });
+        let mut frame_allocator = FrameAllocator::new(usize::MAX);
+        let frame = frame_allocator.alloc().unwrap();
+        TargetArch::with_video(|video| {
+            let _ = writeln!(video, "Frame: {:?}", frame.start());
+        });
+        frame_allocator.dealloc(frame);
         Self {
             arch,
             frame_allocator,
@@ -47,7 +51,12 @@ impl Kernel {
         }
     }
 
-    pub fn panic(&mut self, _info: &PanicInfo) -> ! {
+    pub fn panic(&mut self, info: &PanicInfo) -> ! {
+        TargetArch::with_video(|video| {
+            let _ = video.clear().set_bg(Color::red()).set_fg(Color::black());
+            let _ = writeln!(video, "Kernel Paniced! Spining...");
+            let _ = writeln!(video, "Panic info:\n{:?}", info);
+        });
         loop {
             core::hint::spin_loop();
         }
