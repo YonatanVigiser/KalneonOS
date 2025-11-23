@@ -7,8 +7,7 @@ impl Color {
     }
 
     pub fn distance_to(&self, color: &Self) -> u16 {
-        let r_dis = self.0.abs_diff(color.0) as u16;
-        let g_dis = self.1.abs_diff(color.1) as u16;
+        let r_dis = self.0.abs_diff(color.0) as u16; let g_dis = self.1.abs_diff(color.1) as u16;
         let b_dis = self.2.abs_diff(color.2) as u16;
         r_dis + g_dis + b_dis
     }
@@ -60,4 +59,27 @@ impl<'a> ColorPalette<'_> {
     pub fn select_nth(&self, index: usize) -> &Color {
         &self.0[index]
     }
+}
+
+pub mod common {
+    use super::*;
+
+    pub const VGA_COLOR_PALLETE: ColorPalette = ColorPalette(&[
+        Color::black(),
+        Color(0, 0, 170),
+        Color(0, 170, 0),
+        Color(0, 170, 170),
+        Color(170, 0, 0),
+        Color(170, 0, 170),
+        Color(170, 85, 0),
+        Color(170, 170, 170),
+        Color(85, 85, 85),
+        Color(85, 85, 255),
+        Color(85, 255, 85),
+        Color(85, 255, 255),
+        Color(255, 85, 85),
+        Color(255, 85, 255),
+        Color(255, 255, 85),
+        Color::white(),
+    ]);
 }

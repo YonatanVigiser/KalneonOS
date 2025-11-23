@@ -1,8 +1,7 @@
 pub mod keyboard;
 
-use crate::kernel::display::color::Color;
-
-pub trait OutputConsole: core::fmt::Write + Sync + Send {}
+use crate::kernel::io::display::color::Color;
+use crate::kernel::io::ascii::AsciiChar;
 
 pub trait InputConsole: Sync + Send {
     fn process_input(&mut self);
@@ -10,14 +9,11 @@ pub trait InputConsole: Sync + Send {
     fn has_next_byte(&self) -> bool;
 }
 
-pub trait VideoConsole: OutputConsole {
-    fn get_cursor_pos(&self) -> (usize, usize);
-    fn clear(&mut self) -> &mut dyn VideoConsole;
-    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()>;
-    fn set_bg(&mut self, color: Color) -> &mut dyn VideoConsole;
-    fn set_fg(&mut self, color: Color) -> &mut dyn VideoConsole;
-    fn scroll_up(&mut self, by: usize) -> &mut dyn VideoConsole;
-    fn scroll_down(&mut self, by: usize) -> &mut dyn VideoConsole;
+pub trait VideoConsole: Sync + Send {
+    fn write_char(&mut self, x: usize, y: usize, ascii_char: AsciiChar, bg: Color, fg: Color) -> Result<(), ()>;
+    fn get_width(&self) -> usize;
+    fn get_height(&self) -> usize;
 }
 
-pub trait SerialConsole: InputConsole + OutputConsole {}
+use core::fmt::Write;
+pub trait SerialConsole: Sync + Send + Write + InputConsole {}

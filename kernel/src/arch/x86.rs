@@ -32,8 +32,10 @@ impl ArchX86 {
         *VIDEO.lock() = Some(Box::from(Vga::init(80, 25)));
         if let Some(serial) = SerialDriver::init() {
             *SERIAL.lock() = Some(Box::from(serial));
+            pic::unmask_irq(4); // Serial port 1
         }
         *TIMER.lock() = Some(Box::from(PitTimer::init()));
+        pic::unmask_irq(0); // Timer
 
         // Init ps/2 drivers:
         // Init the ps/2 controller
@@ -43,15 +45,9 @@ impl ArchX86 {
             if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
                 *KEYBOARD.lock() = Some(Box::from(driver));
             }
-        } else {
-            panic!("Opps!");
+            pic::unmask_irq(1); // Keyboard
         }
-
-        pic::unmask_irq(0); // Timer
-        pic::unmask_irq(1); // Keyboard
-        pic::unmask_irq(4); // Serial port 1
     }
-
 }
 
 use super::Arch;
@@ -70,10 +66,6 @@ impl Arch for ArchX86 {
         // Init early drivers
         Self::init_drivers();
 
-        Self::with_video(|video| {
-            let _ = video.clear().write_str("Arch init is complete!");
-        });
-
         // Finish init - enable interrupts
         unsafe {
             cpu::sti();
@@ -82,17 +74,10 @@ impl Arch for ArchX86 {
         Self()
     }
 
-    fn panic(info: &PanicInfo) -> ! {
-        use crate::kernel::display::color::Color;
-
+    fn panic(_info: &PanicInfo) -> ! {
         unsafe {
             cpu::cli();
         }
-
-        Self::with_video(|video| {
-            video.set_bg(Color::red()).set_fg(Color::black()).clear();
-            let _ = writeln!(video, "{}", info);
-        });
 
         loop {
             core::hint::spin_loop();

@@ -88,7 +88,7 @@ impl SerialDriver {
     }
 }
 
-use crate::drivers::traits::console::{InputConsole, OutputConsole, SerialConsole};
+use crate::drivers::traits::console::{InputConsole, SerialConsole};
 
 unsafe impl Sync for SerialDriver {}
 
@@ -100,8 +100,6 @@ impl core::fmt::Write for SerialDriver {
         Ok(())
     }
 }
-
-impl OutputConsole for SerialDriver {}
 
 impl InputConsole for SerialDriver {
     fn process_input(&mut self) {

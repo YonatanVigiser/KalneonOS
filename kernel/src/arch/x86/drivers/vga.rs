@@ -60,26 +60,7 @@ impl From<u8> for VgaColor {
     }
 }
 
-use crate::kernel::display::color::{Color, ColorPalette};
-
-const VGA_COLOR_PALLETE: ColorPalette = ColorPalette(&[
-    Color::black(),
-    Color(0, 0, 170),
-    Color(0, 170, 0),
-    Color(0, 170, 170),
-    Color(170, 0, 0),
-    Color(170, 0, 170),
-    Color(170, 85, 0),
-    Color(170, 170, 170),
-    Color(85, 85, 85),
-    Color(85, 85, 255),
-    Color(85, 255, 85),
-    Color(85, 255, 255),
-    Color(255, 85, 85),
-    Color(255, 85, 255),
-    Color(255, 255, 85),
-    Color::white(),
-]);
+use crate::kernel::io::display::color::{Color, common::VGA_COLOR_PALLETE};
 
 impl From<Color> for VgaColor {
     fn from(value: Color) -> Self {
@@ -113,16 +94,8 @@ impl From<VgaCell> for u16 {
 pub struct Vga {
     vmem_ptr: *mut u16,
     video_type: VideoType,
-    cx: u8,
-    cy: u8,
-    height: u8,
-    width: u8,
-    auto_scroll: bool,
-    bg: VgaColor,
-    fg: VgaColor,
-    cursor_visible: bool,
-    cursor_cell: VgaCell,
-    cell_under_cursor: VgaCell,
+    height: usize,
+    width: usize,
 }
 
 // SAFETY: Vga contains a pointer to memory-mapped I/O (VGA text buffer at 0xB8000).
@@ -132,34 +105,18 @@ unsafe impl Send for Vga {}
 unsafe impl Sync for Vga {}
 
 impl Vga {
-    pub fn init(width: u8, height: u8) -> Self {
+    pub fn init(width: usize, height: usize) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
         Self {
             vmem_ptr,
             video_type,
-            cx: 0,
-            cy: 0,
-            bg: VgaColor::Black,
-            fg: VgaColor::White,
             height,
             width,
-            auto_scroll: true,
-            cursor_visible: true,
-            cursor_cell: VgaCell {
-                ascii: '_',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
-            cell_under_cursor: VgaCell {
-                ascii: ' ',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
         }
     }
 
-    fn put_cell(&self, x: u8, y: u8, cell: VgaCell) -> Result<(), ()> {
+    fn put_cell(&self, x: usize, y: usize, cell: VgaCell) -> Result<(), ()> {
         if x >= self.width || y >= self.height {
             return Err(());
         }
@@ -168,112 +125,6 @@ impl Vga {
         let ptr = unsafe { self.vmem_ptr.add(index) };
         unsafe { ptr.write_volatile(value) };
         Ok(())
-    }
-
-    fn get_cell(&self, x: u8, y: u8) -> Result<VgaCell, ()> {
-        if x >= self.width || y >= self.height {
-            return Err(());
-        }
-        let index = (x as usize) + (y as usize) * (self.width as usize);
-        let ptr = unsafe { self.vmem_ptr.add(index) };
-        let value: u16 = unsafe { ptr.read_volatile() };
-        Ok(value.into())
-    }
-
-    fn write_char(&mut self, c: char) -> Result<&mut Self, ()> {
-        if self.cx >= self.width || self.cy >= self.height {
-            return Err(());
-        }
-        let mut new_cx = self.cx;
-        let mut new_cy = self.cy;
-        match c {
-            '\0' => return Ok(self),
-            '\n' => {
-                new_cy += 1;
-                new_cx = 0;
-            }
-            '\t' => {
-                new_cx = (self.cx + 4) & !3;
-            }
-            _ => {
-                self.cell_under_cursor = VgaCell {
-                    ascii: c,
-                    bg: self.bg,
-                    fg: self.fg,
-                };
-                new_cx += 1;
-            }
-        };
-        if new_cx >= self.width {
-            new_cy += 1;
-            new_cx = 0;
-        }
-        if new_cy == self.height && self.auto_scroll {
-            let _ = self.scroll_down(1);
-            let _ = self.move_cursor(0, self.height - 1);
-        } else {
-            self.move_cursor(new_cx, new_cy)?;
-        }
-        Ok(self)
-    }
-
-    fn write_string(&mut self, string: &str) -> Result<&mut Self, ()> {
-        for b in string.bytes() {
-            let _ = self.write_char(b as char)?;
-        }
-        Ok(self)
-    }
-
-    fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
-        self.bg = bg;
-        self.fg = fg;
-        self.cursor_cell.bg = bg;
-        self.cursor_cell.fg = fg;
-        self.update_cursor();
-        self
-    }
-
-    fn copy_line(&mut self, from: u8, to: u8) -> Result<(), ()> {
-        for index in 0..self.width {
-            let cell = self.get_cell(index, from)?;
-            self.put_cell(index, to, cell)?;
-        }
-        Ok(())
-    }
-
-    fn clear_line(&mut self, line: u8) -> Result<(), ()> {
-        for index in 0..self.width {
-            self.put_cell(
-                index,
-                line,
-                VgaCell {
-                    ascii: ' ',
-                    bg: self.bg,
-                    fg: self.fg,
-                },
-            )?;
-        }
-        self.move_cursor(0, 0);
-        Ok(())
-    }
-
-    fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, ()> {
-        if x >= self.width || y >= self.height {
-            return Err(());
-        }
-        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
-        self.cell_under_cursor = self.get_cell(x, y)?;
-        if self.cursor_visible {
-            self.put_cell(x, y, self.cursor_cell)?;
-        }
-        self.cx = x;
-        self.cy = y;
-        Ok(self)
-    }
-
-    pub fn update_cursor(&mut self) -> &mut Self {
-        let _ = self.move_cursor(self.cx, self.cy);
-        self
     }
 
     fn get_video_type_bda() -> VideoType {
@@ -290,91 +141,21 @@ impl Vga {
     }
 }
 
-use crate::drivers::traits::console::{OutputConsole, VideoConsole};
-
-impl core::fmt::Write for Vga {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        self.write_string(s)
-            .map(|_| ())
-            .map_err(|_| core::fmt::Error)
-    }
-}
-
-impl OutputConsole for Vga {}
+use crate::drivers::traits::console::VideoConsole;
+use crate::kernel::io::ascii::AsciiChar;
 
 impl VideoConsole for Vga {
-    fn clear(&mut self) -> &mut dyn VideoConsole {
-        let empty_cell = VgaCell {
-            ascii: ' ',
-            bg: self.bg,
-            fg: self.fg,
-        };
-        for index in 0..(self.height as usize * self.width as usize) {
-            unsafe {
-                self.vmem_ptr.add(index).write_volatile(empty_cell.into());
-            }
-        }
-        self.cell_under_cursor = empty_cell;
-        self.move_cursor(0, 0);
-        self
+    fn write_char(&mut self, x: usize, y: usize, ascii_char: AsciiChar, bg: Color, fg: Color) -> Result<(), ()> {
+        let cell = VgaCell { ascii: ascii_char as u8 as char, bg: bg.into(), fg: fg.into() };
+        self.put_cell(x, y, cell)?;
+        Ok(())
     }
 
-    fn get_cursor_pos(&self) -> (usize, usize) {
-        (self.cx as usize, self.cy as usize)
+    fn get_width(&self) -> usize {
+        self.width
     }
 
-    fn move_cursor(&mut self, x: usize, y: usize) -> Result<&mut dyn VideoConsole, ()> {
-        self.move_cursor(x as u8, y as u8)?;
-        Ok(self)
-    }
-
-    fn set_bg(&mut self, color: Color) -> &mut dyn VideoConsole {
-        self.set_colors(color.into(), self.fg);
-        self
-    }
-
-    fn set_fg(&mut self, color: Color) -> &mut dyn VideoConsole {
-        self.set_colors(self.bg, color.into());
-        self
-    }
-
-    fn scroll_down(&mut self, amount: usize) -> &mut dyn VideoConsole {
-        if amount == 0 {
-            return self;
-        }
-        if amount > self.height.into() {
-            self.clear();
-        } else {
-            for line_num in (amount as u8)..self.height {
-                let _ = self.copy_line(line_num, line_num - 1);
-            }
-        }
-        let _ = self.clear_line(self.height - 1);
-        if self.cy == 0 {
-            let _ = self.move_cursor(0, 0);
-        } else {
-            self.cy -= 1;
-        }
-        self
-    }
-
-    fn scroll_up(&mut self, amount: usize) -> &mut dyn VideoConsole {
-        if amount == 0 {
-            return self;
-        }
-        if amount > self.height.into() {
-            self.clear();
-            let _ = self.move_cursor(0, 0);
-        } else {
-            for line_num in 0..(self.height - amount as u8) {
-                let _ = self.copy_line(line_num, line_num + 1);
-            }
-        }
-        let _ = self.clear_line(0);
-        self.cy += 1;
-        if self.cy == self.height {
-            let _ = self.move_cursor(0, self.height - 1);
-        }
-        self
+    fn get_height(&self) -> usize {
+        self.height
     }
 }

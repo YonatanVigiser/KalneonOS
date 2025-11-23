@@ -1,10 +1,9 @@
-pub mod display;
 pub mod memory;
 pub mod io;
 
 use crate::arch::Arch;
-use display::color::Color;
-use io::keyboard_manager::KeyboardManager;
+use io::display::color::Color;
+use io::keyboard::keyboard_state_manager::KeyboardManager;
 use memory::frame_allocator::FrameAllocator;
 
 pub struct Kernel {
@@ -15,18 +14,9 @@ pub struct Kernel {
 
 impl Kernel {
     pub fn init(arch: TargetArch) -> Self {
-        TargetArch::with_video(|video| {
-            let _ = writeln!(video.clear(), "Kernel start init!");
-        });
-        let mut frame_allocator = FrameAllocator::new(usize::MAX);
-        let frame = frame_allocator.alloc().unwrap();
-        TargetArch::with_video(|video| {
-            let _ = writeln!(video, "Frame: {:?}", frame.start());
-        });
-        frame_allocator.dealloc(frame);
         Self {
             arch,
-            frame_allocator,
+            frame_allocator: FrameAllocator::new(usize::MAX),
             keyboard_manager: KeyboardManager::init()
         }
     }
@@ -67,8 +57,7 @@ use crate::TargetArch;
 
 pub static mut KERNEL: Option<Kernel> = None;
 
-pub fn kmain(arch: TargetArch) -> ! {
-    let kernel = Kernel::init(arch);
+pub fn kmain(arch: TargetArch) -> ! { let kernel = Kernel::init(arch);
     unsafe {
         KERNEL = Some(kernel);
         let ptr = core::ptr::addr_of_mut!(KERNEL);

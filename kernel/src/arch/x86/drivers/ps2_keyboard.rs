@@ -230,7 +230,6 @@ pub struct PS2Keyboard {
     last_connection_time: u64,
 }
 
-use crate::drivers::traits::console::OutputConsole;
 impl PS2Keyboard {
     pub fn init(keyboard_type: PS2DeviceType) -> Result<Self, ()> {
         if !keyboard_type.is_keyboard() {

@@ -1,1 +1,4 @@
-pub mod keyboard_manager;
+pub mod keyboard;
+pub mod display;
+pub mod ascii;
+
