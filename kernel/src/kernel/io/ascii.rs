@@ -318,5 +318,51 @@ impl AsciiChar {
             _ => true,
         }
     }
+
+    pub fn is_numeric(&self) -> bool {
+        matches!(self,
+            Self::Num0 |
+            Self::Num1 |
+            Self::Num2 |
+            Self::Num3 |
+            Self::Num4 |
+            Self::Num5 |
+            Self::Num6 |
+            Self::Num7 |
+            Self::Num8 |
+            Self::Num9
+        )
+    }
+
+    pub fn is_alphabetic(&self) -> bool {
+        matches!(self,
+            Self::A |
+            Self::B |
+            Self::C |
+            Self::D |
+            Self::E |
+            Self::F |
+            Self::G |
+            Self::H |
+            Self::I |
+            Self::J |
+            Self::K |
+            Self::L |
+            Self::M |
+            Self::N |
+            Self::O |
+            Self::P |
+            Self::Q |
+            Self::R |
+            Self::S |
+            Self::T |
+            Self::U |
+            Self::V |
+            Self::W |
+            Self::X |
+            Self::Y |
+            Self::Z
+        )
+    }
 }
 

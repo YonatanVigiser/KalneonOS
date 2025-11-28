@@ -10,7 +10,7 @@ pub trait InputConsole: Sync + Send {
 }
 
 pub trait VideoConsole: Sync + Send {
-    fn write_char(&mut self, x: usize, y: usize, ascii_char: AsciiChar, bg: Color, fg: Color) -> Result<(), ()>;
+    fn write_char(&mut self, x: usize, y: usize, bg: Color, fg: Color, ascii_char: AsciiChar) -> Result<(), ()>;
     fn get_width(&self) -> usize;
     fn get_height(&self) -> usize;
 }
