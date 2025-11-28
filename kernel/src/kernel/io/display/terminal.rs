@@ -1,6 +1,5 @@
 use super::super::ascii::AsciiChar;
 use crate::drivers::traits::console::VideoConsole;
-use crate::drivers::traits::console::InputConsole;
 use super::color::Color;
 
 use alloc::vec;
@@ -47,20 +46,24 @@ impl CommandParams {
             return Ok(None);
         }
         if matches!(next_char, AsciiChar::TildeSign) | next_char.is_alphabetic() {
-            return Ok(None);
+            return match next_char {
+                AsciiChar::A => Ok(Some(OutputCommand::MoveCursorUp(*self.params.get(0).ok_or(())? as usize))),
+                _ => Err(()),
+            };
         }
         Err(())
     }
 }
 
 enum OutputCommand {
-    CursorUp(usize),
-    CursorDown(usize),
-    CursorForward(usize),
-    CursorBack(usize),
-    CursorNewLine(usize),
+    MoveCursorUp(usize),
+    MoveCursorDown(usize),
+    MoveCursorForward(usize),
+    MoveCursorBack(usize),
+    MoveCursorToBeginingDown(usize),
+    MoveCursorToBeginingUp(usize),
     CursorMoveToColoumn(usize),
-    CursorMoveTo(usize, usize),
+    MoveCursorTo(usize, usize),
     ClearScreenFromCursorToEnd,
     ClearScreenToCursor,
     ClearScreen,
@@ -124,17 +127,34 @@ impl Terminal {
             TerminalOutputState::EscapeSequence(state) => {
                 if let Some(command) = state.add(data)? {
                     match command {
-                        OutputCommand::CursorUp(n) => {
-                            if let TerminalDriver::Video(stream) = driver {
-
-                            }
+                        OutputCommand::MoveCursorUp(n) => self.cy += n,
+                        OutputCommand::MoveCursorDown(n) => self.cy -= n,
+                        OutputCommand::MoveCursorForward(n) => self.cx += n,
+                        OutputCommand::MoveCursorBack(n) => self.cx -= n,
+                        OutputCommand::MoveCursorToBeginingDown(n) => {
+                            self.cx = 0;
+                            self.cy += n;
+                        },
+                        OutputCommand::MoveCursorToBeginingUp(n) => {
+                            self.cx = 0;
+                            self.cy -= n;
+                        },
+                        OutputCommand::MoveCursorTo(x, y) => {
+                            self.cx = x;
+                            self.cy = y;
+                        },
+                        OutputCommand::ClearScreenFromCursorToEnd => {
+                            clear_range(driver, self.cx, self.cy, self.height - 1, self.width - 1);
                         }
-
                     }
                     self.state = TerminalOutputState::Normal;
                 }
                 Ok(())
             }
         }
+    }
+
+    fn clear_range(driver: TerminalDriver, start_x: usize, start_y: usize, end_x: usize, end_y: usize) => {
+        match driver 
     }
 }
