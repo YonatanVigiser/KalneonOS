@@ -145,7 +145,7 @@ use crate::drivers::traits::console::VideoConsole;
 use crate::kernel::io::ascii::AsciiChar;
 
 impl VideoConsole for Vga {
-    fn write_char(&mut self, x: usize, y: usize, ascii_char: AsciiChar, bg: Color, fg: Color) -> Result<(), ()> {
+    fn write_char(&mut self, x: usize, y: usize, bg: Color, fg: Color, ascii_char: AsciiChar) -> Result<(), ()> {
         let cell = VgaCell { ascii: ascii_char as u8 as char, bg: bg.into(), fg: fg.into() };
         self.put_cell(x, y, cell)?;
         Ok(())

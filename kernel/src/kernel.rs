@@ -29,9 +29,6 @@ impl Kernel {
 
     fn periodic(&mut self) {
         self.keyboard_manager.update();
-        if let Some(next_ascii) = self.keyboard_manager.next_ascii() {
-            TargetArch::with_video(|video| write!(video, "{}", next_ascii as u8 as char));
-        }
     }
 
     fn sleep(&self, ms: u64) {
@@ -42,11 +39,6 @@ impl Kernel {
     }
 
     pub fn panic(&mut self, info: &PanicInfo) -> ! {
-        TargetArch::with_video(|video| {
-            let _ = video.clear().set_bg(Color::red()).set_fg(Color::black());
-            let _ = writeln!(video, "Kernel Paniced! Spining...");
-            let _ = writeln!(video, "Panic info:\n{:?}", info);
-        });
         loop {
             core::hint::spin_loop();
         }
