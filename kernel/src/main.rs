@@ -12,6 +12,7 @@ extern crate alloc;
 
 use arch::Arch;
 
+#[cfg(not(feature = "legacy"))]
 #[unsafe(link_section = ".text.multiboot")]
 #[used]
 static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));

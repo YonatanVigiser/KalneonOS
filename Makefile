@@ -20,7 +20,7 @@ GRUB_CFG_FILE := $(BOOT_DIR)/grub.cfg
 
 .PHONY: all x86-legacy x86 x64 clean
 
-all: x86
+all: x86 x64 x86-legacy
 
 x86-legacy: $(IMAGE_X86_LEGACY)
 
@@ -37,7 +37,7 @@ $(MBR_BIN) $(BOOT0_BIN) $(BOOT1_BIN):
 
 $(KERNEL_X86_BIN):
 	@mkdir -p $(dir $@)
-	cd $(KERNEL_DIR) && cargo-objcopy $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json -- -O binary ../$@
+	cd $(KERNEL_DIR) && cargo-objcopy $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json --features legacy -- -O binary ../$@
 
 x86: $(ISO_X86)
 
