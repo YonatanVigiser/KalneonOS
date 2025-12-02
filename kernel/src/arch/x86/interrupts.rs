@@ -2,7 +2,6 @@ use super::pic;
 use crate::debug_hex;
 
 #[repr(C)]
-#[cfg(target_arch = "x86")]
 pub struct InterruptStackFrame {
     gs: u32,
     fs: u32,
@@ -23,35 +22,8 @@ pub struct InterruptStackFrame {
     eflags: u32,
 }
 
-#[cfg(target_arch = "x86")]
 debug_hex!(InterruptStackFrame,
   hex: [eflags, cs, eip, err_code, int_num, eax, ecx, edx, ebx, esp, ebp, esi, edi, ds, es, fs, gs],
-  normal: []
-);
-
-#[repr(C)]
-#[cfg(target_arch = "x86_64")]
-pub struct InterruptStackFrame {
-    rdi: u64,
-    rsi: u64,
-    rbp: u64,
-    rsp: u64,
-    rbx: u64,
-    rdx: u64,
-    rcx: u64,
-    rax: u64,
-    int_num: u64,
-    err_code: u64,
-    rip: u64,
-    cs: u64,
-    rflags: u64,
-    original_rsp: u64,
-    ss: u64,
-}
-
-#[cfg(target_arch = "x86_64")]
-debug_hex!(InterruptStackFrame,
-  hex: [ss, original_rsp, rflags, cs, rip, err_code, int_num, rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi],
   normal: []
 );
 

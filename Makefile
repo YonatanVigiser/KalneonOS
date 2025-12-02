@@ -5,7 +5,6 @@ RUST_MODE ?= debug
 
 KERNEL_X86_BIN := $(BUILD_DIR)/$(KERNEL_DIR)/legacy/kernel.bin
 KERNEL_X86 := $(BUILD_DIR)/$(KERNEL_DIR)/i386-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
-KERNEL_X64 := $(BUILD_DIR)/$(KERNEL_DIR)/x86_64-kalneon_os/$(if $(filter release,$(RUST_MODE)),release,debug)/kernel
 
 MBR_BIN := $(BUILD_DIR)/legacy/mbr.bin
 BOOT0_BIN := $(BUILD_DIR)/legacy/boot0.bin
@@ -14,13 +13,12 @@ DISK_SIZE := 3000
 
 IMAGE_X86_LEGACY := $(BUILD_DIR)/kalneonos-x86-legacy.img
 ISO_X86 := $(BUILD_DIR)/kalneonos-x86.iso
-ISO_X64 := $(BUILD_DIR)/kalneonos-x64.iso
 
 GRUB_CFG_FILE := $(BOOT_DIR)/grub.cfg
 
-.PHONY: all x86-legacy x86 x64 clean
+.PHONY: all x86-legacy x86 clean
 
-all: x86 x64 x86-legacy
+all: x86 x86-legacy
 
 x86-legacy: $(IMAGE_X86_LEGACY)
 
@@ -49,17 +47,6 @@ $(ISO_X86): $(KERNEL_X86)
 
 $(KERNEL_X86):
 	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/i386-kalneon_os.json
-
-x64: $(ISO_X64)
-
-$(ISO_X64): $(KERNEL_X64)
-	@mkdir -p $(BUILD_DIR)/isodir-x64/boot/grub
-	cp $< $(BUILD_DIR)/isodir-x64/boot/kernel
-	cp $(GRUB_CFG_FILE) $(BUILD_DIR)/isodir-x64/boot/grub/grub.cfg
-	grub-mkrescue -o $@ $(BUILD_DIR)/isodir-x64 -d /usr/lib/grub/x86_64-efi
-
-$(KERNEL_X64):
-	cd $(KERNEL_DIR) && cargo build $(if $(filter release,$(RUST_MODE)),--release,) --target targets/x86_64-kalneon_os.json
 
 clean:
 	cd $(KERNEL_DIR) && cargo clean

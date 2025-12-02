@@ -14,7 +14,6 @@ fn compile_asm_files() {
     // Determine NASM output format based on architecture
     let nasm_format = match target_arch.as_str() {
         "x86" => "elf32",
-        "x86_64" => "elf64",
         arch => panic!("Unsupported architecture: {}", arch),
     };
 
@@ -47,7 +46,7 @@ fn build_mutliboot_header() {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     use multiboot2_header::*;
     let arch_header_tag = match target_arch.as_str() {
-        "x86" | "x86_64" => Some(HeaderTagISA::I386),
+        "x86" => Some(HeaderTagISA::I386),
         _ => None,
     };
     if let Some(arch_tag) = arch_header_tag {
