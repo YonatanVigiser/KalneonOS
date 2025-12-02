@@ -3,7 +3,8 @@ ENTRY(_start)
 SECTIONS {
   . = 0x00100000;
 
-  .text : {
+  .text : ALIGN(8) {
+    KEEP(*(.text.multiboot))
     KEEP(*(.text._start))
     *(.text*)
   }
@@ -19,10 +20,7 @@ SECTIONS {
   .bss : {
     *(.bss*)
     *(COMMON)
-  }
-
-  .stack : ALIGN(16) {
-    KEEP(*(.stack))
+    *(.stack*)
   }
 
   .heap (NOLOAD) : ALIGN(4K) {

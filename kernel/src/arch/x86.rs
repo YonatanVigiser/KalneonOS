@@ -42,13 +42,11 @@ impl ArchX86 {
 
             if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
                 *KEYBOARD.lock() = Some(Box::from(driver));
+                pic::unmask_irq(1); // Keyboard
             }
-        } else {
-            panic!("Opps!");
         }
 
         pic::unmask_irq(0); // Timer
-        pic::unmask_irq(1); // Keyboard
         pic::unmask_irq(4); // Serial port 1
     }
 

@@ -9,9 +9,8 @@ _start:
   ; Load a temp "valid" stack for init:
   mov esp, stack_top
 
-  ; Save the passed parameters to the kernel
-  push eax ; Magic value from bootloader (indentifier)
-  push ebx ; Boot Info pointer
+  push ebx
+  push eax
 
   ; Load a simple GDT:
   lgdt [gdt_desc]
@@ -67,7 +66,7 @@ gdt_desc:
   dw gdt_end - gdt - 1
   dd gdt
 
-section .stack
+section .bss.stack
 align 16
 stack: resb 0x100000
 stack_top:

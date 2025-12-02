@@ -56,7 +56,7 @@ pub enum PS2DeviceType {
     JapanesePKeyboard,
     JapaneseAKeyboard,
     NCDSunKeyboard,
-    Unknown,
+    Unknown(Option<u8>, Option<u8>),
 }
 
 impl PS2DeviceType {
@@ -76,7 +76,7 @@ impl PS2DeviceType {
     }
 
     pub fn is_mouse(&self) -> bool {
-        !self.is_keyboard() && !matches!(self, Self::Unknown)
+        !self.is_keyboard() && !matches!(self, Self::Unknown(_, _))
     }
 }
 
@@ -87,15 +87,15 @@ impl PS2DeviceType {
             (Some(0x00), _) => Self::StandardMouse,
             (Some(0x03), _) => Self::ScrollwheelMouse,
             (Some(0x04), _) => Self::FiveButtonsMouse,
-            (Some(0xAB), Some(0x83) | Some(0xC1)) => Self::MF2Keyboard,
-            (Some(0xAB), Some(0x84)) => Self::ShortKeyboard,
+            (Some(0xAB), Some(0x83) | Some(0xC1) | Some(0x41)) => Self::MF2Keyboard,
+            (Some(0xAB), Some(0x84) | Some(0x54)) => Self::ShortKeyboard,
             (Some(0xAB), Some(0x85)) => Self::NCD97Keyboard,
             (Some(0xAB), Some(0x86)) => Self::Key122Keyboard,
             (Some(0xAB), Some(0x90)) => Self::JapaneseGKeyboard,
             (Some(0xAB), Some(0x91)) => Self::JapanesePKeyboard,
             (Some(0xAB), Some(0x92)) => Self::JapaneseAKeyboard,
             (Some(0xAC), Some(0xA1)) => Self::NCDSunKeyboard,
-            _ => Self::Unknown,
+            (first, second) => Self::Unknown(first, second),
         }
     }
 }
@@ -135,7 +135,7 @@ pub fn init() -> Result<(Option<PS2DeviceType>, Option<PS2DeviceType>), ()> {
         send_command(PS2Command::DisableSecondPort);
     }
     */
-    let mut config = read_config_byte();
+    let mut config = CONFIG;
     if port1_test {
         send_command(PS2Command::EnableFirstPort);
         config |= 0x01;

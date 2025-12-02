@@ -12,10 +12,16 @@ extern crate alloc;
 
 use arch::Arch;
 
-#[cfg(target_arch = "x86")]
+#[cfg(not(feature = "legacy"))]
+#[unsafe(link_section = ".text.multiboot")]
+#[used]
+static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
+
+#[cfg(any(target_arch = "x86"))]
 pub type TargetArch = arch::x86::ArchX86;
 
 #[unsafe(no_mangle)]
+#[inline(never)]
 pub extern "C" fn main(boot_magic_val: usize, boot_info_ptr: usize) -> ! {
     let arch = TargetArch::init(boot_magic_val, boot_info_ptr);
     kernel::kmain(arch)
