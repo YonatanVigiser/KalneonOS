@@ -16,7 +16,7 @@ ISO_X86 := $(BUILD_DIR)/kalneonos-x86.iso
 
 GRUB_CFG_FILE := $(BOOT_DIR)/grub.cfg
 
-.PHONY: all x86-legacy x86 clean
+.PHONY: all x86-legacy x86 clean $(KERNEL_X86_BIN) $(KERNEL_X86)
 
 all: x86 x86-legacy
 
