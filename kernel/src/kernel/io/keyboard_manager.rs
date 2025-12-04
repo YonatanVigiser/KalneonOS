@@ -385,10 +385,9 @@ impl KeyboardManager {
             key_press_time: None,
             last_repeat_time: None,
         };
-        let mut manager = Self {
+        Self {
             state,
-        };
-        manager
+        }
     }
 
     pub fn get_state(&self) -> &KeyboardState {

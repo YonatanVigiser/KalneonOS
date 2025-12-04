@@ -1,6 +1,5 @@
 use alloc::vec::Vec;
-use alloc::vec;
-use super::frame::{MemoryFrame, MemoryFrameType, FRAME_SIZE};
+use super::frame::{MemoryFrame, MemoryType, FRAME_SIZE};
 use super::map::MemoryMap;
 
 #[derive(Debug)]
@@ -11,14 +10,15 @@ pub struct FrameAllocator {
 }
 
 impl FrameAllocator {
-    pub fn from_mmap(mmap: &MemoryMap) -> Self {
-        let frames = Vec::new();
-        for (count, frame) in mmap.frames().enumerate() {
-            if count % usize::BITS == 0 {
+    pub fn from_memory_map(mmap: &MemoryMap) -> Self {
+        let mut frames = Vec::new();
+        for (count, frame) in mmap.iter().enumerate() {
+            if count % usize::BITS as usize == 0 {
                 frames.push(0);
             }
-            let is_free = matches!(frame.memory_type(), MemoryFrameType::Usable);
-            frames[frames.len() - 1] |= (!is_free as usize) << (count % usize::BITS);
+            let is_free = matches!(frame.memory_type, MemoryType::Usable);
+            let index = frames.len() - 1;
+            frames[index] |= (!is_free as usize) << (count % usize::BITS as usize);
         }
         Self {
             frames,
@@ -53,7 +53,7 @@ impl FrameAllocator {
             self.change_nth_frame(self.next_search_hint, true);
             self.next_search_hint += 1;
             self.allocated_frames_count += 1;
-            return Some(MemoryFrame::new(MemoryFrameType::Usable, (self.next_search_hint - 1) * FRAME_SIZE));
+            return Some(MemoryFrame::new(MemoryType::Usable, (self.next_search_hint - 1) * FRAME_SIZE));
         }
         // Only if next not free, try searching all of the bitmap. This runs at O(n)
         for (index, &part) in self.frames.iter().enumerate() {
@@ -64,7 +64,7 @@ impl FrameAllocator {
                         self.change_nth_frame(frame_index, true);
                         self.next_search_hint = frame_index + 1;
                         self.allocated_frames_count += 1;
-                        return Some(MemoryFrame::new(MemoryFrameType::Usable, frame_index * FRAME_SIZE));
+                        return Some(MemoryFrame::new(MemoryType::Usable, frame_index * FRAME_SIZE));
                     }
                 }
             }

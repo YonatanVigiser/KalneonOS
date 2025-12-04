@@ -1,5 +1,5 @@
-#[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
-pub enum MemoryFrameType {
+#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
+pub enum MemoryType {
     Usable,
     KernelAddressSpace,
     MMIO,
@@ -11,12 +11,12 @@ pub const FRAME_SIZE: usize = 4096;
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub struct MemoryFrame {
     start: usize,
-    memory_type: MemoryFrameType,
+    memory_type: MemoryType,
     pub(super) deallocated: bool,
 }
 
 impl MemoryFrame {
-    pub(super) fn new(memory_type: MemoryFrameType, start: usize) -> Self {
+    pub(super) fn new(memory_type: MemoryType, start: usize) -> Self {
         let start = start & !(FRAME_SIZE - 1);
         Self {
             start,
@@ -39,7 +39,7 @@ impl MemoryFrame {
         self.start + FRAME_SIZE
     }
 
-    pub fn memory_type(&self) -> &MemoryFrameType {
+    pub fn memory_type(&self) -> &MemoryType {
         &self.memory_type
     }
 }
