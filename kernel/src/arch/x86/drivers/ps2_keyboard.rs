@@ -234,7 +234,6 @@ use crate::drivers::traits::console::OutputConsole;
 impl PS2Keyboard {
     pub fn init(keyboard_type: PS2DeviceType) -> Result<Self, ()> {
         if !keyboard_type.is_keyboard() {
-            panic!("Not a keyboard type! Got: {:?}", keyboard_type);
             return Err(());
         }
 

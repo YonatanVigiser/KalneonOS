@@ -7,7 +7,7 @@ use crate::drivers::traits::timer::Timer;
 use core::panic::PanicInfo;
 
 pub trait Arch {
-    fn init(boot_magic_val: usize, boot_info_ptr: usize) -> Self;
+    fn init(boot_magic_val: usize, boot_info_ptr: usize);
 
     fn panic(info: &PanicInfo) -> !;
 

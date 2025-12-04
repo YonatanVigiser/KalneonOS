@@ -32,8 +32,10 @@ impl ArchX86 {
         *VIDEO.lock() = Some(Box::from(Vga::init(80, 25)));
         if let Some(serial) = SerialDriver::init() {
             *SERIAL.lock() = Some(Box::from(serial));
+            pic::unmask_irq(4); // Serial port 1
         }
         *TIMER.lock() = Some(Box::from(PitTimer::init()));
+        pic::unmask_irq(0); // Timer
 
         // Init ps/2 drivers:
         // Init the ps/2 controller
@@ -45,39 +47,28 @@ impl ArchX86 {
                 pic::unmask_irq(1); // Keyboard
             }
         }
-
-        pic::unmask_irq(0); // Timer
-        pic::unmask_irq(4); // Serial port 1
     }
-
 }
 
 use super::Arch;
 
 impl Arch for ArchX86 {
-    fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
-        // Init CPU
+    fn init(_boot_magic_val: usize, _boot_info_ptr: usize) {
         idt::init();
 
-        // Init heap
         heap::init_heap();
 
-        // Init intterupts:
         pic::init();
 
-        // Init early drivers
         Self::init_drivers();
 
         Self::with_video(|video| {
             let _ = video.clear().write_str("Arch init is complete!");
         });
 
-        // Finish init - enable interrupts
         unsafe {
             cpu::sti();
         }
-
-        Self()
     }
 
     fn panic(info: &PanicInfo) -> ! {
