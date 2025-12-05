@@ -17,12 +17,12 @@ use arch::Arch;
 #[used]
 static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
-#[cfg(any(target_arch = "x86"))]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub type TargetArch = arch::x86::ArchX86;
 
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic_val: usize, boot_info_ptr: usize) -> ! {
-    let arch = TargetArch::init(boot_magic_val, boot_info_ptr);
-    kernel::kmain(arch)
+    TargetArch::init(boot_magic_val, boot_info_ptr);
+    kernel::kmain()
 }

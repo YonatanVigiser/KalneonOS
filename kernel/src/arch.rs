@@ -3,11 +3,14 @@ pub mod x86;
 use crate::drivers::traits::console::{SerialConsole, VideoConsole};
 use crate::drivers::traits::console::keyboard::KeyboardDriver;
 use crate::drivers::traits::timer::Timer;
+use crate::kernel::memory::map::MemoryMap;
 
 use core::panic::PanicInfo;
 
 pub trait Arch {
-    fn init(boot_magic_val: usize, boot_info_ptr: usize) -> Self;
+    fn init(boot_magic_val: usize, boot_info_ptr: usize);
+
+    fn take_memory_map() -> Option<MemoryMap>;
 
     fn panic(info: &PanicInfo) -> !;
 

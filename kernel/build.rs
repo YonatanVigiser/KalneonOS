@@ -14,6 +14,7 @@ fn compile_asm_files() {
     // Determine NASM output format based on architecture
     let nasm_format = match target_arch.as_str() {
         "x86" => "elf32",
+        "x86_64" => "elf32",
         arch => panic!("Unsupported architecture: {}", arch),
     };
 

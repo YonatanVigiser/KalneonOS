@@ -16,14 +16,21 @@ use crate::drivers::traits::console::*;
 use crate::drivers::traits::console::keyboard::KeyboardDriver;
 use crate::drivers::traits::timer::Timer;
 
+use crate::kernel::memory::frame::{MemoryType, FRAME_SIZE};
+use crate::kernel::memory::map::{MemoryMap, MemoryRegion};
+
 use spin::Mutex;
 use alloc::boxed::Box;
+use alloc::vec;
 
 // Drivers:
 pub static KEYBOARD: Mutex<Option<Box<dyn KeyboardDriver>>> = Mutex::new(None);
 pub static TIMER: Mutex<Option<Box<dyn Timer>>> = Mutex::new(None);
 pub static VIDEO: Mutex<Option<Box<dyn VideoConsole>>> = Mutex::new(None);
 pub static SERIAL: Mutex<Option<Box<dyn SerialConsole>>> = Mutex::new(None);
+
+// Arch specific boot info:
+pub static MEMORY_MAP: Mutex<Option<MemoryMap>> = Mutex::new(None);
 
 pub struct ArchX86();
 
@@ -32,52 +39,47 @@ impl ArchX86 {
         *VIDEO.lock() = Some(Box::from(Vga::init(80, 25)));
         if let Some(serial) = SerialDriver::init() {
             *SERIAL.lock() = Some(Box::from(serial));
+            pic::unmask_irq(4); // Serial port 1
         }
         *TIMER.lock() = Some(Box::from(PitTimer::init()));
+        pic::unmask_irq(0); // Timer
 
         // Init ps/2 drivers:
         // Init the ps/2 controller
         if let Ok(types) = drivers::ps2::init() {
             let (keyboard_type, _mouse_type) = types;
 
-            if let Some(keyboard_type) = keyboard_type && let Ok(driver) = PS2Keyboard::init(keyboard_type) {
-                *KEYBOARD.lock() = Some(Box::from(driver));
-                pic::unmask_irq(1); // Keyboard
+            if let Some(keyboard_type) = keyboard_type {
+                if let Ok(driver) = PS2Keyboard::init(keyboard_type) {
+                    *KEYBOARD.lock() = Some(Box::from(driver));
+                    pic::unmask_irq(1); // Keyboard
+                }
             }
         }
-
-        pic::unmask_irq(0); // Timer
-        pic::unmask_irq(4); // Serial port 1
     }
-
 }
 
 use super::Arch;
 
 impl Arch for ArchX86 {
-    fn init(_boot_magic_val: usize, _boot_info_ptr: usize) -> Self {
-        // Init CPU
+    fn init(_boot_magic_val: usize, _boot_info_ptr: usize) {
         idt::init();
 
-        // Init heap
         heap::init_heap();
 
-        // Init intterupts:
         pic::init();
 
-        // Init early drivers
         Self::init_drivers();
+
+        *MEMORY_MAP.lock() = Some(vec![MemoryRegion { start: 0, frames_size: usize::MAX / FRAME_SIZE, memory_type: MemoryType::Usable }]);
 
         Self::with_video(|video| {
             let _ = video.clear().write_str("Arch init is complete!");
         });
 
-        // Finish init - enable interrupts
         unsafe {
             cpu::sti();
         }
-
-        Self()
     }
 
     fn panic(info: &PanicInfo) -> ! {
@@ -95,6 +97,10 @@ impl Arch for ArchX86 {
         loop {
             core::hint::spin_loop();
         }
+    }
+
+    fn take_memory_map() -> Option<MemoryMap> {
+        MEMORY_MAP.lock().take()
     }
 
     fn with_keyboard<F, R>(f: F) -> Option<R>

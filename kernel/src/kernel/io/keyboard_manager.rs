@@ -375,7 +375,7 @@ const REPEAT_RATE_TIME: u64 = 50;
 const INITAL_REPEAT_DELAY_TIME: u64 = 500;
 
 impl KeyboardManager {
-    pub fn init() -> Self {
+    pub const fn init() -> Self {
         let state = KeyboardState {
             caps_lock: false,
             num_lock: false,
@@ -385,11 +385,9 @@ impl KeyboardManager {
             key_press_time: None,
             last_repeat_time: None,
         };
-        let mut manager = Self {
+        Self {
             state,
-        };
-        manager.update();
-        manager
+        }
     }
 
     pub fn get_state(&self) -> &KeyboardState {

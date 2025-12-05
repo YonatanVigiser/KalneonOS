@@ -1,45 +1,6 @@
-pub const FRAME_SIZE: usize = 4096;
-
-#[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
-pub struct MemoryFrame {
-    start: usize,
-    can_drop: bool,
-}
-
-impl MemoryFrame {
-    fn new(start: usize) -> Self {
-        let start = start & !(FRAME_SIZE - 1);
-        Self {
-            start,
-            can_drop: false,
-        }
-    }
-    
-    fn index(&self) -> usize {
-        self.start / FRAME_SIZE
-    }
-
-    pub fn start(&self) -> usize {
-        self.start
-    }
-
-    pub fn end(&self) -> usize {
-        self.start + FRAME_SIZE
-    }
-}
-
-/* Uncomment when we have backtracing
-impl Drop for MemoryFrame {
-    fn drop(&mut self) {
-        if !self.can_drop {
-            panic!("MemoryFrame was dropped without calling dealloc!");
-        }
-    }
-}
-*/
-
 use alloc::vec::Vec;
-use alloc::vec;
+use super::frame::{MemoryFrame, MemoryType, FRAME_SIZE};
+use super::map::MemoryMap;
 
 #[derive(Debug)]
 pub struct FrameAllocator {
@@ -49,9 +10,18 @@ pub struct FrameAllocator {
 }
 
 impl FrameAllocator {
-    pub fn new(last_addressable_byte: usize) -> Self {
+    pub fn from_memory_map(mmap: &MemoryMap) -> Self {
+        let mut frames = Vec::new();
+        for (count, frame) in mmap.iter().enumerate() {
+            if count % usize::BITS as usize == 0 {
+                frames.push(0);
+            }
+            let is_free = matches!(frame.memory_type, MemoryType::Usable);
+            let index = frames.len() - 1;
+            frames[index] |= (!is_free as usize) << (count % usize::BITS as usize);
+        }
         Self {
-            frames: vec![0; last_addressable_byte / FRAME_SIZE / usize::BITS as usize],
+            frames,
             next_search_hint: 0,
             allocated_frames_count: 0,
         }
@@ -83,7 +53,7 @@ impl FrameAllocator {
             self.change_nth_frame(self.next_search_hint, true);
             self.next_search_hint += 1;
             self.allocated_frames_count += 1;
-            return Some(MemoryFrame::new((self.next_search_hint - 1) * FRAME_SIZE));
+            return Some(MemoryFrame::new(MemoryType::Usable, (self.next_search_hint - 1) * FRAME_SIZE));
         }
         // Only if next not free, try searching all of the bitmap. This runs at O(n)
         for (index, &part) in self.frames.iter().enumerate() {
@@ -94,7 +64,7 @@ impl FrameAllocator {
                         self.change_nth_frame(frame_index, true);
                         self.next_search_hint = frame_index + 1;
                         self.allocated_frames_count += 1;
-                        return Some(MemoryFrame::new(frame_index * FRAME_SIZE));
+                        return Some(MemoryFrame::new(MemoryType::Usable, frame_index * FRAME_SIZE));
                     }
                 }
             }
@@ -102,14 +72,17 @@ impl FrameAllocator {
         None
     }
 
-    pub fn dealloc(&mut self, mut frame: MemoryFrame) {
+    pub fn dealloc(&mut self, frame: &mut MemoryFrame) {
+        if frame.deallocated {
+            panic!("dealloc was called on a frame that previously dealloacted!");
+        }
         if !self.get_nth_frame(frame.index()) {
             panic!("dealloc was called on a frame that was free in frame allocator");
         }
         self.change_nth_frame(frame.index(), false);
         self.allocated_frames_count -= 1;
         self.next_search_hint = frame.index().min(self.next_search_hint);
-        frame.can_drop = true;
+        frame.deallocated = true;
     }
 
     pub fn free_frames_count(&self) -> usize {
