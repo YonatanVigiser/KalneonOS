@@ -72,6 +72,47 @@ impl FrameAllocator {
         None
     }
 
+    pub fn alloc_range(&mut self, frames_count: usize) -> Option<Vec<MemoryFrame>> {
+        // First, try using the last free frame - as cache - runs at O(1):
+        let mut free = true;
+        for i in 0..frames_count {
+            free &= !self.get_nth_frame(self.next_search_hint + i);
+        }
+        if free {
+            for i in 0..frames_count {
+                self.change_nth_frame(self.next_search_hint + i, true);
+            }
+            self.next_search_hint += frames_count;
+            self.allocated_frames_count += frames_count;
+            return Some(Vec::from_iter((0..frames_count).map(|i| MemoryFrame::new(MemoryType::Usable, (self.next_search_hint - frames_count + i) * FRAME_SIZE))));
+        }
+        // Only if next not free, try searching all of the bitmap. This runs at O(n*frames_count)
+        let mut free_count = 0;
+        let mut count = 0;
+        'outer: for part in &self.frames {
+            for bit in 0..usize::BITS as usize {
+                if ((part >> bit) & 1) == 0 {
+                    free_count += 1;
+                } else {
+                    free_count = 0;
+                }
+                count += 1;
+                if free_count == frames_count {
+                    break 'outer;
+                }
+            }
+        }
+        if free_count == frames_count {
+            for i in 0..frames_count {
+                self.change_nth_frame(count - frames_count + i, true);
+            }
+            self.next_search_hint = count;
+            self.allocated_frames_count += frames_count;
+            return Some(Vec::from_iter((0..frames_count).map(|i| MemoryFrame::new(MemoryType::Usable, (count - frames_count + i) * FRAME_SIZE))));
+        }
+        None
+    }
+
     pub fn dealloc(&mut self, frame: &mut MemoryFrame) {
         if frame.deallocated {
             panic!("dealloc was called on a frame that previously dealloacted!");

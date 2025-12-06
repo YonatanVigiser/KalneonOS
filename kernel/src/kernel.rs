@@ -1,6 +1,7 @@
 pub mod display;
 pub mod memory;
 pub mod io;
+pub mod thread;
 
 use core::panic::PanicInfo;
 use spin::Mutex;
@@ -18,6 +19,8 @@ pub static MEMORY_MAP: Mutex<Option<MemoryMap>> = Mutex::new(None);
 
 #[global_allocator]
 pub static HEAP_ALLOCATOR: LockedHeap = LockedHeap::empty();
+
+pub static UPTIME_MS: Mutex<u64> = Mutex::new(0);
 
 use crate::TargetArch;
 

@@ -59,6 +59,11 @@ impl ArchX86 {
     }
 }
 
+unsafe extern "C" {
+    unsafe fn context_switch(old_stack_ptr: &mut usize, new_stack_ptr: usize);
+    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry_point: usize);
+}
+
 use super::Arch;
 
 impl Arch for ArchX86 {
@@ -101,6 +106,14 @@ impl Arch for ArchX86 {
 
     fn take_memory_map() -> Option<MemoryMap> {
         MEMORY_MAP.lock().take()
+    }
+
+    unsafe fn context_switch(old_stack_ptr: &mut usize, new_stack_ptr: usize) {
+        unsafe { context_switch(old_stack_ptr, new_stack_ptr); }
+    }
+
+    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn()) {
+        unsafe { fake_thread_entry_stack(stack_ptr, entry as usize); }
     }
 
     fn with_keyboard<F, R>(f: F) -> Option<R>

@@ -12,6 +12,10 @@ pub trait Arch {
 
     fn take_memory_map() -> Option<MemoryMap>;
 
+    unsafe fn context_switch(old_stack_ptr: &mut usize, new_stack_ptr: usize);
+
+    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn());
+
     fn panic(info: &PanicInfo) -> !;
 
     fn with_keyboard<F, R>(f: F) -> Option<R> 
