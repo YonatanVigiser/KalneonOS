@@ -17,7 +17,7 @@ pub enum ThreadState {
     Running,
     Ready,
     Blocked(BlockingEvent),
-    Sleeping(u64),
+    Sleeping(u64), // Duration
     Terminated,
 }
 
@@ -47,12 +47,16 @@ impl Thread {
         }
     }
 
-    pub unsafe fn context_switch(&mut self, other: &Self) {
+    pub unsafe fn context_switch(&mut self, other: &mut Self, new_thread_state: ThreadState) {
+        assert!(matches!(self.state, ThreadState::Running), "Attempted to switch context from a non-runnning thread!");
+        assert!(matches!(new_thread_state, ThreadState::Running), "Attempted to switch context from a non-runnning thread!");
+        self.state = new_thread_state;
+        other.state = ThreadState::Running;
         unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, other.stack_ptr); }
     }
 
-    pub fn schedule(self) {
-    }
+    //pub fn schedule(self) {
+    //}
 
     pub fn id(&self) -> ThreadId {
         self.id

@@ -2,6 +2,8 @@ pub mod display;
 pub mod memory;
 pub mod io;
 pub mod thread;
+pub mod scheduler;
+pub mod sync;
 
 use core::panic::PanicInfo;
 use spin::Mutex;
