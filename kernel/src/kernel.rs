@@ -1,8 +1,7 @@
 pub mod display;
 pub mod memory;
 pub mod io;
-pub mod thread;
-pub mod scheduler;
+pub mod threading;
 pub mod sync;
 
 use core::panic::PanicInfo;
@@ -43,6 +42,7 @@ pub fn idle_thread() {
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    threading::scheduler::disable_preemption();
     TargetArch::panic(info)
 }
 

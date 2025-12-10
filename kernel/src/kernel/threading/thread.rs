@@ -7,7 +7,7 @@ use core::sync::atomic::{AtomicUsize, Ordering};
 
 pub type ThreadId = usize;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BlockingEvent {
     Keyboard,
 }
@@ -31,12 +31,12 @@ pub struct Thread {
     stack: Vec<MemoryFrame>,
     stack_ptr: usize,
     state: ThreadState,
-    priority: u64,
+    pub(super) priority: u64,
 }
 
 impl Thread {
-    pub fn new(entry: fn()) -> Self {
-        let id = SPAWNED_THREADS_COUNT.fetch_add(1, Ordering::SeqCst); // The first one gets 0!
+    pub fn new(entry: fn() -> !) -> Self {
+        let id = SPAWNED_THREADS_COUNT.fetch_add(1, Ordering::SeqCst);
         let stack = FRAME_ALLOCATOR.lock().as_mut().expect("Frame allocator isn't initialized!").alloc_range(THREAD_STACK_SIZE / FRAME_SIZE).expect("Allocation failed!");
         let mut stack_ptr = stack.last().expect("Shouldn't panic!").end();
         TargetArch::fake_thread_entry_stack(&mut stack_ptr, entry);
@@ -49,12 +49,9 @@ impl Thread {
         }
     }
 
-    pub unsafe fn context_switch(&mut self, other: &mut Self, new_thread_state: ThreadState) {
-        assert!(matches!(self.state, ThreadState::Running), "Attempted to switch context from a non-runnning thread!");
-        assert!(matches!(new_thread_state, ThreadState::Running), "Attempted to switch context from a non-runnning thread!");
-        self.state = new_thread_state;
-        other.state = ThreadState::Running;
-        unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, other.stack_ptr); }
+    pub unsafe fn context_switch(&mut self, to: &Self) {
+        assert!(matches!(self.state(), ThreadState::Running(_)), "Attempted to switch context from a non-runnning thread!");
+        unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, to.stack_ptr); }
     }
 
     pub fn id(&self) -> ThreadId {
@@ -67,18 +64,6 @@ impl Thread {
 
     pub fn state(&self) -> &ThreadState {
         &self.state
-    }
-
-    pub fn priority(&self) -> u64 {
-        self.priority
-    }
-
-    pub fn increase_priority(&mut self) {
-        self.priority += 1;
-    }
-
-    pub fn set_priority(&mut self, priority: u64) {
-        self.priority = priority;
     }
 
     pub fn set_state(&mut self, new_state: ThreadState) {

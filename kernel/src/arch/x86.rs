@@ -112,7 +112,7 @@ impl Arch for ArchX86 {
         unsafe { context_switch(old_stack_ptr, new_stack_ptr); }
     }
 
-    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn()) {
+    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn() -> !) {
         unsafe { fake_thread_entry_stack(stack_ptr, entry as usize); }
     }
 

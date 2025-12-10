@@ -14,7 +14,7 @@ pub trait Arch {
 
     unsafe fn context_switch(old_stack_ptr: &mut usize, new_stack_ptr: usize);
 
-    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn());
+    fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn() -> !);
 
     fn panic(info: &PanicInfo) -> !;
 

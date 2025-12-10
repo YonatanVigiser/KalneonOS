@@ -18,7 +18,7 @@ unsafe impl<T: ?Sized + Sync> Sync for SharedGuard<T> {}
 unsafe impl<T: ?Sized + Send> Send for SharedGuard<T> {}
 
 impl<T> Shared<T> {
-    pub fn new(data: T) -> Self {
+    pub const fn new(data: T) -> Self {
         Self {
             cell: UnsafeCell::new(data),
         }
