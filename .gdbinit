@@ -5,7 +5,7 @@ define hook-stop
 end
 
 set disassembly-flavor intel
-set architecture auto
+set architecture i386
 layout asm
 layout reg
 b *0x7c00

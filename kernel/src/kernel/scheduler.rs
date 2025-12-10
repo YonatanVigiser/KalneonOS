@@ -1,8 +1,10 @@
-use core::sync::atomic::{Ordering, AtomicUsize};
-use super::thread::{Thread, ThreadState};
+use core::sync::atomic::{Ordering, AtomicUsize, AtomicBool};
+use super::thread::{Thread, ThreadState, BlockingEvent};
 use alloc::vec::Vec;
 
 static DISABLE_PREEMPTION: AtomicUsize = AtomicUsize::new(0);
+
+static SWITCH_MISSED: AtomicBool = AtomicBool::new(false);
 
 pub fn default_idle_thread() {
     loop {
@@ -16,6 +18,9 @@ pub fn disable_preemption() {
 
 pub fn enable_preemption() {
     DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
+    if SWITCH_MISSED.load(Ordering::Acquire) && preemption_enabled() {
+        yield_now();
+    }
 }
 
 pub fn preemption_enabled() -> bool {
@@ -24,7 +29,7 @@ pub fn preemption_enabled() -> bool {
 
 pub struct Scheduler {
     idle_thread: Thread,
-    threads: Vec<(Thread, u64)>, // Thread, priority
+    threads: Vec<Thread>,
     last_wake_time: u64,
 }
 
@@ -42,19 +47,28 @@ impl Scheduler {
         // Increament priority for already ready threads:
         self.threads.iter_mut().for_each(|(thread, priority)| if matches!(thread.state(), ThreadState::Ready) { *priority += 1 });
         // Wake threads:
+        let delta_time = current_time - self.last_wake_time;
+        let mut switch = false;
         for thread in self.threads.as_mut_slice() {
-            if let ThreadState::Sleeping(remaning_duration) = thread.0.state() {
-                let delta_time = current_time - self.last_wake_time;
+            if let ThreadState::Sleeping(remaning_duration) = thread.state() {
                 if remaning_duration - delta_time > 0 {
-                    thread.0.set_state(ThreadState::Sleeping(remaning_duration - delta_time));
+                    thread.set_state(ThreadState::Sleeping(remaning_duration - delta_time));
                 } else {
-                    thread.0.set_state(ThreadState::Ready);
-                    thread.1 = 0;
+                    thread.set_state(ThreadState::Ready);
+                }
+            }
+            if let ThreadState::Running(remaning_duration) = thread.state() {
+                thread.set_state(ThreadState::Running(remaning_duration.saturating_sub(delta_time)));
+                if remaning_duration.saturating_sub(delta_time) == 0 {
+                    switch = true;
                 }
             }
         }
         self.last_wake_time = current_time;
         // Context switch if needed:
+        if switch {
+
+        }
         if preemption_enabled() {
             let mut iter = self.threads.iter_mut();
             let current_running_thread = iter.find(|(thread, _)| matches!(thread.state(), ThreadState::Running)).map(|(thread, _)| thread);
@@ -70,9 +84,13 @@ impl Scheduler {
     }
     
     // Should be called in relevant intterupts:
-    //pub fn wake_with_event(&
+    pub fn wake_with_event(&mut self, Blocki
 
     pub fn set_idle_thread(&mut self, idle_thread: Thread) {
         self.idle_thread = idle_thread;
     }
+}
+
+pub fn yield_now() {
+    
 }

@@ -14,10 +14,10 @@ pub enum BlockingEvent {
 
 #[derive(Debug)]
 pub enum ThreadState {
-    Running,
+    Running(u64),  // Remaning Duration
     Ready,
     Blocked(BlockingEvent),
-    Sleeping(u64), // Duration
+    Sleeping(u64), // Remaning Duration
     Terminated,
 }
 
@@ -31,6 +31,7 @@ pub struct Thread {
     stack: Vec<MemoryFrame>,
     stack_ptr: usize,
     state: ThreadState,
+    priority: u64,
 }
 
 impl Thread {
@@ -44,6 +45,7 @@ impl Thread {
             stack,
             stack_ptr,
             state: ThreadState::Ready,
+            priority: 0,
         }
     }
 
@@ -55,9 +57,6 @@ impl Thread {
         unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, other.stack_ptr); }
     }
 
-    //pub fn schedule(self) {
-    //}
-
     pub fn id(&self) -> ThreadId {
         self.id
     }
@@ -68,6 +67,18 @@ impl Thread {
 
     pub fn state(&self) -> &ThreadState {
         &self.state
+    }
+
+    pub fn priority(&self) -> u64 {
+        self.priority
+    }
+
+    pub fn increase_priority(&mut self) {
+        self.priority += 1;
+    }
+
+    pub fn set_priority(&mut self, priority: u64) {
+        self.priority = priority;
     }
 
     pub fn set_state(&mut self, new_state: ThreadState) {
