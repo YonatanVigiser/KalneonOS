@@ -70,7 +70,7 @@ impl Scheduler {
     }
     
     // Should be called in relevant intterupts:
-    pub fn wake_with_event(&
+    //pub fn wake_with_event(&
 
     pub fn set_idle_thread(&mut self, idle_thread: Thread) {
         self.idle_thread = idle_thread;

@@ -27,13 +27,18 @@ pub static UPTIME_MS: Mutex<u64> = Mutex::new(0);
 use crate::TargetArch;
 
 pub fn kmain() -> ! {
-    *MEMORY_MAP.lock() = Some(TargetArch::take_memory_map()).expect("No memory map provided by Arch!");
-    *FRAME_ALLOCATOR.lock() = Some(FrameAllocator::from_memory_map(MEMORY_MAP.lock().as_mut().unwrap()));
     TargetArch::with_video(|video| {
         writeln!(video.clear(), "Kernel start...");
     });
+
+    *MEMORY_MAP.lock() = Some(TargetArch::take_memory_map()).expect("No memory map provided by Arch!");
+    *FRAME_ALLOCATOR.lock() = Some(FrameAllocator::from_memory_map(MEMORY_MAP.lock().as_mut().unwrap()));
     loop {
     }
+}
+
+pub fn idle_thread() {
+
 }
 
 #[panic_handler]

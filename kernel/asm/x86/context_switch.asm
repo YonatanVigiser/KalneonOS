@@ -30,7 +30,7 @@ fake_thread_entry_stack:
   sub edx, 16
 
   ; Set up stack frame that context_switch expects
-  mo dword [edx], 0       ; ESI = 0
+  mov dword [edx], 0       ; ESI = 0
   mov dword [edx + 4], 0   ; EDI = 0
   mov dword [edx + 8], 0   ; EBX = 0
   mov [edx + 12], ecx      ; Return address = entry point
