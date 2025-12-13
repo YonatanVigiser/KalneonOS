@@ -1,7 +1,7 @@
-use super::FRAME_ALLOCATOR;
+use crate::kernel::FRAME_ALLOCATOR;
 use crate::arch::Arch;
 use crate::TargetArch;
-use super::memory::frame::{MemoryFrame, FRAME_SIZE};
+use crate::kernel::memory::frame::{MemoryFrame, FRAME_SIZE};
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicUsize, Ordering};
 
@@ -14,10 +14,10 @@ pub enum BlockingEvent {
 
 #[derive(Debug)]
 pub enum ThreadState {
-    Running(u64),  // Remaning Duration
+    Running(u64),  // Remaining Duration
     Ready,
     Blocked(BlockingEvent),
-    Sleeping(u64), // Remaning Duration
+    Sleeping(u64), // Remaining Duration
     Terminated,
 }
 
@@ -49,8 +49,11 @@ impl Thread {
         }
     }
 
-    pub unsafe fn context_switch(&mut self, to: &Self) {
+    pub fn context_switch(&mut self, to: &mut Self, old_thread_state: ThreadState, running_thread_duration: u64) {
         assert!(matches!(self.state(), ThreadState::Running(_)), "Attempted to switch context from a non-runnning thread!");
+        self.state = old_thread_state;
+        to.state = ThreadState::Running(running_thread_duration);
+        to.priority = 0;
         unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, to.stack_ptr); }
     }
 

@@ -14,7 +14,6 @@ use core::panic::PanicInfo;
 
 use crate::drivers::traits::console::*;
 use crate::drivers::traits::console::keyboard::KeyboardDriver;
-use crate::drivers::traits::timer::Timer;
 
 use crate::kernel::memory::frame::{MemoryType, FRAME_SIZE};
 use crate::kernel::memory::map::{MemoryMap, MemoryRegion};
@@ -25,7 +24,6 @@ use alloc::vec;
 
 // Drivers:
 pub static KEYBOARD: Mutex<Option<Box<dyn KeyboardDriver>>> = Mutex::new(None);
-pub static TIMER: Mutex<Option<Box<dyn Timer>>> = Mutex::new(None);
 pub static VIDEO: Mutex<Option<Box<dyn VideoConsole>>> = Mutex::new(None);
 pub static SERIAL: Mutex<Option<Box<dyn SerialConsole>>> = Mutex::new(None);
 
@@ -41,7 +39,7 @@ impl ArchX86 {
             *SERIAL.lock() = Some(Box::from(serial));
             pic::unmask_irq(4); // Serial port 1
         }
-        *TIMER.lock() = Some(Box::from(PitTimer::init()));
+        PitTimer::init();
         pic::unmask_irq(0); // Timer
 
         // Init ps/2 drivers:
@@ -126,20 +124,6 @@ impl Arch for ArchX86 {
             };
 
             pic::unmask_irq(1);
-
-            result
-    }
-
-    fn with_timer<F, R>(f: F) -> Option<R>
-        where F: FnOnce(&mut dyn Timer) -> R {
-            pic::mask_irq(0);
-
-            let result = {
-                let mut guard = TIMER.lock();
-                guard.as_mut().map(|timer| f(timer.as_mut()))
-            };
-
-            pic::unmask_irq(0);
 
             result
     }

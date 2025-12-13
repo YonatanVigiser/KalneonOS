@@ -4,6 +4,7 @@ use crate::arch::x86::interrupts::{InterruptStackFrame, register_interrupt_handl
 use crate::arch::x86::pic;
 use crate::arch::Arch;
 use super::ps2::{self, PS2DeviceType};
+use crate::kernel::UPTIME_MS;
 use alloc::collections::VecDeque;
 
 const CONNECTION_TIME_TEST_THRESHOLD_MS: u64 = 2000; // 2 seconds
@@ -335,7 +336,7 @@ impl KeyboardDriver for PS2Keyboard {
 
     fn is_connected(&mut self) -> bool {
         pic::mask_irq(IRQ_NUM);
-        let current_uptime = crate::TargetArch::with_timer(|timer| timer.get_uptime_ms()).expect("Timer Driver was not initlialized!");
+        let current_uptime = *UPTIME_MS.lock();
 
         let connected = if current_uptime > self.last_connection_time + CONNECTION_TIME_TEST_THRESHOLD_MS {
             ps2::echo_device_port1()

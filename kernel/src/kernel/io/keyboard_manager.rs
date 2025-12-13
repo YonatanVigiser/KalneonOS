@@ -1,6 +1,7 @@
 use crate::drivers::traits::console::keyboard::{Key, KeyEvent};
 use crate::arch::Arch;
 use crate::TargetArch;
+use crate::kernel::UPTIME_MS;
 
 #[repr(u8)]
 #[allow(non_camel_case_types)]
@@ -395,7 +396,7 @@ impl KeyboardManager {
     }
 
     pub fn update(&mut self) {
-        let current_time = TargetArch::with_timer(|timer| timer.get_uptime_ms()).expect("Timer not initiazed!");
+        let current_time = *UPTIME_MS.lock();
         while TargetArch::with_keyboard(|keyboard| keyboard.has_next_key()).expect(DRIVER_NOT_INIT) {
             match TargetArch::with_keyboard(|keyboard| keyboard.next_key()).expect(DRIVER_NOT_INIT).expect("Keyboard reports having key but didn't provide one!") {
                 KeyEvent::KeyPressed(key) => self.state.update(key, true, current_time),
@@ -409,7 +410,7 @@ impl KeyboardManager {
         let key = self.state.last_ascii_key_pressed?;
         let key_press_time = self.state.key_press_time?;
 
-        let current_time = TargetArch::with_timer(|timer| timer.get_uptime_ms()).expect("Timer not initiazed!");
+        let current_time = *UPTIME_MS.lock();
 
         // First press - always return immediately
         if self.state.last_repeat_time.is_none() {

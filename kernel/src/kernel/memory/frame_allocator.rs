@@ -12,13 +12,20 @@ pub struct FrameAllocator {
 impl FrameAllocator {
     pub fn from_memory_map(mmap: &MemoryMap) -> Self {
         let mut frames = Vec::new();
-        for (count, frame) in mmap.iter().enumerate() {
-            if count % usize::BITS as usize == 0 {
-                frames.push(0);
+        for memory_range in mmap.iter() {
+            for frame in memory_range.to_frames() {
+                if (frame.index() % usize::BITS as usize) == 0 {
+                    frames.push(0);
+                }
+                let is_free = matches!(frame.memory_type(), MemoryType::Usable);
+                let index = frame.index() / usize::BITS as usize;
+                let bit = frame.index() % usize::BITS as usize;
+                if !is_free {
+                    frames[index] |= 1 << bit;
+                } else {
+                    frames[index] &= !(1 << bit);
+                }
             }
-            let is_free = matches!(frame.memory_type, MemoryType::Usable);
-            let index = frames.len() - 1;
-            frames[index] |= (!is_free as usize) << (count % usize::BITS as usize);
         }
         Self {
             frames,
@@ -110,6 +117,7 @@ impl FrameAllocator {
             self.allocated_frames_count += frames_count;
             return Some(Vec::from_iter((0..frames_count).map(|i| MemoryFrame::new(MemoryType::Usable, (count - frames_count + i) * FRAME_SIZE))));
         }
+        panic!("free_count: {}, frames_count: {}", free_count, frames_count);
         None
     }
 
