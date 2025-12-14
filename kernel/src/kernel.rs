@@ -5,13 +5,12 @@ pub mod threading;
 pub mod sync;
 
 use core::panic::PanicInfo;
-use spin::Mutex;
 use crate::arch::Arch;
 use io::keyboard_manager::KeyboardManager;
 use memory::map::MemoryMap;
 use memory::frame_allocator::FrameAllocator;
 use linked_list_allocator::LockedHeap;
-use threading::scheduler::{self, SCHEDULER};
+use threading::scheduler::SCHEDULER;
 use threading::thread::Thread;
 use sync::Shared;
 
@@ -36,8 +35,21 @@ pub fn kmain() -> ! {
     *MEMORY_MAP.lock() = Some(TargetArch::take_memory_map()).expect("No memory map provided by Arch!");
     *FRAME_ALLOCATOR.lock() = Some(FrameAllocator::from_memory_map(MEMORY_MAP.lock().as_mut().unwrap()));
     SCHEDULER.lock().set_idle_thread(Thread::new(idle_thread));
-    SCHEDULER.lock().add_thread(Thread::new());
+    SCHEDULER.lock().add_thread(Thread::new(keyboard_thread));
+    SCHEDULER.lock().add_thread(Thread::new(panic_thread));
     SCHEDULER.lock().start()
+}
+
+pub fn keyboard_thread() -> ! {
+    loop {
+        TargetArch::with_video(|v| v.write_str("TEST!"));
+        SCHEDULER.lock().block(threading::thread::BlockingEvent::Keyboard);
+        KEYBOARD_STATE_MANAGER.lock().update();
+    }
+}
+
+pub fn panic_thread() -> ! {
+    panic!("PANIC!!!")
 }
 
 pub fn idle_thread() -> ! {
@@ -49,7 +61,13 @@ pub fn idle_thread() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     threading::scheduler::disable_preemption();
-    TargetArch::panic(info)
+    if SCHEDULER.lock().is_started() {
+        // TODO: Add better logging!
+        TargetArch::with_video(|v| writeln!(v, "Thread {}, panicked! Panic info:\n{}", SCHEDULER.lock().current_thread_id(), info));
+        SCHEDULER.lock().exit_thread()
+    } else {
+        TargetArch::panic(info)
+    }
 }
 
 #[alloc_error_handler]

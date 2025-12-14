@@ -21,16 +21,16 @@ pub enum ThreadState {
     Terminated,
 }
 
-pub static SPAWNED_THREADS_COUNT: AtomicUsize = AtomicUsize::new(0);
+static SPAWNED_THREADS_COUNT: AtomicUsize = AtomicUsize::new(0);
 
-pub const THREAD_STACK_SIZE: usize = 1024 * 1024; // 1 MB stack
+const THREAD_STACK_SIZE: usize = 1024 * 1024; // 1 MB stack
 
 #[derive(Debug)]
 pub struct Thread {
-    id: ThreadId,
+    pub(super) id: ThreadId,
     stack: Vec<MemoryFrame>,
     stack_ptr: usize,
-    state: ThreadState,
+    pub(super) state: ThreadState,
     pub(super) priority: u64,
 }
 
@@ -49,28 +49,12 @@ impl Thread {
         }
     }
 
-    pub fn context_switch(&mut self, to: &mut Self, old_thread_state: ThreadState, running_thread_duration: u64) {
-        assert!(matches!(self.state(), ThreadState::Running(_)), "Attempted to switch context from a non-runnning thread!");
+    pub(super) fn context_switch(&mut self, to: &mut Self, old_thread_state: ThreadState, running_thread_duration: u64) {
+        assert!(matches!(self.state, ThreadState::Running(_)), "Attempted to switch context from a non-runnning thread!");
         self.state = old_thread_state;
         to.state = ThreadState::Running(running_thread_duration);
         to.priority = 0;
         unsafe { crate::TargetArch::context_switch(&mut self.stack_ptr, to.stack_ptr); }
-    }
-
-    pub fn id(&self) -> ThreadId {
-        self.id
-    }
-
-    pub fn stack_ptr(&self) -> usize {
-        self.stack_ptr
-    }
-
-    pub fn state(&self) -> &ThreadState {
-        &self.state
-    }
-
-    pub fn set_state(&mut self, new_state: ThreadState) {
-        self.state = new_state;
     }
 }
 

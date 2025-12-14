@@ -23,7 +23,7 @@ fn compile_asm_files() {
         if path.extension().is_some_and(|ext| ext == "asm") {
             let file_stem = path.file_stem().unwrap().to_str().unwrap();
             let out_path = out_dir.join(format!("{file_stem}.o"));
-            println!("cargo:return-if-changed={}", path.display());
+            println!("cargo:rerun-if-changed={}", path.display());
 
             let status = Command::new("nasm")
                 .args([

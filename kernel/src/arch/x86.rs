@@ -74,7 +74,7 @@ impl Arch for ArchX86 {
 
         Self::init_drivers();
 
-        *MEMORY_MAP.lock() = Some(vec![MemoryRegion { start: 0, frames_size: usize::MAX / FRAME_SIZE, memory_type: MemoryType::Usable }]);
+        *MEMORY_MAP.lock() = Some(vec![MemoryRegion { start: 0, frames_size: 1024 * 1024 * 20 / FRAME_SIZE, memory_type: MemoryType::KernelAddressSpace }, MemoryRegion { start: 1024 *  1024 * 20, frames_size: (usize::MAX - 1024 * 1024 * 20) / FRAME_SIZE, memory_type: MemoryType::Usable }]);
 
         Self::with_video(|video| {
             let _ = video.clear().write_str("Arch init is complete!");
