@@ -6,10 +6,10 @@ build-std-features = ["compiler-builtins-mem"]
 target-dir = "../build/kernel"
 
 [target.i386-unknown-none]
-rustflags = ["-C", "link-args=-nostartfiles -Wl,-entry=_start"]
+rustflags = ["-C", "link-args=-nostartfiles -Wl –eh-frame-hdr,-entry=_start"]
 
 [target.x86_64-unknown-none]
-rustflags = ["-C", "link-args=-nostartfiles -Wl,-entry=_start"]
+rustflags = ["-C", "link-args=-nostartfiles -Wl –eh-frame-hdr,-entry=_start"]
 
 [profile.release]
 opt-level = 2

@@ -117,7 +117,6 @@ impl FrameAllocator {
             self.allocated_frames_count += frames_count;
             return Some(Vec::from_iter((0..frames_count).map(|i| MemoryFrame::new(MemoryType::Usable, (count - frames_count + i) * FRAME_SIZE))));
         }
-        panic!("free_count: {}, frames_count: {}", free_count, frames_count);
         None
     }
 

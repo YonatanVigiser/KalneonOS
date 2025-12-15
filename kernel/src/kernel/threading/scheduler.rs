@@ -51,6 +51,9 @@ impl Scheduler {
     }
 
     pub fn wake_with_time(&mut self, current_time: u64) {
+        if !self.started {
+            return;
+        }
         self.cleanup_terminated();
         self.threads.iter_mut().filter(|thread| matches!(thread.state, ThreadState::Ready)).for_each(|thread| { thread.priority = thread.priority.saturating_add(1); });
         let delta_time = current_time - self.last_wake_time;
@@ -75,6 +78,7 @@ impl Scheduler {
             }
         }
         self.last_wake_time = current_time;
+        //panic!("Wake with time! switch: {}, found_runnning: {}, preemption_enabled: {},", switch, found_running, preemption_enabled());
         // Context switch if needed:
         if switch || !found_running {
             if preemption_enabled() {

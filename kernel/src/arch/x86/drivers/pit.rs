@@ -27,9 +27,9 @@ impl PitTimer {
     }
 
     fn handle_irq(_stack_info: &mut interrupts::InterruptStackFrame) {
+        pic::send_eoi(IRQ_NUM);
         *UPTIME_MS.lock() += MS_PER_TICK;
         SCHEDULER.lock().wake_with_time(*UPTIME_MS.lock());
-        pic::send_eoi(IRQ_NUM);
     }
 }
 

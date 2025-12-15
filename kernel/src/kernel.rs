@@ -37,6 +37,8 @@ pub fn kmain() -> ! {
     SCHEDULER.lock().set_idle_thread(Thread::new(idle_thread));
     SCHEDULER.lock().add_thread(Thread::new(keyboard_thread));
     SCHEDULER.lock().add_thread(Thread::new(panic_thread));
+    SCHEDULER.lock().add_thread(Thread::new(print_1));
+    SCHEDULER.lock().add_thread(Thread::new(print_2));
     SCHEDULER.lock().start()
 }
 
@@ -45,6 +47,20 @@ pub fn keyboard_thread() -> ! {
         TargetArch::with_video(|v| v.write_str("TEST!"));
         SCHEDULER.lock().block(threading::thread::BlockingEvent::Keyboard);
         KEYBOARD_STATE_MANAGER.lock().update();
+    }
+}
+
+pub fn print_1() -> ! {
+    loop {
+        TargetArch::with_video(|v| writeln!(v, "1"));
+        //SCHEDULER.lock().yield_now()
+    }
+}
+
+pub fn print_2() -> ! {
+    loop {
+        TargetArch::with_video(|v| writeln!(v, "2"));
+        //SCHEDULER.lock().yield_now()
     }
 }
 
@@ -61,6 +77,7 @@ pub fn idle_thread() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     threading::scheduler::disable_preemption();
+    /*
     if SCHEDULER.lock().is_started() {
         // TODO: Add better logging!
         TargetArch::with_video(|v| writeln!(v, "Thread {}, panicked! Panic info:\n{}", SCHEDULER.lock().current_thread_id(), info));
@@ -68,6 +85,8 @@ fn panic(info: &PanicInfo) -> ! {
     } else {
         TargetArch::panic(info)
     }
+    */
+    TargetArch::panic(info)
 }
 
 #[alloc_error_handler]
