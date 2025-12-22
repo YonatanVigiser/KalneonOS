@@ -36,7 +36,7 @@ pub fn kmain() -> ! {
     *FRAME_ALLOCATOR.lock() = Some(FrameAllocator::from_memory_map(MEMORY_MAP.lock().as_mut().unwrap()));
     SCHEDULER.lock().set_idle_thread(Thread::new(idle_thread));
     SCHEDULER.lock().add_thread(Thread::new(keyboard_thread));
-    SCHEDULER.lock().add_thread(Thread::new(panic_thread));
+    //SCHEDULER.lock().add_thread(Thread::new(panic_thread));
     SCHEDULER.lock().add_thread(Thread::new(print_1));
     SCHEDULER.lock().add_thread(Thread::new(print_2));
     SCHEDULER.lock().start()
@@ -44,22 +44,24 @@ pub fn kmain() -> ! {
 
 pub fn keyboard_thread() -> ! {
     loop {
-        TargetArch::with_video(|v| v.write_str("TEST!"));
         SCHEDULER.lock().block(threading::thread::BlockingEvent::Keyboard);
         KEYBOARD_STATE_MANAGER.lock().update();
     }
 }
 
+use threading::scheduler;
 pub fn print_1() -> ! {
     loop {
-        TargetArch::with_video(|v| writeln!(v, "1"));
+        let value = scheduler::preemption_enabled();
+        TargetArch::with_video(|v| writeln!(v, "1:{}", value));
         //SCHEDULER.lock().yield_now()
     }
 }
 
 pub fn print_2() -> ! {
     loop {
-        TargetArch::with_video(|v| writeln!(v, "2"));
+        let value = scheduler::preemption_enabled();
+        TargetArch::with_video(|v| writeln!(v, "2:{}", value));
         //SCHEDULER.lock().yield_now()
     }
 }

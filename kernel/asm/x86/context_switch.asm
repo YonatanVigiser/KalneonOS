@@ -37,9 +37,9 @@ fake_thread_entry_stack:
   mov edx, [eax]        ; Get stack pointer value
 
   ; Set up stack frame that context_switch expects
-  mov dword [edx - 4], ecx       ; Return address = entry point
-  mov dword [edx - 8], 0     ; EFLAGS = 0
-  mov dword [edx - 12], 0     ; EAX = 0
+  mov dword [edx - 4], ecx   ; Return address = entry point
+  mov dword [edx - 8], 0x200 ; EFLAGS = IF
+  mov dword [edx - 12], 0    ; EAX = 0
   mov dword [edx - 16], 0    ; EBX = 0
   mov dword [edx - 20], 0    ; ECX = 0
   mov dword [edx - 24], 0    ; EDX = 0

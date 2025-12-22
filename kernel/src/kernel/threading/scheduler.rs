@@ -78,10 +78,9 @@ impl Scheduler {
             }
         }
         self.last_wake_time = current_time;
-        //panic!("Wake with time! switch: {}, found_runnning: {}, preemption_enabled: {},", switch, found_running, preemption_enabled());
         // Context switch if needed:
         if switch || !found_running {
-            if preemption_enabled() {
+            if DISABLE_PREEMPTION.load(Ordering::Acquire) == 1 {
                 self.switch_running_thread(ThreadState::Ready);
             } else {
                 SWITCH_MISSED.store(true, Ordering::Release);
@@ -98,6 +97,8 @@ impl Scheduler {
     }
 
     fn switch_running_thread(&mut self, old_thread_state: ThreadState) {
+        // To counter the lock of the scheduler being held while the function is callled:
+        DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
         let current_thread_index = self.threads.iter().position(|thread| matches!(thread.state, ThreadState::Running(_)));
         let new_thread_index = self.threads.iter().enumerate().filter(|(_, thread)| matches!(thread.state, ThreadState::Ready)).max_by_key(|(_, thread)| thread.priority).map(|(index, _)| index);
         let mut idle_thread = self.idle_thread.as_mut().expect("No idle thread was configured for the scheduler!");
@@ -120,6 +121,7 @@ impl Scheduler {
             },
             (None, None) => {},
         };
+        disable_preemption();
     }
 
     fn cleanup_terminated(&mut self) {
@@ -138,8 +140,7 @@ impl Scheduler {
     pub fn start(&mut self) -> ! {
         assert!(!self.started, "Scheduler::start() was called more than once!");
         self.started = true;
-        enable_preemption();
-        enable_preemption(); // To make up for SCHEDLER lock
+        DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
         self.switch_running_thread(ThreadState::Terminated);
         panic!("No thread was added before calling Scheduler::start()!");
     }

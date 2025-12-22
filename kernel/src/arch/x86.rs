@@ -17,15 +17,16 @@ use crate::drivers::traits::console::keyboard::KeyboardDriver;
 
 use crate::kernel::memory::frame::{MemoryType, FRAME_SIZE};
 use crate::kernel::memory::map::{MemoryMap, MemoryRegion};
+use crate::kernel::sync::Shared;
 
 use spin::Mutex;
 use alloc::boxed::Box;
 use alloc::vec;
 
 // Drivers:
-pub static KEYBOARD: Mutex<Option<Box<dyn KeyboardDriver>>> = Mutex::new(None);
-pub static VIDEO: Mutex<Option<Box<dyn VideoConsole>>> = Mutex::new(None);
-pub static SERIAL: Mutex<Option<Box<dyn SerialConsole>>> = Mutex::new(None);
+pub static KEYBOARD: Shared<Option<Box<dyn KeyboardDriver>>> = Shared::new(None);
+pub static VIDEO: Shared<Option<Box<dyn VideoConsole>>> = Shared::new(None);
+pub static SERIAL: Shared<Option<Box<dyn SerialConsole>>> = Shared::new(None);
 
 // Arch specific boot info:
 pub static MEMORY_MAP: Mutex<Option<MemoryMap>> = Mutex::new(None);
