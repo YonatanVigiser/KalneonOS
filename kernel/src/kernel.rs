@@ -13,6 +13,7 @@ use linked_list_allocator::LockedHeap;
 use threading::scheduler::SCHEDULER;
 use threading::thread::Thread;
 use sync::Shared;
+use core::sync::atomic::AtomicUsize;
 
 pub static FRAME_ALLOCATOR: Shared<Option<FrameAllocator>> = Shared::new(None);
 
@@ -23,7 +24,7 @@ pub static MEMORY_MAP: Shared<Option<MemoryMap>> = Shared::new(None);
 #[global_allocator]
 pub static HEAP_ALLOCATOR: LockedHeap = LockedHeap::empty();
 
-pub static UPTIME_MS: Shared<u64> = Shared::new(0);
+pub static UPTIME_MS: AtomicUsize = AtomicUsize::new(0);
 
 use crate::TargetArch;
 

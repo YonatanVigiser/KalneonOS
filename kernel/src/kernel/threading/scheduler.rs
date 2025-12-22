@@ -6,7 +6,7 @@ use alloc::vec::Vec;
 
 static DISABLE_PREEMPTION: AtomicUsize = AtomicUsize::new(1);
 
-static SWITCH_MISSED: AtomicBool = AtomicBool::new(false);
+pub static SWITCH_MISSED: AtomicBool = AtomicBool::new(false);
 
 pub static SCHEDULER: Shared<Scheduler> = Shared::new(Scheduler::new()); 
 
@@ -20,9 +20,6 @@ pub fn disable_preemption() {
 #[inline]
 pub fn enable_preemption() {
     DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
-    if preemption_enabled() && SWITCH_MISSED.swap(false, Ordering::AcqRel) {
-        SCHEDULER.lock().yield_now();
-    }
 }
 
 #[inline]
@@ -79,6 +76,7 @@ impl Scheduler {
             }
         }
         self.last_wake_time = current_time;
+        SWITCH_MISSED.store(false, Ordering::Release);
         // Context switch if needed:
         if switch || !found_running {
             if DISABLE_PREEMPTION.load(Ordering::Acquire) == 1 {
@@ -99,8 +97,7 @@ impl Scheduler {
 
     fn switch_running_thread(&mut self, old_thread_state: ThreadState) {
         crate::TargetArch::with_interrupts_disabled(|| {
-            // To counter the lock of the scheduler being held while the function is callled:
-            DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
+            unsafe { SCHEDULER.force_unlock(); }
             let current_thread_index = self.threads.iter().position(|thread| matches!(thread.state, ThreadState::Running(_)));
             let new_thread_index = self.threads.iter().enumerate().filter(|(_, thread)| matches!(thread.state, ThreadState::Ready)).max_by_key(|(_, thread)| thread.priority).map(|(index, _)| index);
             let mut idle_thread = self.idle_thread.as_mut().expect("No idle thread was configured for the scheduler!");

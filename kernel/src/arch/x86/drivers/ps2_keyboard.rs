@@ -336,7 +336,8 @@ impl KeyboardDriver for PS2Keyboard {
 
     fn is_connected(&mut self) -> bool {
         pic::mask_irq(IRQ_NUM);
-        let current_uptime = *UPTIME_MS.lock();
+        use core::sync::atomic::Ordering;
+        let current_uptime = UPTIME_MS.load(Ordering::Acquire) as u64;
 
         let connected = if current_uptime > self.last_connection_time + CONNECTION_TIME_TEST_THRESHOLD_MS {
             ps2::echo_device_port1()
