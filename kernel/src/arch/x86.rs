@@ -111,6 +111,17 @@ impl Arch for ArchX86 {
         unsafe { context_switch(old_stack_ptr, new_stack_ptr); }
     }
 
+    fn with_interrupts_disabled<F, R>(f: F) -> R
+        where F: FnOnce() -> R {
+            let interrupts_enabled = cpu::interrupts_enabled();
+            unsafe { cpu::cli(); }
+            let result = f();
+            if interrupts_enabled {
+                unsafe { cpu::sti(); }
+            }
+            result
+    }
+
     fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn() -> !) {
         unsafe { fake_thread_entry_stack(stack_ptr, entry as usize); }
     }

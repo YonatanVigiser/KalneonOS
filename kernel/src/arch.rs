@@ -13,10 +13,8 @@ pub trait Arch {
 
     unsafe fn context_switch(old_stack_ptr: &mut usize, new_stack_ptr: usize);
 
-    /*
     fn with_interrupts_disabled<F, R>(f: F) -> R
         where F: FnOnce() -> R;
-    */
 
     fn fake_thread_entry_stack(stack_ptr: &mut usize, entry: fn() -> !);
 

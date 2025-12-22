@@ -1,6 +1,7 @@
 use super::idt::Idtr;
 use core::arch::asm;
 
+#[inline]
 pub unsafe fn lidt(idtr: &Idtr) {
     unsafe {
         asm!(
@@ -11,18 +12,41 @@ pub unsafe fn lidt(idtr: &Idtr) {
     }
 }
 
+#[inline]
 pub unsafe fn sti() {
     unsafe {
         asm!("sti", options(nomem, nostack));
     }
 }
 
+#[inline]
 pub unsafe fn cli() {
     unsafe {
         asm!("cli", options(nomem, nostack));
     }
 }
 
+
+#[inline]
+pub fn flags() -> usize {
+    let flags;
+    unsafe {
+        asm!(
+            "pushfd",
+            "pop {to}",
+            to = out(reg) flags,
+            options(nomem),
+        );
+    }
+    flags
+}
+
+#[inline]
+pub fn interrupts_enabled() -> bool {
+    (flags() & 0x200) != 0
+}
+
+#[inline]
 pub fn inb(port: u16) -> u8 {
     let inb: u8;
     unsafe {
@@ -36,6 +60,7 @@ pub fn inb(port: u16) -> u8 {
     inb
 }
 
+#[inline]
 pub fn outb(port: u16, value: u8) {
     unsafe {
         asm!(
@@ -47,6 +72,7 @@ pub fn outb(port: u16, value: u8) {
     }
 }
 
+#[inline]
 pub fn io_wait() {
     let mut _unused: u8 = 0;
     unsafe {
@@ -58,12 +84,14 @@ pub fn io_wait() {
     }
 }
 
+#[inline]
 pub unsafe fn halt() {
     unsafe {
         asm!("hlt", options(nomem, nostack),);
     }
 }
 
+#[inline]
 pub unsafe fn enable_paging(pd_address: u32) {
     unsafe {
         asm!(

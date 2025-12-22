@@ -1,4 +1,5 @@
 use core::sync::atomic::{Ordering, AtomicUsize, AtomicBool};
+use crate::arch::Arch;
 use super::thread::{Thread, ThreadState, BlockingEvent, ThreadId};
 use super::super::sync::Shared;
 use alloc::vec::Vec;
@@ -9,7 +10,7 @@ static SWITCH_MISSED: AtomicBool = AtomicBool::new(false);
 
 pub static SCHEDULER: Shared<Scheduler> = Shared::new(Scheduler::new()); 
 
-const THREAD_PREEMPTION_TIME_MS: u64 = 10;
+const THREAD_PREEMPTION_TIME_MS: u64 = 100;
 
 #[inline]
 pub fn disable_preemption() {
@@ -97,31 +98,33 @@ impl Scheduler {
     }
 
     fn switch_running_thread(&mut self, old_thread_state: ThreadState) {
-        // To counter the lock of the scheduler being held while the function is callled:
-        DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
-        let current_thread_index = self.threads.iter().position(|thread| matches!(thread.state, ThreadState::Running(_)));
-        let new_thread_index = self.threads.iter().enumerate().filter(|(_, thread)| matches!(thread.state, ThreadState::Ready)).max_by_key(|(_, thread)| thread.priority).map(|(index, _)| index);
-        let mut idle_thread = self.idle_thread.as_mut().expect("No idle thread was configured for the scheduler!");
-        match (current_thread_index, new_thread_index) {
-            (Some(current_thread_index), Some(new_thread_index)) => {
-                let (current_thread, new_thread) = if current_thread_index < new_thread_index {
-                    let (left, right) = self.threads.split_at_mut(new_thread_index);
-                    (&mut left[current_thread_index], &mut right[0])
-                } else {
-                    let (left, right) = self.threads.split_at_mut(current_thread_index);
-                    (&mut right[0], &mut left[new_thread_index])
-                };
-                current_thread.context_switch(new_thread, old_thread_state, THREAD_PREEMPTION_TIME_MS);
-            },
-            (Some(current_thread_index), None) =>
-                self.threads[current_thread_index].context_switch(&mut idle_thread, old_thread_state, THREAD_PREEMPTION_TIME_MS),
-            (None, Some(new_thread_index)) => {
-                idle_thread.state = ThreadState::Running(0);
-                idle_thread.context_switch(&mut self.threads[new_thread_index], ThreadState::Ready, THREAD_PREEMPTION_TIME_MS)
-            },
-            (None, None) => {},
-        };
-        disable_preemption();
+        crate::TargetArch::with_interrupts_disabled(|| {
+            // To counter the lock of the scheduler being held while the function is callled:
+            DISABLE_PREEMPTION.fetch_sub(1, Ordering::Release);
+            let current_thread_index = self.threads.iter().position(|thread| matches!(thread.state, ThreadState::Running(_)));
+            let new_thread_index = self.threads.iter().enumerate().filter(|(_, thread)| matches!(thread.state, ThreadState::Ready)).max_by_key(|(_, thread)| thread.priority).map(|(index, _)| index);
+            let mut idle_thread = self.idle_thread.as_mut().expect("No idle thread was configured for the scheduler!");
+            match (current_thread_index, new_thread_index) {
+                (Some(current_thread_index), Some(new_thread_index)) => {
+                    let (current_thread, new_thread) = if current_thread_index < new_thread_index {
+                        let (left, right) = self.threads.split_at_mut(new_thread_index);
+                        (&mut left[current_thread_index], &mut right[0])
+                    } else {
+                        let (left, right) = self.threads.split_at_mut(current_thread_index);
+                        (&mut right[0], &mut left[new_thread_index])
+                    };
+                    current_thread.context_switch(new_thread, old_thread_state, THREAD_PREEMPTION_TIME_MS);
+                },
+                (Some(current_thread_index), None) =>
+                    self.threads[current_thread_index].context_switch(&mut idle_thread, old_thread_state, THREAD_PREEMPTION_TIME_MS),
+                (None, Some(new_thread_index)) => {
+                    idle_thread.state = ThreadState::Running(0);
+                    idle_thread.context_switch(&mut self.threads[new_thread_index], ThreadState::Ready, THREAD_PREEMPTION_TIME_MS)
+                },
+                (None, None) => {},
+            };
+            disable_preemption();
+        });
     }
 
     fn cleanup_terminated(&mut self) {
