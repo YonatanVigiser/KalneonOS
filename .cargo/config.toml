@@ -1,0 +1,13 @@
+[unstable]
+json-target-spec = true
+build-std = ["core", "compiler_builtins", "alloc"]
+build-std-features = ["compiler-builtins-mem"]
+
+[build]
+target-dir = "build"
+
+[target.i386-unkown-none]
+rustflags = ["-C", "link-args=-no startfiles -Wl,-entry=_start"]
+
+[target.x86_64-unkown-none]
+rustflags = ["-C", "link-args=-no startfiles -Wl,-entry=_start"]
