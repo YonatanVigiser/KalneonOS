@@ -1,9 +1,3 @@
 build/
 *.swp
 *.bacon-locations
-Cargo.lock
-
-
-# Added by cargo
-
-/target

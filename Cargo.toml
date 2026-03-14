@@ -6,6 +6,13 @@ edition = "2024"
 [dependencies]
 spin = "0.10"
 linked_list_allocator = "0.10"
+x86_64 = "0.15"
+#thingbuf = "0.1"
+
+[dependencies.bitvec]
+version = "1"
+default-features = false
+features = ["atomic", "alloc"]
 
 [build-dependencies]
 multiboot2-header = "0.7"

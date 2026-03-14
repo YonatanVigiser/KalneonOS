@@ -3,10 +3,9 @@ ENTRY(_start)
 SECTIONS {
   . = 0x00100000;
 
-  .multiboot : {
-  }
-
   .text : {
+    . = ALIGN(8);
+    KEEP(*(.multiboot))
     *(.text*)
   }
 

@@ -2,19 +2,26 @@
 #![no_main]
 #![feature(alloc_error_handler)]
 
+pub mod heap;
+pub mod types;
+pub mod drivers;
+pub mod memory;
+
 extern crate alloc;
 
-use core::panic::PanicInfo;
-use linked_list_allocator::LockedHeap;
-
-#[global_allocator]
-pub static HEAP_ALLOCATOR: LockedHeap = LockedHeap::empty();
+#[unsafe(link_section = ".multiboot")]
+#[used]
+static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main() -> ! {
+    heap::init();
+    drivers::init();
     loop { }
 }
+
+use core::panic::PanicInfo;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {

@@ -7,8 +7,9 @@ fn main() {
 
 fn compile_asm_files() {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
-    let mut asm_dir = PathBuf::from("asm");
+    let mut asm_dir = PathBuf::from("src/arch/");
     asm_dir.push(&target_arch);
+    asm_dir.push("asm/");
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     // Determine NASM output format based on architecture
@@ -98,7 +99,6 @@ fn build_mutliboot_header() {
         file.write_all(&end_tag).expect("Failed to write multiboot header");
 
         println!("cargo:rerun-if-changed=build.rs");
-        println!("cargo:warning=Multiboot header written to: {}", header_path.display());
     } else {
         println!("cargo:warning=target arch is not supported by multiboot2 protocol!");
     }
