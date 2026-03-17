@@ -3,5 +3,6 @@ pub mod gdt;
 
 pub fn init() {
     unsafe { gdt::load(); }
+    unsafe { interrupts::init(); }
 }
 

@@ -25,7 +25,7 @@
     "kcfi",
     "kernel-address"
   ],
-  "target-pointer-width": "32",
+  "target-pointer-width": 32,
   "pre-link-args": {
     "ld.lld": ["-Tlink.ld"]
   }
