@@ -1,14 +1,21 @@
-build_mode := "debug"
+build_mode  := "debug"
 target_arch := arch()
-grub_arch := "i386-pc"
 
-default: create_iso
+default: (run "bios" target_arch)
 
-build:
-  cargo build {{ if build_mode == "release" {"--release"} else {""} }} --target targets/{{target_arch}}-kalneon_os.json
+build arch=target_arch:
+    cargo build {{ if build_mode == "release" {"--release"} else {""} }} \
+        --target targets/{{arch}}-kalneon_os.json
 
-create_iso: build
-  mkdir -p build/iso-{{target_arch}}/boot/grub
-  cp build/{{target_arch}}-kalneon_os/{{build_mode}}/kernel build/iso-{{target_arch}}/boot/kernel
-  cp grub.cfg build/iso-{{target_arch}}/boot/grub/grub.cfg
-  grub-mkrescue -o build/kalneon_os-{{target_arch}}.iso build/iso-{{target_arch}} -d /usr/lib/grub/{{grub_arch}}
+iso firmware="bios" arch=target_arch: (build arch)
+    mkdir -p build/iso-{{arch}}/boot/grub
+    cp build/{{arch}}-kalneon_os/{{build_mode}}/kernel build/iso-{{arch}}/boot/kernel
+    cp grub.cfg build/iso-{{arch}}/boot/grub/grub.cfg
+    grub-mkrescue -o build/kalneon_os-{{arch}}.iso build/iso-{{arch}} \
+        -d /usr/lib/grub/{{ if firmware == "uefi" { "x86_64-efi" } else { "i386-pc" } }}
+
+run firmware="bios" arch=target_arch: (iso firmware arch)
+    {{ if arch == "x86" { "qemu-system-x86" } else { "qemu-system-x86_64" } }} \
+        {{ if firmware == "uefi" { "-bios /usr/share/ovmf/OVMF.fd" } else { "" } }} \
+        -cdrom build/kalneon_os-{{arch}}.iso -gdb tcp::26000 -S &
+    gdb build/iso-{{arch}}/boot/kernel
