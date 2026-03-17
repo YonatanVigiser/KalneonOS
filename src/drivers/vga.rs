@@ -112,7 +112,7 @@ impl Vga {
     pub fn init(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
-        Self {
+        let mut vga = Self {
             vmem_ptr,
             video_type,
             cx: 0,
@@ -133,7 +133,9 @@ impl Vga {
                 bg: VgaColor::Black,
                 fg: VgaColor::White,
             },
-        }
+        };
+        vga.clear();
+        vga
     }
 
     fn put_cell(&self, x: u8, y: u8, cell: VgaCell) -> Result<(), ()> {

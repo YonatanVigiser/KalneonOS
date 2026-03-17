@@ -3,9 +3,12 @@ ENTRY(_start)
 SECTIONS {
   . = 0x00100000;
 
+  .multiboot : ALIGN(8) {
+    *(.multiboot)
+  }
+
   .text : {
-    . = ALIGN(8);
-    KEEP(*(.multiboot))
+    KEEP(*(.text._start))
     *(.text*)
   }
 
@@ -20,12 +23,21 @@ SECTIONS {
   .bss : {
     *(.bss*)
     *(COMMON)
-    *(.stack*)
+    . = ALIGN(64);
+    stack_bottom = .;
+    . += 0x100000;
+    stack_top = .;
   }
 
   .heap (NOLOAD) : ALIGN(4K) {
     __heap_start = .;
     . += 1M;
     __heap_end = .;
+  }
+  
+  /DISCARD/ : {
+    *(.eh_frame)
+    *(.eh_frame_hdr)
+    *(.note*)
   }
 }

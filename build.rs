@@ -7,9 +7,8 @@ fn main() {
 
 fn compile_asm_files() {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
-    let mut asm_dir = PathBuf::from("src/arch/");
+    let mut asm_dir = PathBuf::from("asm/");
     asm_dir.push(&target_arch);
-    asm_dir.push("asm/");
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     // Determine NASM output format based on architecture
@@ -24,7 +23,7 @@ fn compile_asm_files() {
         if path.extension().is_some_and(|ext| ext == "asm") {
             let file_stem = path.file_stem().unwrap().to_str().unwrap();
             let out_path = out_dir.join(format!("{file_stem}.o"));
-            println!("cargo:return-if-changed={}", path.display());
+            println!("cargo:rerun-if-changed={}", path.display());
 
             let status = Command::new("nasm")
                 .args([

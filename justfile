@@ -1,6 +1,6 @@
 build_mode := "debug"
 target_arch := arch()
-grub_arch := target_arch + "-efi"
+grub_arch := "i386-pc"
 
 default: create_iso
 

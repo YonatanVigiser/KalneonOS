@@ -6,6 +6,9 @@ pub mod heap;
 pub mod types;
 pub mod drivers;
 pub mod memory;
+pub mod arch;
+pub mod boot_info;
+pub mod logging;
 
 extern crate alloc;
 
@@ -16,15 +19,19 @@ static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/m
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main() -> ! {
+    arch::init();
     heap::init();
     drivers::init();
+    logging::init_boot_logger();
+    log::info!("Kernel booting...");
     loop { }
 }
 
 use core::panic::PanicInfo;
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    log::error!("{}", info);
     loop { }
 }
 
