@@ -1,6 +1,6 @@
 use super::{FRAME_SIZE, MemoryType};
 
-#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
 pub struct FrameAlignedAddress(usize);
 
 impl FrameAlignedAddress {
@@ -34,6 +34,13 @@ impl FrameAlignedAddress {
 
     pub fn next(&self) -> Self {
         Self(self.0.wrapping_add(FRAME_SIZE))
+    }
+}
+
+use core::fmt::{Debug, Formatter, Error};
+impl Debug for FrameAlignedAddress {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        write!(f, "Address: {:X}", self.0)
     }
 }
 

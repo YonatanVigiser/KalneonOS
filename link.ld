@@ -3,6 +3,8 @@ ENTRY(_start)
 SECTIONS {
   . = 0x00100000;
 
+  __kernel_start = .;
+
   .multiboot : ALIGN(8) {
     *(.multiboot)
   }
@@ -34,7 +36,9 @@ SECTIONS {
     . += 1M;
     __heap_end = .;
   }
-  
+
+  __kernel_end = .;
+
   /DISCARD/ : {
     *(.eh_frame)
     *(.eh_frame_hdr)

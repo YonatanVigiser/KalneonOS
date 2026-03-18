@@ -25,9 +25,9 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     drivers::init();
     logging::init_boot_logger();
     log::info!("Kernel booting...");
-    log::info!("MAGIC: {}, PTR: {}", boot_magic, boot_info_ptr);
     let boot_info = boot_info::load(boot_magic, boot_info_ptr);
-    log::info!("BOOT MMAP: {:?}", boot_info.mmap);
+    let mut allocator = memory::frame_allocator::FrameAllocator::from_memory_map(&boot_info.mmap);
+    allocator.reserve(memory::kernel_region());
     loop { }
 }
 

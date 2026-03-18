@@ -52,11 +52,9 @@ fn build_mutliboot_header() {
     };
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
-            .efi_bs_tag(EfiBootServiceHeaderTag::new(HeaderTagFlag::Optional))
             .information_request_tag(InformationRequestHeaderTag::new(
                     HeaderTagFlag::Optional,
                     &[
-                        MbiTagType::End.into(),
                         MbiTagType::Cmdline.into(),
                         MbiTagType::BootLoaderName.into(),
                         MbiTagType::BasicMeminfo.into(),
@@ -64,6 +62,7 @@ fn build_mutliboot_header() {
                         MbiTagType::Framebuffer.into(),
                         MbiTagType::EfiMmap.into(),
                         MbiTagType::LoadBaseAddr.into(),
+                        MbiTagType::End.into(),
                     ],
             )).build();
 

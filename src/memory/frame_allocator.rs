@@ -51,7 +51,7 @@ impl FrameAllocator {
         frame.deallocated = true;
     }
 
-    pub fn resesrve(&mut self, region: MemoryRegion) {
+    pub fn reserve(&mut self, region: MemoryRegion) {
         self.frames[region.start.index()..region.end().index() - 1].fill(true);
     }
 
