@@ -70,6 +70,7 @@ check_long_mode:
 
 ; Set up identity paging for the first 1GB using 2MB huge pages
 setup_page_tables:
+  push edi
   ; Clear page tables (bss section might not be zeroed)
   mov edi, p4_table
   mov ecx, 3 * 4096 / 4  ; 3 tables, 4096 bytes each, divide by 4 for dwords
@@ -108,6 +109,7 @@ setup_page_tables:
   inc edx
   loop .map_p2_table
 
+  pop edi
   ret
 
 ; 64-bit entry point

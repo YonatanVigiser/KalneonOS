@@ -1,4 +1,4 @@
-use log::{Log, Metadata, Record, LevelFilter};
+use log::{Log, Metadata, Record, LevelFilter, Level};
 use core::fmt::Write;
 use crate::drivers::vga::VGA;
 
@@ -12,8 +12,8 @@ pub struct BootLogger;
 static BOOT_LOGGER: BootLogger = BootLogger;
 
 impl Log for BootLogger {
-    fn enabled(&self, _metadata: &Metadata) -> bool {
-        true
+    fn enabled(&self, metadata: &Metadata) -> bool {
+        metadata.level() <= Level::Info && !VGA.is_locked()
     }
 
     fn log(&self, record: &Record) {

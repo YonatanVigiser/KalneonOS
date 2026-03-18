@@ -1,55 +1,72 @@
-#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
-pub enum MemoryType {
-    Usable,
-    KernelAddressSpace,
-    MMIO,
-    Reserved,
-}
+use super::{FRAME_SIZE, MemoryType};
 
-pub const FRAME_SIZE: usize = 4096;
+#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
+pub struct FrameAlignedAddress(usize);
+
+impl FrameAlignedAddress {
+    pub const fn is_aligned(start: usize) -> bool {
+        start % FRAME_SIZE == 0
+    }
+
+    pub fn new(start: usize) -> Self {
+        Self(start & !(FRAME_SIZE - 1))
+    }
+
+    pub fn distance_to(&self, other: &Self) -> usize {
+        self.index().abs_diff(other.index())
+    }
+
+    pub fn start(&self) -> usize {
+        self.0
+    }
+
+    pub fn end(&self) -> usize {
+        self.0.wrapping_add(FRAME_SIZE)
+    }
+
+    pub fn index(&self) -> usize {
+        self.0 / FRAME_SIZE 
+    }
+
+    pub fn prev(&self) -> Self {
+        Self(self.0.wrapping_sub(FRAME_SIZE))
+    }
+
+    pub fn next(&self) -> Self {
+        Self(self.0.wrapping_add(FRAME_SIZE))
+    }
+}
 
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub struct MemoryFrame {
-    start: usize,
+    address: FrameAlignedAddress,
     memory_type: MemoryType,
     pub(super) deallocated: bool,
 }
 
 impl MemoryFrame {
-    pub(super) fn new(memory_type: MemoryType, start: usize) -> Self {
-        let start = start & !(FRAME_SIZE - 1);
+    pub fn new(memory_type: MemoryType, address: FrameAlignedAddress) -> Self {
         Self {
-            start,
+            address,
             memory_type,
             deallocated: false,
         }
     }
     
-    pub fn index(&self) -> usize {
-        self.start / FRAME_SIZE
-    }
-
-    pub fn start(&self) -> usize {
-        debug_assert!(!self.deallocated, "A deallocated frame was used after freed!");
-        self.start
-    }
-
-    pub fn end(&self) -> usize {
-        debug_assert!(!self.deallocated, "A deallocated frame was used after freed!");
-        self.start + FRAME_SIZE
+    pub fn address(&self) -> &FrameAlignedAddress {
+        debug_assert!(self.deallocated, "A deallocated frame was used after freed!");
+        &self.address
     }
 
     pub fn memory_type(&self) -> &MemoryType {
+        debug_assert!(self.deallocated, "A deallocated frame was used after freed!");
         &self.memory_type
     }
 }
 
-#[cfg(debug_assertions)]
 impl Drop for MemoryFrame {
     fn drop(&mut self) {
-        if !self.deallocated {
-            panic!("MemoryFrame was dropped without calling dealloc!");
-        }
+        debug_assert!(!self.deallocated, "MemoryFrame was dropped without calling dealloc!");
     }
 }
 

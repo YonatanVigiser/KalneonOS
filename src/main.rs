@@ -19,12 +19,15 @@ static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/m
 
 #[unsafe(no_mangle)]
 #[inline(never)]
-pub extern "C" fn main() -> ! {
+pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     arch::init();
     heap::init();
     drivers::init();
     logging::init_boot_logger();
     log::info!("Kernel booting...");
+    log::info!("MAGIC: {}, PTR: {}", boot_magic, boot_info_ptr);
+    let boot_info = boot_info::load(boot_magic, boot_info_ptr);
+    log::info!("BOOT MMAP: {:?}", boot_info.mmap);
     loop { }
 }
 
