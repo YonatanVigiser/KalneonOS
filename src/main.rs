@@ -4,10 +4,10 @@
 #![feature(abi_x86_interrupt)]
 
 pub mod heap;
-pub mod types;
 pub mod drivers;
 pub mod memory;
-pub mod arch;
+pub mod interrupts;
+pub mod gdt;
 pub mod boot_info;
 pub mod logging;
 
@@ -20,7 +20,8 @@ static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/m
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
-    arch::init();
+    unsafe { gdt::load(); }
+    interrupts::init();
     heap::init();
     drivers::init();
     logging::init_boot_logger();
@@ -28,7 +29,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     let boot_info = boot_info::load(boot_magic, boot_info_ptr);
     let mut allocator = memory::frame_allocator::FrameAllocator::from_memory_map(&boot_info.mmap);
     allocator.reserve(memory::kernel_region());
-    loop { }
+    halt_loop()
 }
 
 use core::panic::PanicInfo;
@@ -36,7 +37,13 @@ use core::panic::PanicInfo;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     log::error!("{}", info);
-    loop { }
+    halt_loop()
+}
+
+pub fn halt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 #[alloc_error_handler]
