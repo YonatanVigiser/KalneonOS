@@ -4,8 +4,8 @@ target_arch := arch()
 default: (run "bios" target_arch)
 
 build arch=target_arch:
-    cargo build {{ if build_mode == "release" {"--release"} else {""} }} \
-        --target targets/{{arch}}-kalneon_os.json
+    cp targets/{{arch}}-kalneon_os.json targets/current-kalneon_os.json
+    cargo build {{ if build_mode == "release" {"--release"} else {""} }}
 
 iso firmware="bios" arch=target_arch: (build arch)
     mkdir -p build/iso-{{arch}}/boot/grub

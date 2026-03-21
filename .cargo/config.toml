@@ -5,6 +5,7 @@ build-std-features = ["compiler-builtins-mem"]
 
 [build]
 target-dir = "build"
+target = "targets/current-kalneon_os.json"
 
 [target.i386-unkown-none]
 rustflags = ["-C", "link-args=-no startfiles -Wl,-entry=_start"]
