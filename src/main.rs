@@ -10,6 +10,7 @@ pub mod interrupts;
 pub mod gdt;
 pub mod boot_info;
 pub mod logging;
+pub mod traits;
 
 extern crate alloc;
 
@@ -28,7 +29,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     log::info!("Kernel booting...");
     let boot_info = boot_info::load(boot_magic, boot_info_ptr);
     let mut allocator = memory::frame_allocator::FrameAllocator::from_memory_map(&boot_info.mmap);
-    allocator.reserve(memory::kernel_region());
+    unsafe { allocator.reserve_range(memory::kernel_range()); }
     halt_loop()
 }
 

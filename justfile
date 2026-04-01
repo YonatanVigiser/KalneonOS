@@ -9,7 +9,7 @@ build arch=target_arch:
 
 iso firmware="bios" arch=target_arch: (build arch)
     mkdir -p build/iso-{{arch}}/boot/grub
-    cp build/{{arch}}-kalneon_os/{{build_mode}}/kernel build/iso-{{arch}}/boot/kernel
+    cp build/current-kalneon_os/{{build_mode}}/kernel build/iso-{{arch}}/boot/kernel
     cp grub.cfg build/iso-{{arch}}/boot/grub/grub.cfg
     grub-mkrescue -o build/kalneon_os-{{arch}}.iso build/iso-{{arch}} \
         -d /usr/lib/grub/{{ if firmware == "uefi" { "x86_64-efi" } else { "i386-pc" } }}

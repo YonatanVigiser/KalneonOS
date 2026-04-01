@@ -1,19 +1,22 @@
-use multiboot2::{BootInformation, BootInformationHeader, MemoryArea, MemoryAreaTypeId, MemoryAreaType};
-use crate::memory::frame::FrameAlignedAddress;
-use crate::memory::{MemoryType, FRAME_SIZE};
-use crate::memory::region::MemoryRegion;
+use multiboot2::{BootInformation, BootInformationHeader, MemoryArea, MemoryAreaType, MemoryAreaTypeId};
+use x86_64::structures::paging::frame::PhysFrame;
+use crate::traits::Indexable;
+use x86_64::PhysAddr;
+use crate::memory::{MemoryType, TypedPhysFrameRange};
 use alloc::vec::Vec;
 
 pub struct BootInfo {
-    pub mmap: Vec<MemoryRegion>,
+    pub mmap: Vec<TypedPhysFrameRange>,
 }
 
 impl From<MemoryAreaTypeId> for MemoryType {
-    fn from(memory_type: MemoryAreaTypeId) -> Self {
-        match memory_type.into() {
-            MemoryAreaType::Available | MemoryAreaType::AcpiAvailable => MemoryType::Usable,
-            MemoryAreaType::Custom(_) => MemoryType::Other,
-            _ => MemoryType::Reserved,
+    fn from(value: MemoryAreaTypeId) -> Self {
+        match value.into() {
+            MemoryAreaType::Available | MemoryAreaType::AcpiAvailable => Self::Usable,
+            MemoryAreaType::Reserved => Self::Reserved,
+            MemoryAreaType::ReservedHibernate => Self::NVM,
+            MemoryAreaType::Defective => Self::Defective,
+           MemoryAreaType ::Custom(_) => Self::Other,
         }
     }
 }
@@ -32,50 +35,46 @@ pub fn load(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
 }
 
 
-fn frames_from_mmap(memory_areas: &[MemoryArea]) -> Vec<MemoryRegion> {
-    let mut frames: Vec<MemoryRegion> = Vec::new();
+fn frames_from_mmap(memory_areas: &[MemoryArea]) -> Vec<TypedPhysFrameRange> {
+    let mut frames: Vec<TypedPhysFrameRange> = Vec::new();
     for memory_area in memory_areas {
-        let memory_type: MemoryType = memory_area.typ().into();
-        let mut start = FrameAlignedAddress::new(memory_area.start_address() as usize);
-        let mut length = memory_area.size() as usize / FRAME_SIZE;
-        if memory_area.size() as usize % FRAME_SIZE != 0 {
-            length += 1;
-        }
-        if let Some(ref last_region) = frames.last() {
-            if start > last_region.end() {
+        let typ: MemoryType = memory_area.typ().into();
+        let mut start = PhysFrame::containing_address(PhysAddr::new(memory_area.start_address()));
+        let end = PhysFrame::containing_address(PhysAddr::new(memory_area.end_address()));
+        if let Some(last) = frames.last() {
+            if start > last.range.end {
                 // Hole
-                if memory_type == MemoryType::Reserved {
-                    if last_region.memory_type == MemoryType::Reserved {
-                        frames.last_mut().unwrap().length += last_region.end().distance_to(&start) + length;
+                if typ == MemoryType::Reserved {
+                    if last.typ == MemoryType::Reserved {
+                        frames.last_mut().unwrap().range.end = end;
                     } else {
-                        frames.push(MemoryRegion { start: last_region.end(), length: last_region.end().distance_to(&start) + length, memory_type: MemoryType::Reserved  });
+                        frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, end) });
                     }
                     continue;
+                } else if last.typ == MemoryType::Reserved {
+                    frames.last_mut().unwrap().range.end = start;
                 } else {
-                    frames.push(MemoryRegion { start: last_region.end(), length: last_region.end().distance_to(&start), memory_type: MemoryType::Reserved });
+                    frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, start) });
                 }
-            } else if start < last_region.end() {
-                // Overlapping - check priority. On lower, move self. On higher, move last. On
-                // equal, merge both
-                if last_region.memory_type > memory_type {
-                    start = last_region.end();
-                } else if last_region.memory_type < memory_type {
-                    frames.last_mut().unwrap().length = last_region.start.distance_to(&start);
-                } else {
-                    frames.last_mut().unwrap().length += length;
-                    continue;
-                }
-            } else if memory_type == last_region.memory_type {
-                frames.last_mut().unwrap().length += length;
+            } else if typ == last.typ {
+                frames.last_mut().unwrap().range.end = end;
                 continue;
+            } else if start < last.range.end {
+                // Overlapping - check priority. On lower, move self. On higher, move last. Not
+                // equal, because we checked earlier
+                if last.typ > typ {
+                    start = last.range.end;
+                } else if last.typ < typ {
+                    frames.last_mut().unwrap().range.end = start;
+                }
             }
         } else {
-            let zero = FrameAlignedAddress::new(0);
+            let zero = PhysFrame::from_index(0);
             if start != zero {
-                frames.push(MemoryRegion { start: zero, length: zero.distance_to(&start), memory_type: MemoryType::Reserved });
+                frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(zero, start) });
             }
         }
-        frames.push(MemoryRegion { start, length, memory_type });
+        frames.push(TypedPhysFrameRange { typ, range: PhysFrame::range(start, end) });
     }
     frames
 }
