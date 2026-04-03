@@ -1,3 +1,4 @@
 build/
 *.swp
 *.bacon-locations
+targets/current-kalneon_os.json

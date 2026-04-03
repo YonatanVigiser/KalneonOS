@@ -4,12 +4,12 @@ target_arch := arch()
 default: (run "bios" target_arch)
 
 build arch=target_arch:
-    cargo build {{ if build_mode == "release" {"--release"} else {""} }} \
-        --target targets/{{arch}}-kalneon_os.json
+    cp targets/{{arch}}-kalneon_os.json targets/current-kalneon_os.json
+    cargo build {{ if build_mode == "release" {"--release"} else {""} }}
 
 iso firmware="bios" arch=target_arch: (build arch)
     mkdir -p build/iso-{{arch}}/boot/grub
-    cp build/{{arch}}-kalneon_os/{{build_mode}}/kernel build/iso-{{arch}}/boot/kernel
+    cp build/current-kalneon_os/{{build_mode}}/kernel build/iso-{{arch}}/boot/kernel
     cp grub.cfg build/iso-{{arch}}/boot/grub/grub.cfg
     grub-mkrescue -o build/kalneon_os-{{arch}}.iso build/iso-{{arch}} \
         -d /usr/lib/grub/{{ if firmware == "uefi" { "x86_64-efi" } else { "i386-pc" } }}

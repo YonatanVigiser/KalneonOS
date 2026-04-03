@@ -3,32 +3,30 @@
 #![feature(alloc_error_handler)]
 #![feature(abi_x86_interrupt)]
 
-pub mod heap;
 pub mod drivers;
 pub mod memory;
 pub mod interrupts;
 pub mod gdt;
 pub mod boot_info;
 pub mod logging;
+pub mod traits;
 
 extern crate alloc;
 
 #[unsafe(link_section = ".multiboot")]
 #[used]
-static MULTIBOOT_HEADER: [u8; 72] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
+static MULTIBOOT_HEADER: [u8; 64] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     unsafe { gdt::load(); }
     interrupts::init();
-    heap::init();
     drivers::init();
     logging::init_boot_logger();
-    log::info!("Kernel booting...");
     let boot_info = boot_info::load(boot_magic, boot_info_ptr);
-    let mut allocator = memory::frame_allocator::FrameAllocator::from_memory_map(&boot_info.mmap);
-    allocator.reserve(memory::kernel_region());
+    memory::init(&boot_info.mmap);
+    log::info!("Kernel booting...");
     halt_loop()
 }
 
@@ -41,6 +39,7 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 pub fn halt_loop() -> ! {
+    x86_64::instructions::interrupts::disable();
     loop {
         x86_64::instructions::hlt();
     }

@@ -5,9 +5,9 @@ edition = "2024"
 
 [dependencies]
 spin = "0.10"
-linked_list_allocator = "0.10"
 x86_64 = "0.15"
-lazy_static = { version="1.5", features=["spin_no_std"] }
+lazy_static = { version = "1.5", features = ["spin_no_std"] }
+talc = { version = "4", default-features = false, features = ["lock_api"] }
 log = "0.4"
 multiboot2 = "0.24"
 

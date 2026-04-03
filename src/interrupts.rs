@@ -1,11 +1,13 @@
 use lazy_static::lazy_static;
 use x86_64::set_general_handler;
-use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 
 lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
         let mut idt = InterruptDescriptorTable::new();
         set_general_handler!(&mut idt, general_handler);
+        idt.double_fault.set_handler_fn(double_fault_handler);
+        idt.page_fault.set_handler_fn(page_fault_handler);
         idt
     };
 }
@@ -18,3 +20,15 @@ fn general_handler(stack_frame: InterruptStackFrame, index: u8, error_code: Opti
     panic!("Unhandled interrupt: {}\nStack frame:\n{:?}\nError Code: {:?}", index, stack_frame, error_code);
 }
 
+extern "x86-interrupt" fn page_fault_handler(
+    stack_frame: InterruptStackFrame,
+    error_code: PageFaultErrorCode,
+) {
+    use x86_64::registers::control::Cr2;
+
+    panic!("EXCEPTION: PAGE FAULT\nAccessed Address: {:?}\nError COde: {:?}\n{:#?}", Cr2::read(), error_code, stack_frame);
+}
+
+extern "x86-interrupt" fn double_fault_handler(stack_frame: InterruptStackFrame, error_code: u64) -> ! {
+    panic!("Double Fault! Error Code: {}. Stack Frame:\n{:#?}", error_code, stack_frame)
+}

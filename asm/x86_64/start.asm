@@ -1,5 +1,8 @@
 extern main
-extern stack_top
+extern __stack_top
+extern __boot_stack_top
+extern __bss_start
+extern __bss_end
 global _start
 
 section .text._start
@@ -17,13 +20,13 @@ _start:
   mov esi, ebx
 
   ; Set up initial stack
-  mov esp, stack_top
+  mov esp, __boot_stack_top
 
   ; Check if already in long mode
   mov ecx, 0xC0000080
   rdmsr
   test eax, 1 << 10      ; LMA = Long Mode Active
-  jnz long_mode_start    ; already 64-bit, skip setup
+  jnz already_in_long_mode
 
   ; Verify we're running on a CPU that supports long mode
   call check_cpuid
@@ -68,55 +71,46 @@ check_long_mode:
   mov esi, error_no_long_mode
   jmp error
 
-; Set up identity paging for the first 1GB using 2MB huge pages
+; Set up identity paging for the first 1GB, and also map the first 1G to high memory
 setup_page_tables:
   push edi
   ; Clear page tables (bss section might not be zeroed)
   mov edi, p4_table
-  mov ecx, 3 * 4096 / 4  ; 3 tables, 4096 bytes each, divide by 4 for dwords
+  mov ecx, 3 * 4096 / 4
   xor eax, eax
   rep stosd
 
-  ; Map P4[0] -> P3 (use edi which already points to p4_table)
+  ; Identity map: P4[0] -> p3_low_table
   mov edi, p4_table
-  mov eax, p3_table
-  or eax, 0b11  ; present + writable
-  stosd  ; Store eax at [edi] and increment edi
-  xor eax, eax
-  stosd  ; Store upper 32 bits (zero for 32-bit addresses)
+  mov eax, p3_low_table
+  or  eax, 0b11
+  mov [edi], eax
+  mov dword [edi + 4], 0
 
-  ; Map P3[0] -> P2
-  mov edi, p3_table
-  mov eax, p2_table
-  or eax, 0b11  ; present + writable
-  stosd
-  xor eax, eax
-  stosd
+  ; P3[0] -> 1GiB huge page
+  mov edi, p3_low_table
+  mov eax, 0b10000011 ; present + writable + huge
+  mov [edi], eax
+  mov dword [edi + 4], 0 ; phys addr 0
 
-  ; Map P2 entries to 512 × 2MB pages = 1GB
-  mov edi, p2_table
-  mov ecx, 512  ; Loop counter
-  xor edx, edx  ; Page number counter
-  mov ebx, 0b10000011  ; present + writable + huge page
-.map_p2_table:
-  mov eax, edx
-  shl eax, 21  ; multiply by 2MB (2^21)
-  or eax, ebx
-  stosd  ; Store the entry (lower 32 bits)
-  xor eax, eax
-  stosd  ; Store upper 32 bits (zero)
+  ; Kernel: P4[511] -> p3_kernel_table -> 1GiB huge page
+  mov edi, p4_table + 511 * 8
+  mov eax, p3_kernel_table
+  or  eax, 0b11
+  mov [edi], eax
+  mov dword [edi + 4], 0
 
-  inc edx
-  loop .map_p2_table
+  ; P3[510] -> 1GiB huge page
+  mov edi, p3_kernel_table + 510 * 8
+  mov eax, 0b10000011 ; present + writable + huge
+  mov [edi], eax
+  mov dword [edi + 4], 0 ; phys addr 0
 
   pop edi
   ret
 
-; 64-bit entry point
-
 ; Enable paging and long mode
 enter_long_mode:
-  ; Load P4 table into CR3
   mov eax, p4_table
   mov cr3, eax
 
@@ -136,7 +130,6 @@ enter_long_mode:
   or eax, 1 << 31
   mov cr0, eax
 
-  ; mov eax, gdt64.pointer
   lgdt [gdt64.pointer]
 
   jmp dword gdt64.code:long_mode_start
@@ -158,6 +151,45 @@ error:
   hlt
 
 bits 64
+; Build page tables, load a GDT and jump to long_mode_start
+already_in_long_mode:
+  mov rsp, __boot_stack_top
+  push rdi
+  push rsi
+
+  ; Clear page tables (bss section might not be zeroed)
+  mov rdi, p4_table
+  mov rcx, 3 * 4096 / 8
+  xor rax, rax
+  rep stosq
+
+  ; Identity map: P4[0] -> p3_low_table
+  mov rdi, p4_table
+  mov rax, p3_low_table
+  or  rax, 0b11
+  mov [rdi], rax
+
+  ; P3[0] -> 1GiB huge page
+  mov rdi, p3_low_table
+  mov qword [rdi], 0b10000011 ; present + writable + huge + phys addr 0
+
+  ; Kernel: P4[511] -> p3_kernel_table -> 1GiB huge page
+  mov rdi, p4_table + 511 * 8
+  mov rax, p3_kernel_table
+  or  rax, 0b11
+  mov [rdi], rax
+
+  ; P3[510] -> 1GiB huge page
+  mov rdi, p3_kernel_table + 510 * 8
+  mov qword [rdi], 0b10000011 ; present + writable + huge + phys addr 0
+
+  mov rax, p4_table
+  mov cr3, rax
+
+  pop rsi
+  pop rdi
+  jmp long_mode_start
+
 long_mode_start:
   ; Reload segment registers
   xor ax, ax
@@ -167,7 +199,21 @@ long_mode_start:
   mov gs, ax
   mov ss, ax
 
-  call main
+  mov rsp, __stack_top
+
+  push rdi
+  push rsi
+  ; Zero .bss
+  mov rdi, __bss_start
+  mov rcx, __bss_end
+  sub rcx, rdi
+  xor al, al
+  rep stosb
+  pop rsi
+  pop rdi
+
+  mov rax, main
+  call rax
 
   ; If kernel returns, halt
   cli
@@ -176,7 +222,7 @@ long_mode_start:
   jmp .loop
 
 
-section .rodata
+section .boot.rodata
 ; GDT for 64-bit mode
 gdt64:
     dq 0 ; zero entry
@@ -191,11 +237,11 @@ error_no_cpuid: db "ERROR: CPUID not supported", 0
 error_no_long_mode: db "ERROR: Long mode not available", 0
 
 ; Page tables (must be page-aligned)
-section .bss
+section .boot.bss
 align 4096
 p4_table:
   resb 4096
-p3_table:
+p3_low_table:
   resb 4096
-p2_table:
+p3_kernel_table:
   resb 4096

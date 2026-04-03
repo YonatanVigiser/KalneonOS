@@ -2,42 +2,71 @@ ENTRY(_start)
 
 SECTIONS {
   . = 0x00100000;
-
-  __kernel_start = .;
+  __phys_start = .;
 
   .multiboot : ALIGN(8) {
     *(.multiboot)
   }
 
-  .text : {
+  .boot.text : {
     KEEP(*(.text._start))
+  }
+
+  .boot.rodata : {
+    *(.boot.rodata)
+  }
+
+  .boot.bss (NOLOAD) : {
+    *(.boot.bss)
+  }
+
+  .boot.stack (NOLOAD) : ALIGN(64) {
+    __boot_stack_bottom = .;
+    . += 4K;
+    __boot_stack_top = .;
+  }
+
+  __high_sections_lma = .;
+
+  __vma_start = 0xffffffff80000000;
+  . += __vma_start;
+
+  .text : AT(__high_sections_lma) ALIGN(4K) {  
+    __text_start = .;
     *(.text*)
+    __text_end = .;
   }
 
-  .rodata : {
+  .rodata : ALIGN(4K) {
+    __rodata_start = .;
     *(.rodata*)
+    __rodata_end = .;
   }
 
-  .data : {
+  .data : ALIGN(4K) {
+    __data_start = .;
     *(.data*)
+    __data_end = .;
   }
 
-  .bss : {
+  .bss (NOLOAD) : ALIGN(4K) {
+    __bss_start = .;
     *(.bss*)
     *(COMMON)
-    . = ALIGN(64);
-    stack_bottom = .;
-    . += 0x100000;
-    stack_top = .;
+    __bss_end = .;
   }
 
-  .heap (NOLOAD) : ALIGN(4K) {
-    __heap_start = .;
+  .stack (NOLOAD) : ALIGN(4K) {
+    __stack_guard = .;
+    . += 4K;
+    __stack_buttom = .;
     . += 1M;
-    __heap_end = .;
+    __stack_top = .;
   }
+  
+  __vma_end = .;
 
-  __kernel_end = .;
+  __phys_end = __vma_end - __vma_start; /* contains the low sections inside of it */
 
   /DISCARD/ : {
     *(.eh_frame)
