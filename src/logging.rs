@@ -18,8 +18,9 @@ impl Log for BootLogger {
 
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
-            if let Some(vga) = VGA.lock().as_mut() {
-                writeln!(vga, "{} - {}", record.level(), record.args());
+            let mut guard = VGA.lock();
+            if let Some(vga) = guard.as_mut() {
+                let _ = writeln!(vga, "{} - {}", record.level(), record.args());
             }
         }
     }

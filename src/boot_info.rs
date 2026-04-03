@@ -2,11 +2,10 @@ use multiboot2::{BootInformation, BootInformationHeader, MemoryArea, MemoryAreaT
 use x86_64::structures::paging::frame::PhysFrame;
 use crate::traits::Indexable;
 use x86_64::PhysAddr;
-use crate::memory::{MemoryType, TypedPhysFrameRange};
-use alloc::vec::Vec;
+use crate::memory::{MemoryType, map::{TypedPhysFrameRange, MemoryMap}};
 
 pub struct BootInfo {
-    pub mmap: Vec<TypedPhysFrameRange>,
+    pub mmap: MemoryMap,
 }
 
 impl From<MemoryAreaTypeId> for MemoryType {
@@ -35,8 +34,8 @@ pub fn load(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
 }
 
 
-fn frames_from_mmap(memory_areas: &[MemoryArea]) -> Vec<TypedPhysFrameRange> {
-    let mut frames: Vec<TypedPhysFrameRange> = Vec::new();
+fn frames_from_mmap(memory_areas: &[MemoryArea]) -> MemoryMap {
+    let mut frames = MemoryMap::empty();
     for memory_area in memory_areas {
         let typ: MemoryType = memory_area.typ().into();
         let mut start = PhysFrame::containing_address(PhysAddr::new(memory_area.start_address()));
@@ -48,13 +47,13 @@ fn frames_from_mmap(memory_areas: &[MemoryArea]) -> Vec<TypedPhysFrameRange> {
                     if last.typ == MemoryType::Reserved {
                         frames.last_mut().unwrap().range.end = end;
                     } else {
-                        frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, end) });
+                        frames.append(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, end) });
                     }
                     continue;
                 } else if last.typ == MemoryType::Reserved {
                     frames.last_mut().unwrap().range.end = start;
                 } else {
-                    frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, start) });
+                    frames.append(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(last.range.end, start) });
                 }
             } else if typ == last.typ {
                 frames.last_mut().unwrap().range.end = end;
@@ -71,10 +70,10 @@ fn frames_from_mmap(memory_areas: &[MemoryArea]) -> Vec<TypedPhysFrameRange> {
         } else {
             let zero = PhysFrame::from_index(0);
             if start != zero {
-                frames.push(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(zero, start) });
+                frames.append(TypedPhysFrameRange { typ: MemoryType::Reserved, range: PhysFrame::range(zero, start) });
             }
         }
-        frames.push(TypedPhysFrameRange { typ, range: PhysFrame::range(start, end) });
+        frames.append(TypedPhysFrameRange { typ, range: PhysFrame::range(start, end) });
     }
     frames
 }

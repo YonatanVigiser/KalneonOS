@@ -89,7 +89,6 @@ pub static VGA: Mutex<Option<Vga>> = Mutex::new(None);
 
 pub struct Vga {
     vmem_ptr: *mut u16,
-    video_type: VideoType,
     cx: u8,
     cy: u8,
     height: u8,
@@ -114,7 +113,6 @@ impl Vga {
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
         let mut vga = Self {
             vmem_ptr,
-            video_type,
             cx: 0,
             cy: 0,
             bg: VgaColor::Black,
@@ -203,7 +201,7 @@ impl Vga {
         Ok(self)
     }
 
-    fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
+    pub fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
         self.bg = bg;
         self.fg = fg;
         self.cursor_cell.bg = bg;
@@ -232,11 +230,11 @@ impl Vga {
                 },
             )?;
         }
-        self.move_cursor(0, 0);
+        let _= self.move_cursor(0, 0);
         Ok(())
     }
 
-    fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, ()> {
+    pub fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, ()> {
         if x >= self.width || y >= self.height {
             return Err(());
         }
@@ -268,7 +266,7 @@ impl Vga {
         }
     }
 
-    fn clear(&mut self) -> &mut Self {
+    pub fn clear(&mut self) -> &mut Self {
         let empty_cell = VgaCell {
             ascii: ' ',
             bg: self.bg,
@@ -280,25 +278,25 @@ impl Vga {
             }
         }
         self.cell_under_cursor = empty_cell;
-        self.move_cursor(0, 0);
+        let _ = self.move_cursor(0, 0);
         self
     }
 
-    fn get_cursor_pos(&self) -> (usize, usize) {
+    pub fn get_cursor_pos(&self) -> (usize, usize) {
         (self.cx as usize, self.cy as usize)
     }
 
-    fn set_bg(&mut self, color: VgaColor) -> &mut Self {
-        self.set_colors(color.into(), self.fg);
+    pub fn set_bg(&mut self, color: VgaColor) -> &mut Self {
+        self.set_colors(color, self.fg);
         self
     }
 
-    fn set_fg(&mut self, color: VgaColor) -> &mut Self {
-        self.set_colors(self.bg, color.into());
+    pub fn set_fg(&mut self, color: VgaColor) -> &mut Self {
+        self.set_colors(self.bg, color);
         self
     }
 
-    fn scroll_down(&mut self, amount: usize) -> &mut Self {
+    pub fn scroll_down(&mut self, amount: usize) -> &mut Self {
         if amount == 0 {
             return self;
         }
@@ -318,7 +316,7 @@ impl Vga {
         self
     }
 
-    fn scroll_up(&mut self, amount: usize) -> &mut Self {
+    pub fn scroll_up(&mut self, amount: usize) -> &mut Self {
         if amount == 0 {
             return self;
         }
@@ -336,6 +334,14 @@ impl Vga {
             let _ = self.move_cursor(0, self.height - 1);
         }
         self
+    }
+
+    pub fn get_ptr(&self) -> *mut u16 {
+        self.vmem_ptr
+    }
+    
+    pub fn update_ptr(&mut self, new_ptr: *mut u16) {
+        self.vmem_ptr = new_ptr;
     }
 }
 
