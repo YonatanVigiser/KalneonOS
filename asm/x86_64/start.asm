@@ -25,7 +25,7 @@ _start:
   ; Check if already in long mode
   mov ecx, 0xC0000080
   rdmsr
-  test eax, 1 << 10      ; LMA = Long Mode Active
+  test eax, 1 << 10 ; LMA = Long Mode Active
   jnz already_in_long_mode
 
   ; Verify we're running on a CPU that supports long mode
