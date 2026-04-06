@@ -60,6 +60,8 @@ fn build_mutliboot_header() {
                         MbiTagType::BasicMeminfo.into(),
                         MbiTagType::Mmap.into(),
                         MbiTagType::Framebuffer.into(),
+                        MbiTagType::AcpiV1.into(),
+                        MbiTagType::AcpiV2.into(),
                         MbiTagType::EfiMmap.into(),
                         MbiTagType::LoadBaseAddr.into(),
                         MbiTagType::End.into(),

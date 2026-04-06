@@ -7,9 +7,7 @@ pub mod map;
 use x86_64::structures::paging::{PageSize, Page, PhysFrame, Size4KiB, frame::PhysFrameRange, page::PageRange, OffsetPageTable};
 use x86_64::{PhysAddr, VirtAddr};
 use spin::Mutex;
-
 use map::MemoryMap;
-
 pub type FrameSize = Size4KiB;
 
 unsafe extern "C" {
@@ -94,6 +92,7 @@ pub fn init(mmap: &MemoryMap) {
 #[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
 pub enum MemoryType {
     Usable,
+    ApciReclaimable,
     MMIO,
     NVM,
     Reserved,

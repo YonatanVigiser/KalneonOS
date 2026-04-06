@@ -6,12 +6,14 @@ use crate::memory::{MemoryType, map::{TypedPhysFrameRange, MemoryMap}};
 
 pub struct BootInfo {
     pub mmap: MemoryMap,
+    pub rsdp_addr: PhysAddr,
 }
 
 impl From<MemoryAreaTypeId> for MemoryType {
     fn from(value: MemoryAreaTypeId) -> Self {
         match value.into() {
-            MemoryAreaType::Available | MemoryAreaType::AcpiAvailable => Self::Usable,
+            MemoryAreaType::Available => Self::Usable,
+            MemoryAreaType::AcpiAvailable => Self::ApciReclaimable,
             MemoryAreaType::Reserved => Self::Reserved,
             MemoryAreaType::ReservedHibernate => Self::NVM,
             MemoryAreaType::Defective => Self::Defective,
@@ -28,7 +30,10 @@ pub fn load(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
         }
         let mmap = frames_from_mmap(boot_info.memory_map_tag().expect("No memory map was provided by BIOS!").memory_areas());
         log::info!("MEMORY MAP:\n{:?}", mmap);
-        return BootInfo { mmap };
+        let rsdp_addr = boot_info.rsdp_v2_tag().map(|v2_tag| PhysAddr::new(v2_tag.xsdt_address() as u64)).or(
+            boot_info.rsdp_v1_tag().map(|v1_tag| PhysAddr::new(v1_tag.rsdt_address() as u64)))
+            .expect("No RSDP was passeed from bootloader!");
+        return BootInfo { mmap, rsdp_addr };
     }
     panic!("No multiboot magic found!");
 }

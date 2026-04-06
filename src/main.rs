@@ -15,7 +15,7 @@ extern crate alloc;
 
 #[unsafe(link_section = ".multiboot")]
 #[used]
-static MULTIBOOT_HEADER: [u8; 64] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
+static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin")).len()] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
 #[unsafe(no_mangle)]
 #[inline(never)]
