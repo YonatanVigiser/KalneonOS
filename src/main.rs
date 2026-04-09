@@ -7,6 +7,7 @@ pub mod drivers;
 pub mod memory;
 pub mod interrupts;
 pub mod gdt;
+pub mod acpi;
 pub mod boot_info;
 pub mod logging;
 pub mod traits;

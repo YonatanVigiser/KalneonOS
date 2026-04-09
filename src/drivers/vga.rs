@@ -343,6 +343,10 @@ impl Vga {
     pub fn update_ptr(&mut self, new_ptr: *mut u16) {
         self.vmem_ptr = new_ptr;
     }
+
+    pub fn get_buffer_size(&self) -> usize {
+        (self.width * self.height * u16::BITS as u8) as usize
+    }
 }
 
 impl core::fmt::Write for Vga {

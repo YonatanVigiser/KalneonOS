@@ -2,9 +2,7 @@ use x86_64::{PhysAddr, VirtAddr};
 use x86_64::registers::{control::{Cr3, Cr3Flags}, model_specific::{Efer, EferFlags}};
 use x86_64::structures::paging::{PageTable, FrameAllocator, mapper::{OffsetPageTable, MappedPageTable, PageTableFrameMapping}, Mapper, PageTableFlags as Flags, PhysFrame, page::PageRange, Page, Size1GiB, PageSize};
 
-use super::{FrameSize, map::MemoryMap, MemoryType};
-
-pub const HHDM_START: u64 = 0xffff_8000_0000_0000;
+use super::{FrameSize, map::MemoryMap, MemoryType, HHDM_START};
 
 struct IdentityMapper;
 
