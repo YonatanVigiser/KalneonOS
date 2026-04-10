@@ -345,7 +345,7 @@ impl Vga {
     }
 
     pub fn get_buffer_size(&self) -> usize {
-        (self.width * self.height * u16::BITS as u8) as usize
+        self.width as usize * self.height as usize * u16::BITS as usize
     }
 }
 

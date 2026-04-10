@@ -3,7 +3,6 @@ pub mod vmm;
 pub mod paging;
 pub mod heap;
 pub mod map;
-
 use x86_64::structures::paging::{PageSize, Page, PhysFrame, Size4KiB, frame::PhysFrameRange, page::PageRange, OffsetPageTable, Size1GiB, Mapper, PageTableFlags};
 use x86_64::{PhysAddr, VirtAddr};
 use spin::Mutex;
@@ -100,6 +99,14 @@ pub fn map_mmio_range(phys_mmio_range: PhysFrameRange) -> Option<PageRange> {
     map_phys_range(phys_mmio_range, flags)
 }
 
+pub fn map_mmio_ptr(ptr: u64, size: u64) -> Option<u64> {
+    let offset = ptr % FrameSize::SIZE;
+    let phys_start_frame = PhysFrame::containing_address(PhysAddr::new(ptr));
+    let phys_end_frame = PhysFrame::containing_address(PhysAddr::new(ptr + size));
+    let range = PhysFrame::range(phys_start_frame, phys_end_frame);
+    map_mmio_range(range).map(|range| range.start.start_address().as_u64() + offset)
+}
+
 pub static FRAME_ALLOCATOR: Mutex<Option<frame_allocator::BitmapAllocator>> = Mutex::new(None);
 pub static VMM: Mutex<Option<vmm::VirtualMemoryManager>> = Mutex::new(None);
 pub static MAPPER: Mutex<Option<OffsetPageTable>> = Mutex::new(None);
@@ -118,7 +125,6 @@ pub fn init(mmap: &MemoryMap) {
     *VMM.lock() = Some(vmm);
     *MAPPER.lock() = Some(mapper);
     crate::drivers::update_mmio_with_paging();
-    log::info!("TEST: {:?}", VMM.lock().as_mut().unwrap().allocate_range(8));
     log::info!("Paging was initilized");
 }
 

@@ -4,8 +4,9 @@ pub fn init() {
     *vga::VGA.lock() = Some(vga::Vga::init(80, 25));
 }
 
+use crate::memory::map_mmio_ptr;
 pub fn update_mmio_with_paging() {
-    let mut vga = vga::VGA.lock();
-    let old_ptr = vga.as_ref().unwrap().get_ptr() as u64;
-    vga.as_mut().unwrap().update_ptr((old_ptr + crate::memory::HHDM_START) as *mut u16);
+    let mut vga_guard = vga::VGA.lock();
+    let vga = vga_guard.as_mut().expect("VGA wasn't init before calling update with mmio!");
+    vga.update_ptr(map_mmio_ptr(vga.get_ptr() as u64, vga.get_buffer_size() as u64).expect("Mapping failed!") as *mut u16);
 }
