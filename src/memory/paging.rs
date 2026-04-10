@@ -1,5 +1,5 @@
 use x86_64::{PhysAddr, VirtAddr};
-use x86_64::registers::{control::{Cr3, Cr3Flags}, model_specific::{Efer, EferFlags}};
+use x86_64::registers::{control::{Cr3, Cr3Flags}, model_specific::{Efer, EferFlags, Msr}};
 use x86_64::structures::paging::{PageTable, FrameAllocator, mapper::{OffsetPageTable, MappedPageTable, PageTableFrameMapping}, Mapper, PageTableFlags as Flags, PhysFrame, page::PageRange, Page, Size1GiB, PageSize};
 
 use super::{FrameSize, map::MemoryMap, MemoryType, HHDM_START};
@@ -14,9 +14,7 @@ unsafe impl PageTableFrameMapping for IdentityMapper {
 
 pub unsafe fn init(allocator: &mut dyn FrameAllocator<FrameSize>, mmap: &MemoryMap) -> OffsetPageTable<'static> {
     let l4_table_frame = allocator.allocate_frame().unwrap();
-    let l4_ptr = l4_table_frame.start_address().as_u64() as *mut PageTable;
-    unsafe { l4_ptr.write(PageTable::new()); }
-    let mut mapper = unsafe { MappedPageTable::new(&mut *l4_ptr, IdentityMapper) };
+    let l4_ptr = l4_table_frame.start_address().as_u64() as *mut PageTable; unsafe { l4_ptr.write(PageTable::new()); } let mut mapper = unsafe { MappedPageTable::new(&mut *l4_ptr, IdentityMapper) };
     // Map the hhdm
     let max_phys_frame = mmap.entires().iter().rfind(|f| matches!(f.typ, MemoryType::Usable)).unwrap().range.end.start_address();
     let max_phys_aligned = max_phys_frame.as_u64().next_multiple_of(Size1GiB::SIZE);
@@ -36,11 +34,19 @@ pub unsafe fn init(allocator: &mut dyn FrameAllocator<FrameSize>, mmap: &MemoryM
         map_section(&mut mapper, allocator, vma_to_phys, super::kernel_stack_range(), Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE | Flags::WRITABLE);
     };
     unsafe { Efer::update(|flags| { *flags |= EferFlags::NO_EXECUTE_ENABLE; }); }
+    unsafe { setup_pat() }
     // Load the new page mapping
     unsafe { Cr3::write(l4_table_frame, Cr3Flags::empty()); }
     // Consturct the final mapper
     let l4_hhdm_ptr = (l4_table_frame.start_address().as_u64() + HHDM_START) as *mut PageTable;
     unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) }
+}
+
+const MSR_PAT_ENTRY: u32 = 0x277;
+const PAT_VALUE: u64 = 0x0007010600070106;
+
+unsafe fn setup_pat() {
+    unsafe { Msr::new(MSR_PAT_ENTRY).write(PAT_VALUE); }
 }
 
 unsafe fn map_section(mapper: &mut impl Mapper<FrameSize>, allocator: &mut dyn FrameAllocator<FrameSize>, vma_to_phys: impl Fn(VirtAddr) -> PhysAddr, vma_range: PageRange<FrameSize>, flags: Flags) {

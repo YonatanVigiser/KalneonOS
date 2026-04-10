@@ -111,8 +111,10 @@ setup_page_tables:
 
 ; Enable paging and long mode
 enter_long_mode:
-  mov eax, p4_table
-  mov cr3, eax
+  ; Disable paging
+  mov ebx, cr0
+  and ebx, ~(1 << 31)
+  mov cr0, ebx
 
   ; Enable PAE
   mov eax, cr4
@@ -124,6 +126,10 @@ enter_long_mode:
   rdmsr
   or eax, 1 << 8
   wrmsr
+
+  ; Load page tables
+  mov eax, p4_table
+  mov cr3, eax
 
   ; Enable paging
   mov eax, cr0
