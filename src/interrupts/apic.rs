@@ -1,21 +1,49 @@
-use acpi::platform::interrupt::{Apic, IoApic};
 use pic8259::ChainedPics;
 use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
+use core::sync::atomic::{AtomicUsize, Ordering};
+
+use crate::memory::map_mmio_ptr;
 
 pub const SUPRIOUS_VECTOR: u8 = 0xFF;
 pub const APIC_ERROR_VECTOR: u8 = 0xFE;
-pub const TIMER_VECOTR: u8 = 0x20;
+pub const TIMER_VECOTR: u8 = 0x30;
+const LAPIC_MMIO_SIZE: usize = 0x1000;
 
-pub fn init_lapic(apic: Apic) -> Result<LocalApic, &'static str> {
+pub static LAPIC_ADDR: AtomicUsize = AtomicUsize::new(0);
+
+pub fn set_lapic_addr(lapic_addr: usize) {
+    LAPIC_ADDR.store(lapic_addr, Ordering::Relaxed);
+}
+
+pub fn init_lapic() -> LocalApic {
     disable_pic();
-    LocalApicBuilder::new()
-        .set_xapic_base(apic.local_apic_address)
+    let lapic_ptr = map_mmio_ptr(LAPIC_ADDR.load(Ordering::Relaxed), LAPIC_MMIO_SIZE).expect("MMIO map failed");
+    let mut lapic = LocalApicBuilder::new()
+        .set_xapic_base(lapic_ptr as u64)
         .spurious_vector(SUPRIOUS_VECTOR as usize)
         .error_vector(APIC_ERROR_VECTOR as usize)
         .timer_vector(TIMER_VECOTR as usize)
         .timer_mode(TimerMode::OneShot)
         .timer_divide(TimerDivide::Div16)
-        .build()
+        .timer_initial(0)
+        .build().expect("Local APIC build failed");
+    unsafe { lapic.enable(); }
+    lapic
+}
+
+use crate::drivers::uptime_nano;
+pub fn init_lapic_timer(lapic: &mut LocalApic, nanos_per_int: u64) {
+    unsafe { lapic.set_timer_initial(u32::MAX); }
+    let start_time_nano = uptime_nano();
+    let end_time_nano = start_time_nano + nanos_per_int;
+    while uptime_nano() < end_time_nano { }
+    unsafe { lapic.disable_timer(); }
+    let ticks_done = u32::MAX - unsafe { lapic.timer_current() };
+    unsafe { 
+        lapic.set_timer_mode(TimerMode::Periodic);
+        lapic.set_timer_initial(ticks_done);
+        lapic.enable_timer();
+    }
 }
 
 fn disable_pic() {

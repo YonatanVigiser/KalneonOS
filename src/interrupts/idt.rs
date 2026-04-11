@@ -8,6 +8,7 @@ lazy_static! {
         set_general_handler!(&mut idt, general_handler);
         idt.double_fault.set_handler_fn(double_fault_handler);
         idt.page_fault.set_handler_fn(page_fault_handler);
+        idt[super::apic::TIMER_VECOTR].set_handler_fn(timer_irq_handler);
         idt
     };
 }
@@ -45,4 +46,8 @@ extern "x86-interrupt" fn double_fault_handler(
         "Double Fault! Error Code: {}. Stack Frame:\n{:#?}",
         error_code, stack_frame
     )
+}
+
+extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
+    log::info!("Timer IRQ! HPET time: {:?}", crate::drivers::uptime_nano());
 }

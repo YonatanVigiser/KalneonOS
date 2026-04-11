@@ -10,6 +10,7 @@ pub mod gdt;
 pub mod interrupts;
 pub mod logging;
 pub mod memory;
+pub mod cpu_local;
 pub mod traits;
 
 extern crate alloc;
@@ -25,17 +26,16 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     unsafe {
         gdt::load();
     }
-    interrupts::init();
     logging::init_boot_logger();
     let boot_info = boot_info::load(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
     let acpi = acpi::platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
     drivers::hpet::init_hpet(&acpi.tables).expect("HPET init failed");
+    interrupts::init(&acpi.interrupt_model);
     log::info!("Kernel booting...");
     loop {
-        log::info!("Time: {}", drivers::uptime_nano());
+        core::hint::spin_loop();
     }
-    halt_loop()
 }
 
 use core::panic::PanicInfo;
