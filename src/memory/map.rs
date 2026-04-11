@@ -1,4 +1,4 @@
-use x86_64::structures::paging::frame::{PhysFrameRange, PhysFrame};
+use x86_64::structures::paging::frame::{PhysFrame, PhysFrameRange};
 
 use super::MemoryType;
 use crate::traits::Indexable;
@@ -13,7 +13,13 @@ use alloc::fmt::Debug;
 use core::fmt::{Formatter, Result};
 impl Debug for TypedPhysFrameRange {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "0x{:x} - 0x{:x}: {:?}", self.range.start.start_address(), self.range.end.start_address(), self.typ)
+        write!(
+            f,
+            "0x{:x} - 0x{:x}: {:?}",
+            self.range.start.start_address(),
+            self.range.end.start_address(),
+            self.typ
+        )
     }
 }
 
@@ -27,7 +33,10 @@ pub struct MemoryMap {
 impl MemoryMap {
     pub fn empty() -> Self {
         Self {
-            entires: [TypedPhysFrameRange { range: PhysFrame::range(PhysFrame::from_index(0), PhysFrame::from_index(0)), typ: MemoryType::Reserved }; MEMORY_MAP_ENTRIES],
+            entires: [TypedPhysFrameRange {
+                range: PhysFrame::range(PhysFrame::from_index(0), PhysFrame::from_index(0)),
+                typ: MemoryType::Reserved,
+            }; MEMORY_MAP_ENTRIES],
             occupied_count: 0,
         }
     }
@@ -55,7 +64,10 @@ impl MemoryMap {
     }
 
     pub fn append(&mut self, range: TypedPhysFrameRange) {
-        assert_ne!(self.occupied_count, MEMORY_MAP_ENTRIES, "Memory map had too much entires!");
+        assert_ne!(
+            self.occupied_count, MEMORY_MAP_ENTRIES,
+            "Memory map had too much entires!"
+        );
         self.entires[self.occupied_count] = range;
         self.occupied_count += 1;
     }
@@ -63,6 +75,11 @@ impl MemoryMap {
 
 impl Debug for MemoryMap {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "MemoryMap with {} entires.\n{:?}", self.occupied_count, self.entires())
+        write!(
+            f,
+            "MemoryMap with {} entires.\n{:?}",
+            self.occupied_count,
+            self.entires()
+        )
     }
 }

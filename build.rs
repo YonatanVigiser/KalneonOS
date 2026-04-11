@@ -53,20 +53,21 @@ fn build_mutliboot_header() {
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
             .information_request_tag(InformationRequestHeaderTag::new(
-                    HeaderTagFlag::Optional,
-                    &[
-                        MbiTagType::Cmdline.into(),
-                        MbiTagType::BootLoaderName.into(),
-                        MbiTagType::BasicMeminfo.into(),
-                        MbiTagType::Mmap.into(),
-                        MbiTagType::Framebuffer.into(),
-                        MbiTagType::AcpiV1.into(),
-                        MbiTagType::AcpiV2.into(),
-                        MbiTagType::EfiMmap.into(),
-                        MbiTagType::LoadBaseAddr.into(),
-                        MbiTagType::End.into(),
-                    ],
-            )).build();
+                HeaderTagFlag::Optional,
+                &[
+                    MbiTagType::Cmdline.into(),
+                    MbiTagType::BootLoaderName.into(),
+                    MbiTagType::BasicMeminfo.into(),
+                    MbiTagType::Mmap.into(),
+                    MbiTagType::Framebuffer.into(),
+                    MbiTagType::AcpiV1.into(),
+                    MbiTagType::AcpiV2.into(),
+                    MbiTagType::EfiMmap.into(),
+                    MbiTagType::LoadBaseAddr.into(),
+                    MbiTagType::End.into(),
+                ],
+            ))
+            .build();
 
         // Write the header to a binary file
         let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
@@ -81,14 +82,13 @@ fn build_mutliboot_header() {
             )
         };
 
-        fs::write(&header_path, header_bytes)
-            .expect("Failed to write multiboot header");
+        fs::write(&header_path, header_bytes).expect("Failed to write multiboot header");
 
         // The terminating tag
         let end_tag: [u8; 8] = [
-            0x00, 0x00,  // type = 0
-            0x00, 0x00,  // flags = 0  
-            0x08, 0x00, 0x00, 0x00,  // size = 8
+            0x00, 0x00, // type = 0
+            0x00, 0x00, // flags = 0
+            0x08, 0x00, 0x00, 0x00, // size = 8
         ];
 
         let mut file = fs::OpenOptions::new()
@@ -96,7 +96,8 @@ fn build_mutliboot_header() {
             .open(&header_path)
             .expect("Failed to write multiboot header");
         use std::io::Write;
-        file.write_all(&end_tag).expect("Failed to write multiboot header");
+        file.write_all(&end_tag)
+            .expect("Failed to write multiboot header");
 
         println!("cargo:rerun-if-changed=build.rs");
     } else {

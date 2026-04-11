@@ -230,7 +230,7 @@ impl Vga {
                 },
             )?;
         }
-        let _= self.move_cursor(0, 0);
+        let _ = self.move_cursor(0, 0);
         Ok(())
     }
 
@@ -339,7 +339,7 @@ impl Vga {
     pub fn get_ptr(&self) -> *mut u16 {
         self.vmem_ptr
     }
-    
+
     pub fn update_ptr(&mut self, new_ptr: *mut u16) {
         self.vmem_ptr = new_ptr;
     }
@@ -356,4 +356,3 @@ impl core::fmt::Write for Vga {
             .map_err(|_| core::fmt::Error)
     }
 }
-

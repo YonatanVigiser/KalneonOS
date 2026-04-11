@@ -1,14 +1,33 @@
-use acpi::Handler;
 use crate::memory::HHDM_START;
-use x86_64::instructions::port::{PortReadOnly, PortWriteOnly};
+use acpi::{AcpiTables, Handler, platform::AcpiPlatform};
 use core::ptr::NonNull;
+use x86_64::PhysAddr;
+use x86_64::instructions::port::{PortReadOnly, PortWriteOnly};
+
+pub fn platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> AcpiPlatform<AcpiRuntimeHandler> {
+    log::info!("{:?}", rsdt_addr);
+    let tables = unsafe {
+        AcpiTables::from_rsdt(
+            AcpiRuntimeHandler(),
+            rsdt_revision,
+            rsdt_addr.as_u64() as usize,
+        )
+    }
+    .expect("Acpi tables parsing failed!");
+    AcpiPlatform::new(tables, AcpiRuntimeHandler()).expect("Acpi platform creation failed!")
+}
 
 #[derive(Clone)]
 pub struct AcpiRuntimeHandler();
 
 impl Handler for AcpiRuntimeHandler {
-    unsafe fn map_physical_region<T>(&self, physical_address: usize, size: usize) -> acpi::PhysicalMapping<Self, T> {
-        let virtual_start = NonNull::new((physical_address + HHDM_START as usize) as *mut T).unwrap();
+    unsafe fn map_physical_region<T>(
+        &self,
+        physical_address: usize,
+        size: usize,
+    ) -> acpi::PhysicalMapping<Self, T> {
+        let virtual_start =
+            NonNull::new((physical_address + HHDM_START as usize) as *mut T).unwrap();
         acpi::PhysicalMapping {
             physical_start: physical_address,
             virtual_start,
@@ -18,8 +37,7 @@ impl Handler for AcpiRuntimeHandler {
         }
     }
 
-    fn unmap_physical_region<T>(_region: &acpi::PhysicalMapping<Self, T>) {
-    }
+    fn unmap_physical_region<T>(_region: &acpi::PhysicalMapping<Self, T>) {}
 
     fn read_u8(&self, address: usize) -> u8 {
         address as *const u8 as u8
@@ -38,19 +56,27 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn write_u8(&self, address: usize, value: u8) {
-        unsafe { (address as *mut u8).write(value); }
+        unsafe {
+            (address as *mut u8).write(value);
+        }
     }
 
     fn write_u16(&self, address: usize, value: u16) {
-        unsafe { (address as *mut u16).write(value); }
+        unsafe {
+            (address as *mut u16).write(value);
+        }
     }
 
     fn write_u32(&self, address: usize, value: u32) {
-        unsafe { (address as *mut u32).write(value); }
+        unsafe {
+            (address as *mut u32).write(value);
+        }
     }
 
     fn write_u64(&self, address: usize, value: u64) {
-        unsafe { (address as *mut u64).write(value); }
+        unsafe {
+            (address as *mut u64).write(value);
+        }
     }
 
     fn read_io_u8(&self, port: u16) -> u8 {
@@ -66,15 +92,21 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn write_io_u8(&self, port: u16, value: u8) {
-        unsafe { PortWriteOnly::new(port).write(value); }
+        unsafe {
+            PortWriteOnly::new(port).write(value);
+        }
     }
 
     fn write_io_u16(&self, port: u16, value: u16) {
-        unsafe { PortWriteOnly::new(port).write(value); }
+        unsafe {
+            PortWriteOnly::new(port).write(value);
+        }
     }
 
     fn write_io_u32(&self, port: u16, value: u32) {
-        unsafe { PortWriteOnly::new(port).write(value); }
+        unsafe {
+            PortWriteOnly::new(port).write(value);
+        }
     }
 
     fn read_pci_u8(&self, _address: acpi::PciAddress, _offset: u16) -> u8 {
@@ -102,7 +134,7 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn nanos_since_boot(&self) -> u64 {
-        todo!();
+        crate::drivers::uptime_nano()
     }
 
     fn stall(&self, _microseconds: u64) {
