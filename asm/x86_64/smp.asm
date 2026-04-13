@@ -1,0 +1,67 @@
+global ap_init
+global ap_init_end
+extern ap_start
+
+bits 16
+ap_init:
+  cli
+  lidt [idt]
+  mov eax, 10100000b  ; Set the PAE and PGE bit.
+  mov cr4, eax
+
+  mov edi, [l4_table_frame]
+  mov edx, edi        ; Point CR3 at the PML4.
+  mov cr3, edx
+
+  mov ecx, 0xC0000080 ; Read from the EFER MSR.
+  rdmsr
+
+  or eax, 0x00000100  ; Set the LME bit.
+  wrmsr
+
+  mov ebx, cr0        ; Activate long mode -
+  or ebx,0x80000001   ; - by enabling paging and protection simultaneously.
+  mov cr0, ebx
+
+  lgdt [gdt64.pointer]
+  jmp dword gdt64.code:long_mode_start
+
+bits 64
+long_mode_start:
+  ; Reload segment registers
+  xor ax, ax
+  mov ds, ax
+  mov es, ax
+  mov fs, ax
+  mov gs, ax
+  mov ss, ax
+
+  mov rsp, [stack_top_ptr]
+
+  mov rax, ap_start
+  call rax
+
+  ; If kernel returns, halt
+  cli
+.loop:
+  hlt
+  jmp .loop
+
+l4_table_frame: dd 0
+stack_top_ptr: dq 0
+
+align 4
+idt:
+  .length dw 0
+  .base dd 0
+
+; GDT for 64-bit mode
+gdt64:
+    dq 0 ; zero entry
+.code: equ $ - gdt64 ; new
+    dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; code segment
+.pointer:
+    dw $ - gdt64 - 1
+    dd gdt64
+
+ap_init_end:

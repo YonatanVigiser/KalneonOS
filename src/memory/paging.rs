@@ -9,6 +9,7 @@ use x86_64::structures::paging::{
     page::PageRange,
 };
 use x86_64::{PhysAddr, VirtAddr};
+use core::sync::atomic::{AtomicU64, Ordering};
 
 use super::{FrameSize, HHDM_START, map::MemoryMap};
 
@@ -20,11 +21,14 @@ unsafe impl PageTableFrameMapping for IdentityMapper {
     }
 }
 
+static L4_TABLE_PHYS_ADDR: AtomicU64 = AtomicU64::new(0);
+
 pub unsafe fn init(
     allocator: &mut dyn FrameAllocator<FrameSize>,
     mmap: &MemoryMap,
 ) -> OffsetPageTable<'static> {
     let l4_table_frame = allocator.allocate_frame().unwrap();
+    L4_TABLE_PHYS_ADDR.store(l4_table_frame.start_address().as_u64(), Ordering::Relaxed);
     let l4_ptr = l4_table_frame.start_address().as_u64() as *mut PageTable;
     unsafe {
         l4_ptr.write(PageTable::new());
@@ -81,21 +85,10 @@ pub unsafe fn init(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::kernel_stack_range(),
+            super::bsp_stack_range(),
             Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE | Flags::WRITABLE,
         );
     };
-    unsafe {
-        Efer::update(|flags| {
-            *flags |= EferFlags::NO_EXECUTE_ENABLE;
-        });
-    }
-    unsafe { setup_pat() }
-    // Load the new page mapping
-    unsafe {
-        Cr3::write(l4_table_frame, Cr3Flags::empty());
-    }
-    // Consturct the final mapper
     let l4_hhdm_ptr = (l4_table_frame.start_address().as_u64() + HHDM_START) as *mut PageTable;
     unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) }
 }
@@ -103,9 +96,14 @@ pub unsafe fn init(
 const MSR_PAT_ENTRY: u32 = 0x277;
 const PAT_VALUE: u64 = 0x0007010600070106;
 
-unsafe fn setup_pat() {
+pub unsafe fn enable() {
     unsafe {
+        Efer::update(|flags| {
+            *flags |= EferFlags::NO_EXECUTE_ENABLE;
+        });
         Msr::new(MSR_PAT_ENTRY).write(PAT_VALUE);
+        let l4_table_frame = PhysFrame::from_start_address(PhysAddr::new(L4_TABLE_PHYS_ADDR.load(Ordering::Relaxed))).unwrap();
+        Cr3::write(l4_table_frame, Cr3Flags::empty());
     }
 }
 

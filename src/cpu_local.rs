@@ -1,6 +1,8 @@
 use x2apic::lapic::LocalApic;
 use x86_64::{VirtAddr, registers::model_specific::GsBase};
 
+use alloc::boxed::Box;
+
 #[repr(C)]
 pub struct CpuLocal {
     pub self_ptr: *mut CpuLocal,
@@ -9,9 +11,10 @@ pub struct CpuLocal {
 }
 
 pub fn init(lapic: LocalApic) {
-    let local = CpuLocal { 0 as *mut _, lapic };
-    data.self_ptr = data as *mut _;
-    let addr = VirtAddr::new(data as *mut _ as u64);
+    let local = CpuLocal { self_ptr: core::ptr::null_mut(), lapic };
+    let local = Box::leak(Box::new(local));
+    local.self_ptr = local as *mut _;
+    let addr = VirtAddr::new(local.self_ptr as u64);
     GsBase::write(addr);
 }
 

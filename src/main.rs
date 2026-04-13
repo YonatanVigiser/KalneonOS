@@ -11,6 +11,7 @@ pub mod interrupts;
 pub mod logging;
 pub mod memory;
 pub mod cpu_local;
+pub mod smp;
 pub mod traits;
 
 extern crate alloc;
@@ -31,7 +32,8 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     memory::init(&boot_info.mmap);
     let acpi = acpi::platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
     drivers::hpet::init_hpet(&acpi.tables).expect("HPET init failed");
-    interrupts::init(&acpi.interrupt_model);
+    interrupts::init_global(&acpi.interrupt_model);
+    let lapic = interrupts::init_local();
     log::info!("Kernel booting...");
     loop {
         core::hint::spin_loop();

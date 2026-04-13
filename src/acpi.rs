@@ -137,8 +137,8 @@ impl Handler for AcpiRuntimeHandler {
         crate::drivers::uptime_nano()
     }
 
-    fn stall(&self, _microseconds: u64) {
-        todo!();
+    fn stall(&self, microseconds: u64) {
+        crate::drivers::stall(microseconds * 1000)
     }
 
     fn sleep(&self, _milliseconds: u64) {

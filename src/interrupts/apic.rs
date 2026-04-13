@@ -31,12 +31,9 @@ pub fn init_lapic() -> LocalApic {
     lapic
 }
 
-use crate::drivers::uptime_nano;
 pub fn init_lapic_timer(lapic: &mut LocalApic, nanos_per_int: u64) {
     unsafe { lapic.set_timer_initial(u32::MAX); }
-    let start_time_nano = uptime_nano();
-    let end_time_nano = start_time_nano + nanos_per_int;
-    while uptime_nano() < end_time_nano { }
+    crate::drivers::stall(nanos_per_int);
     unsafe { lapic.disable_timer(); }
     let ticks_done = u32::MAX - unsafe { lapic.timer_current() };
     unsafe { 
