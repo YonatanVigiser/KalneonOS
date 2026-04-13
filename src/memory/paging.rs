@@ -21,12 +21,10 @@ unsafe impl PageTableFrameMapping for IdentityMapper {
     }
 }
 
-static L4_TABLE_PHYS_ADDR: AtomicU64 = AtomicU64::new(0);
-
 pub unsafe fn init(
     allocator: &mut dyn FrameAllocator<FrameSize>,
     mmap: &MemoryMap,
-) -> OffsetPageTable<'static> {
+) -> (OffsetPageTable<'static>, PhysFrame) {
     let l4_table_frame = allocator.allocate_frame().unwrap();
     L4_TABLE_PHYS_ADDR.store(l4_table_frame.start_address().as_u64(), Ordering::Relaxed);
     let l4_ptr = l4_table_frame.start_address().as_u64() as *mut PageTable;
@@ -90,19 +88,18 @@ pub unsafe fn init(
         );
     };
     let l4_hhdm_ptr = (l4_table_frame.start_address().as_u64() + HHDM_START) as *mut PageTable;
-    unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) }
+    (unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) }, l4_table_frame)
 }
 
 const MSR_PAT_ENTRY: u32 = 0x277;
 const PAT_VALUE: u64 = 0x0007010600070106;
 
-pub unsafe fn enable() {
+pub unsafe fn enable(l4_table_frame: PhysFrame) {
     unsafe {
         Efer::update(|flags| {
             *flags |= EferFlags::NO_EXECUTE_ENABLE;
         });
         Msr::new(MSR_PAT_ENTRY).write(PAT_VALUE);
-        let l4_table_frame = PhysFrame::from_start_address(PhysAddr::new(L4_TABLE_PHYS_ADDR.load(Ordering::Relaxed))).unwrap();
         Cr3::write(l4_table_frame, Cr3Flags::empty());
     }
 }

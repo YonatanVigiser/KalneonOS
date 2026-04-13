@@ -11,7 +11,6 @@ use x86_64::structures::paging::{
     frame::PhysFrameRange, page::PageRange, FrameAllocator
 };
 use x86_64::{PhysAddr, VirtAddr};
-
 pub type FrameSize = Size4KiB;
 
 pub const HHDM_START: u64 = 0xffff_8000_0000_0000;
@@ -111,6 +110,10 @@ pub fn hhdm_range(mmap: &MemoryMap) -> PageRange {
     )
 }
 
+pub fn map_frame(frame: PhysFrame, flags: PageTableFlags) -> Option<Page> {
+    map_phys_range(PhysFrame::range(frame, frame.next()), flags).map(|p| p.start)
+}
+
 pub fn map_phys_range(phys_range: PhysFrameRange, flags: PageTableFlags) -> Option<PageRange> {
     let virt_range = VMM
         .lock()
@@ -167,7 +170,7 @@ pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
         let mut frame_allocator_guard = FRAME_ALLOCATOR.lock();
         let frame_allocator = frame_allocator_guard.as_mut().expect("Frame allocator isn't init");
         let frame = frame_allocator.allocate_frame()?;
-        unsafe { mapper.map_to(page, frame, flags, frame_allocator); }
+        unsafe { mapper.map_to(page, frame, flags, frame_allocator).ok()?.flush(); }
     }
     None
 }
@@ -181,8 +184,8 @@ pub fn init(mmap: &MemoryMap) {
     log::info!("Heap was initilized");
     let mut allocator = frame_allocator::BitmapAllocator::from_memory_map(mmap);
     log::info!("Frame allocator was initilized");
-    let mapper = unsafe { paging::init(&mut allocator, mmap) };
-    unsafe { paging::enable() };
+    let (mapper, l4_table_frame) = unsafe { paging::init(&mut allocator, mmap) };
+    unsafe { paging::enable(l4_table_frame) };
     let mut allocated_virtual_ranges = alloc::collections::VecDeque::new();
     allocated_virtual_ranges.push_back(Page::range(hhdm_range(mmap).end, kernel_range().start));
     allocated_virtual_ranges.push_back(Page::range(

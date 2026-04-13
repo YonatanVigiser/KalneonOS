@@ -16,11 +16,18 @@ ap_init:
   mov ecx, 0xC0000080 ; Read from the EFER MSR.
   rdmsr
 
-  or eax, 0x00000100  ; Set the LME bit.
+  or eax, 0x00000900  ; Set the LME bit and NXE.
+  wrmsr
+
+  mov ecx, 0x277 ; Read from the PAT MSR.
+  rdmsr
+
+  mov eax, 0x00070106 ; Set the PAT value
+  mov edx, 0x00070106
   wrmsr
 
   mov ebx, cr0        ; Activate long mode -
-  or ebx,0x80000001   ; - by enabling paging and protection simultaneously.
+  or ebx, 0x80000001  ; - by enabling paging and protection simultaneously.
   mov cr0, ebx
 
   lgdt [gdt64.pointer]
@@ -47,8 +54,6 @@ long_mode_start:
   hlt
   jmp .loop
 
-l4_table_frame: dd 0
-stack_top_ptr: dq 0
 
 align 4
 idt:
@@ -65,3 +70,7 @@ gdt64:
     dd gdt64
 
 ap_init_end:
+
+l4_table_frame: dd 0
+stack_top_ptr: dq 0
+cpu_id: dd 0
