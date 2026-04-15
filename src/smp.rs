@@ -2,14 +2,15 @@ use crate::{gdt, interrupts, cpu_local, memory, drivers};
 use x86_64::structures::paging::{FrameAllocator, PageTableFlags, Mapper};
 use x86_64::registers::control::Cr3;
 use x2apic::lapic::LocalApic;
-use acpi::platform::{ProcessorInfo, ProcessorState};
+use acpi::platform::{Processor, ProcessorState, ProcessorInfo};
 use core::sync::atomic::{AtomicBool, Ordering};
 use spin::Once;
+use alloc::vec::Vec;
 
 static AP_CORE_INIT_FINISH: AtomicBool = AtomicBool::new(false);
-pub static PROCESSORS_INFO: Once<ProcessorInfo> = Once::new();
+pub static ACTIVE_PROCESSORS: Once<Vec<Processor>> = Once::new();
 
-pub unsafe fn wake_all_ap_cores(lapic: &mut LocalApic, processor_info: &mut ProcessorInfo) {
+pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! {
     let mut frame_allocator_guard = memory::FRAME_ALLOCATOR.lock();
     let frame_allocator = frame_allocator_guard.as_mut().expect("Frame allocator isn't init");
     let code_frame = frame_allocator.allocate_frame().expect("Frame allocation failed");
@@ -20,7 +21,9 @@ pub unsafe fn wake_all_ap_cores(lapic: &mut LocalApic, processor_info: &mut Proc
     let copy_size = (copy_end as u64 - copy_start as u64) as usize;
     unsafe { core::ptr::copy_nonoverlapping(copy_start, dest, copy_size) };
     unsafe { core::ptr::write(copy_end as *mut u32, Cr3::read().0.start_address().as_u64() as u32); }
-    for core in processor_info.application_processors.iter_mut().filter(|p| matches!(p.state, ProcessorState::WaitingForSipi)) {
+    let mut active_cores = Vec::new();
+    active_cores.push(processor_info.boot_processor);
+    for core in processor_info.application_processors.iter().filter(|p| matches!(p.state, ProcessorState::WaitingForSipi)) {
         let stack = memory::allocate(memory::bsp_stack_range().count() + 1, PageTableFlags::PRESENT | PageTableFlags::GLOBAL | PageTableFlags::NO_EXECUTE | PageTableFlags::WRITABLE).expect("Stack allocation failed");
         memory::MAPPER.lock().as_mut().unwrap().unmap(stack.start).unwrap(); // Stack guard
         let stack_top_ptr = stack.end.start_address().as_u64();
@@ -35,10 +38,13 @@ pub unsafe fn wake_all_ap_cores(lapic: &mut LocalApic, processor_info: &mut Proc
                 lapic.send_sipi(start_vector, core.local_apic_id);
                 drivers::stall(200_000);
             }
+            let mut core = core.clone();
             core.state = if AP_CORE_INIT_FINISH.swap(false, Ordering::AcqRel) { ProcessorState::Running } else { ProcessorState::Disabled };
+            active_cores.push(core);
         }
     }
-    PROCESSORS_INFO.call_once(|| processor_info);
+    ACTIVE_PROCESSORS.call_once(|| active_cores);
+    ap_start()
 }
 
 #[unsafe(no_mangle)]
