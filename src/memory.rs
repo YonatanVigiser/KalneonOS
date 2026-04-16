@@ -4,7 +4,6 @@ pub mod map;
 pub mod paging;
 pub mod vmm;
 use map::MemoryMap;
-use alloc::alloc::Vec;
 use spin::Mutex;
 use x86_64::structures::paging::{
     Mapper, OffsetPageTable, Page, PageSize, PageTableFlags, PhysFrame, Size1GiB, Size4KiB,

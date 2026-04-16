@@ -9,7 +9,6 @@ use x86_64::structures::paging::{
     page::PageRange,
 };
 use x86_64::{PhysAddr, VirtAddr};
-use core::sync::atomic::{AtomicU64, Ordering};
 
 use super::{FrameSize, HHDM_START, map::MemoryMap};
 
@@ -26,7 +25,6 @@ pub unsafe fn init(
     mmap: &MemoryMap,
 ) -> (OffsetPageTable<'static>, PhysFrame) {
     let l4_table_frame = allocator.allocate_frame().unwrap();
-    L4_TABLE_PHYS_ADDR.store(l4_table_frame.start_address().as_u64(), Ordering::Relaxed);
     let l4_ptr = l4_table_frame.start_address().as_u64() as *mut PageTable;
     unsafe {
         l4_ptr.write(PageTable::new());

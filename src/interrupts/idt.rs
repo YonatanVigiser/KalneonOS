@@ -50,4 +50,5 @@ extern "x86-interrupt" fn double_fault_handler(
 
 extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
     log::info!("Timer IRQ! HPET time: {:?}", crate::drivers::uptime_nano());
+    unsafe { crate::cpu_local::current_cpu().lapic.end_of_interrupt(); }
 }
