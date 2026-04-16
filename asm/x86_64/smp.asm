@@ -5,7 +5,12 @@ extern ap_start
 bits 16
 ap_init:
   cli
-  lidt [idt]
+
+  mov ax, cs
+  shl eax, 4
+  add eax, (idt - ap_init)
+  lidt [eax]
+
   mov eax, 10100000b  ; Set the PAE and PGE bit.
   mov cr4, eax
 
@@ -30,7 +35,10 @@ ap_init:
   or ebx, 0x80000001  ; - by enabling paging and protection simultaneously.
   mov cr0, ebx
 
-  lgdt [gdt64.pointer]
+  mov ax, cs
+  shl eax, 4
+  add eax, (gdt64.pointer - ap_init)
+  lgdt [eax]
   jmp dword gdt64.code:long_mode_start
 
 bits 64
@@ -43,7 +51,7 @@ long_mode_start:
   mov gs, ax
   mov ss, ax
 
-  mov rsp, [stack_top_ptr]
+  mov rsp, [rel stack_top_ptr]
 
   mov rax, ap_start
   call rax
@@ -56,7 +64,7 @@ long_mode_start:
 
 
 align 4
-idt:
+ idt:
   .length dw 0
   .base dd 0
 

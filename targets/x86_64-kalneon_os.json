@@ -28,7 +28,7 @@
   ],
   "target-pointer-width": 64,
   "pre-link-args": {
-    "ld.lld": ["-Tlink.ld"]
+    "ld.lld": ["-Tlink.ld", "--icf=none"]
   }
 }
 
