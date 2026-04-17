@@ -1,13 +1,5 @@
 ENTRY(_start)
 
-/* Workaround for LLD 18 bug with merge sections */
-PHDRS {
-  boot PT_LOAD FLAGS(7);
-  text PT_LOAD FLAGS(5);
-  rodata PT_LOAD FLAGS(4);
-  data PT_LOAD FLAGS(6);
-}
-
 SECTIONS {
   . = 0x00100000;
   __phys_start = .;

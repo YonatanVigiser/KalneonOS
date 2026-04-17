@@ -205,7 +205,7 @@ long_mode_start:
   mov gs, ax
   mov ss, ax
 
-  mov rsp, __stack_top
+  mov rsp, __boot_stack_top
 
   push rdi
   push rsi
