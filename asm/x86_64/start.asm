@@ -1,5 +1,5 @@
 extern main
-extern __stack_top
+extern __bsp_stack_top
 extern __boot_stack_top
 extern __bss_start
 extern __bss_end
@@ -205,7 +205,7 @@ long_mode_start:
   mov gs, ax
   mov ss, ax
 
-  mov rsp, __boot_stack_top
+  mov rsp, __bsp_stack_top
 
   push rdi
   push rsi

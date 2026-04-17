@@ -34,7 +34,9 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     drivers::hpet::init_hpet(&acpi.tables).expect("HPET init failed");
     interrupts::init_global(&acpi.interrupt_model);
     let lapic = interrupts::init_local();
+    cpu_local::init(lapic);
     log::info!("Kernel booting...");
+    interrupts::enable();
     loop {
         core::hint::spin_loop();
     }

@@ -11,9 +11,8 @@ pub struct CpuLocal {
 }
 
 pub fn init(lapic: LocalApic) {
-    let local = CpuLocal { self_ptr: core::ptr::null_mut(), lapic };
-    let local = Box::leak(Box::new(local));
-    local.self_ptr = local as *mut _;
+    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), lapic }));
+    local.self_ptr = local as *mut CpuLocal;
     let addr = VirtAddr::new(local.self_ptr as u64);
     GsBase::write(addr);
 }

@@ -32,14 +32,18 @@ pub fn init_lapic() -> LocalApic {
 }
 
 pub fn init_lapic_timer(lapic: &mut LocalApic, nanos_per_int: u64) {
-    unsafe { lapic.set_timer_initial(u32::MAX); }
-    crate::drivers::stall(nanos_per_int);
-    unsafe { lapic.disable_timer(); }
-    let ticks_done = u32::MAX - unsafe { lapic.timer_current() };
+    const CALIBRATION_ITERATION_COUNT: u32 = 5;
+    let mut ticks_sum = 0;
+    unsafe { lapic.enable_timer(); }
+    for _ in 0..CALIBRATION_ITERATION_COUNT {
+        unsafe { lapic.set_timer_initial(u32::MAX); }
+        crate::drivers::stall(nanos_per_int);
+        ticks_sum += u32::MAX - unsafe { lapic.timer_current() };
+    }
+    let tick_avrg = ticks_sum / CALIBRATION_ITERATION_COUNT;
     unsafe { 
         lapic.set_timer_mode(TimerMode::Periodic);
-        lapic.set_timer_initial(ticks_done);
-        lapic.enable_timer();
+        lapic.set_timer_initial(tick_avrg);
     }
 }
 

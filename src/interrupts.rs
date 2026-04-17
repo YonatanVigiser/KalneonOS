@@ -8,8 +8,11 @@ pub fn init_local() -> LocalApic {
     idt::init();
     let mut lapic = apic::init_lapic();
     apic::init_lapic_timer(&mut lapic, 10000);
-    x86_64::instructions::interrupts::enable();
     lapic
+}
+
+pub fn enable() {
+    x86_64::instructions::interrupts::enable();
 }
 
 pub fn init_global(interrupt_model: &InterruptModel) {
