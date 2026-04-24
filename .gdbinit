@@ -9,5 +9,5 @@ set architecture auto
 layout asm
 layout reg
 b _start
-b main
+#b main
 target remote localhost:26000

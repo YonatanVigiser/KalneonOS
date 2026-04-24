@@ -1,5 +1,5 @@
 extern main
-extern __stack_top
+extern __bsp_stack_top
 extern __boot_stack_top
 extern __bss_start
 extern __bss_end
@@ -111,8 +111,10 @@ setup_page_tables:
 
 ; Enable paging and long mode
 enter_long_mode:
-  mov eax, p4_table
-  mov cr3, eax
+  ; Disable paging
+  mov ebx, cr0
+  and ebx, ~(1 << 31)
+  mov cr0, ebx
 
   ; Enable PAE
   mov eax, cr4
@@ -124,6 +126,10 @@ enter_long_mode:
   rdmsr
   or eax, 1 << 8
   wrmsr
+
+  ; Load page tables
+  mov eax, p4_table
+  mov cr3, eax
 
   ; Enable paging
   mov eax, cr0
@@ -199,7 +205,7 @@ long_mode_start:
   mov gs, ax
   mov ss, ax
 
-  mov rsp, __stack_top
+  mov rsp, __bsp_stack_top
 
   push rdi
   push rsi

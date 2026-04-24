@@ -10,11 +10,18 @@ lazy_static = { version = "1.5", features = ["spin_no_std"] }
 talc = { version = "4", default-features = false, features = ["lock_api"] }
 log = "0.4"
 multiboot2 = "0.24"
+acpi = "6.1"
+pic8259 = "0.11"
+x2apic = "0.5"
+ez_hpet = "1.0"
 
 [dependencies.bitvec]
 version = "1"
 default-features = false
 features = ["atomic", "alloc"]
+
+[patch.crates-io]
+x2apic = { git = "https://github.com/YonatanVigiser/x2apic-rs", branch = "master" }
 
 [build-dependencies]
 multiboot2-header = "0.7"

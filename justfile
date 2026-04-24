@@ -17,5 +17,5 @@ iso firmware="bios" arch=target_arch: (build arch)
 run firmware="bios" arch=target_arch: (iso firmware arch)
     {{ if arch == "x86" { "qemu-system-x86" } else { "qemu-system-x86_64" } }} \
         {{ if firmware == "uefi" { "-bios /usr/share/ovmf/OVMF.fd" } else { "" } }} \
-        -cdrom build/kalneon_os-{{arch}}.iso -m 1024M -gdb tcp::26000 -S &
+        -cdrom build/kalneon_os-{{arch}}.iso -m 1024M -smp 4 -gdb tcp::26000 -S -d int,cpu_reset -D /tmp/qemu.log -enable-kvm -cpu host &
     gdb build/iso-{{arch}}/boot/kernel

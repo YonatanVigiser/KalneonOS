@@ -56,12 +56,12 @@ SECTIONS {
     __bss_end = .;
   }
 
-  .stack (NOLOAD) : ALIGN(4K) {
-    __stack_guard = .;
+  .bsp_stack (NOLOAD) : ALIGN(4K) {
+    __bsp_stack_guard = .;
     . += 4K;
-    __stack_buttom = .;
+    __bsp_stack_buttom = .;
     . += 1M;
-    __stack_top = .;
+    __bsp_stack_top = .;
   }
   
   __vma_end = .;
