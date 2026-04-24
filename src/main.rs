@@ -21,6 +21,7 @@ extern crate alloc;
 static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"))
     .len()] = *include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"));
 
+
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
@@ -33,13 +34,13 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     let acpi = acpi::platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
     drivers::hpet::init_hpet(&acpi.tables).expect("HPET init failed");
     interrupts::init_global(&acpi.interrupt_model);
+    acpi::ACPI.call_once(|| acpi);
     let lapic = interrupts::init_local();
-    cpu_local::init(lapic);
-    log::info!("Kernel booting...");
-    interrupts::enable();
-    loop {
-        core::hint::spin_loop();
-    }
+    let proccessors_info = &acpi::ACPI.get().unwrap().processor_info.as_ref().expect("No proccessor info found in ACPI tables!");
+    cpu_local::init(proccessors_info.boot_processor.processor_uid, lapic);
+    let lapic = &mut cpu_local::current_cpu().lapic;
+    log::info!("Starting SMP...");
+    unsafe { smp::start(lapic, proccessors_info); }
 }
 
 use core::panic::PanicInfo;

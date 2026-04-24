@@ -20,5 +20,8 @@ version = "1"
 default-features = false
 features = ["atomic", "alloc"]
 
+[patch.crates-io]
+x2apic = { git = "https://github.com/YonatanVigiser/x2apic-rs", branch = "master" }
+
 [build-dependencies]
 multiboot2-header = "0.7"

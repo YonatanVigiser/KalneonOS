@@ -14,8 +14,10 @@ ap_init:
   mov eax, 10100000b  ; Set the PAE and PGE bit.
   mov cr4, eax
 
-  mov edi, [l4_table_frame]
-  mov edx, edi        ; Point CR3 at the PML4.
+  mov eax, cs
+  shl eax, 4
+  mov edi, [eax + l4_table - ap_init]
+  mov edx, edi
   mov cr3, edx
 
   mov ecx, 0xC0000080 ; Read from the EFER MSR.
@@ -35,11 +37,19 @@ ap_init:
   or ebx, 0x80000001  ; - by enabling paging and protection simultaneously.
   mov cr0, ebx
 
-  mov ax, cs
+  mov eax, cs
   shl eax, 4
+  mov ebx, eax
+  mov edx, eax ; Save phyiscal start address
+  add ebx, (gdt64 - ap_init)
+  mov [eax + (gdt64.pointer - ap_init + 2)], ebx ; Change the base addr of the GDT at runtime
   add eax, (gdt64.pointer - ap_init)
   lgdt [eax]
-  jmp dword gdt64.code:long_mode_start
+  
+  mov eax, edx
+  add edx, (long_mode_start - ap_init)
+  mov [eax + far_target - ap_init], edx
+  o32 jmp far [eax + far_target - ap_init]
 
 bits 64
 long_mode_start:
@@ -53,6 +63,10 @@ long_mode_start:
 
   mov rsp, [rel stack_top_ptr]
 
+  ; Pass the cpu id
+  xor rdi, rdi
+  mov edi, dword [rel cpu_id]
+
   mov rax, ap_start
   call rax
 
@@ -62,6 +76,9 @@ long_mode_start:
   hlt
   jmp .loop
 
+far_target:
+    dd 0          ; offset
+    dw gdt64.code ; segment selector
 
 align 4
  idt:
@@ -75,10 +92,14 @@ gdt64:
     dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; code segment
 .pointer:
     dw $ - gdt64 - 1
-    dd gdt64
+    dd 0
+
+temp_stack: dq 0
+
+align 8
+; Params (refer to the ApCoreData struct defined in smp.rs):
+stack_top_ptr: dq 0
+l4_table: dd 0
+cpu_id: dd 0
 
 ap_init_end:
-
-l4_table_frame: dd 0
-stack_top_ptr: dq 0
-cpu_id: dd 0

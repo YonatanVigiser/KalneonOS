@@ -4,6 +4,9 @@ use core::ptr::NonNull;
 use x86_64::PhysAddr;
 use x86_64::instructions::port::{PortReadOnly, PortWriteOnly};
 
+use spin::Once;
+pub static ACPI: Once<AcpiPlatform<AcpiRuntimeHandler>> = Once::new();
+
 pub fn platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> AcpiPlatform<AcpiRuntimeHandler> {
     log::info!("{:?}", rsdt_addr);
     let tables = unsafe {

@@ -115,15 +115,15 @@ pub fn map_frame(frame: PhysFrame, flags: PageTableFlags) -> Option<Page> {
 
 pub fn map_phys_range(phys_range: PhysFrameRange, flags: PageTableFlags) -> Option<PageRange> {
     let virt_range = VMM
-        .lock()
+        .try_lock()?
         .as_mut()
         .expect("map() should only be called after memory::init()!")
         .allocate_range(phys_range.len() as usize)?;
-    let mut mapper_lock = MAPPER.lock();
+    let mut mapper_lock = MAPPER.try_lock()?;
     let mapper = mapper_lock
         .as_mut()
         .expect("map() should only be called after memory::init()!");
-    let mut frame_allocator_lock = FRAME_ALLOCATOR.lock();
+    let mut frame_allocator_lock = FRAME_ALLOCATOR.try_lock()?;
     let frame_allocator = frame_allocator_lock
         .as_mut()
         .expect("map() should only be called after memory::init()!");
@@ -160,18 +160,18 @@ pub fn map_mmio_ptr(ptr: usize, size: usize) -> Option<usize> {
 }
 
 pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
-    let mut vmm_guard =  VMM.lock();
+    let mut vmm_guard =  VMM.try_lock()?;
     let vmm = vmm_guard.as_mut().expect("VMM isn't init");
     let pages = vmm.allocate_range(pages_size)?;
-    let mut mapper_guard = MAPPER.lock();
+    let mut mapper_guard = MAPPER.try_lock()?;
     let mapper = mapper_guard.as_mut().expect("Paging isn't init");
     for page in pages {
-        let mut frame_allocator_guard = FRAME_ALLOCATOR.lock();
+        let mut frame_allocator_guard = FRAME_ALLOCATOR.try_lock()?;
         let frame_allocator = frame_allocator_guard.as_mut().expect("Frame allocator isn't init");
         let frame = frame_allocator.allocate_frame()?;
         unsafe { mapper.map_to(page, frame, flags, frame_allocator).ok()?.flush(); }
     }
-    None
+    Some(pages)
 }
 
 pub static FRAME_ALLOCATOR: Mutex<Option<frame_allocator::BitmapAllocator>> = Mutex::new(None);

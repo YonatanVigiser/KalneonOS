@@ -6,12 +6,13 @@ use alloc::boxed::Box;
 #[repr(C)]
 pub struct CpuLocal {
     pub self_ptr: *mut CpuLocal,
+    pub cpu_id: u32,
     pub lapic: LocalApic,
     //pub current_task: *mut Task,
 }
 
-pub fn init(lapic: LocalApic) {
-    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), lapic }));
+pub fn init(cpu_id: u32, lapic: LocalApic) {
+    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), cpu_id, lapic }));
     local.self_ptr = local as *mut CpuLocal;
     let addr = VirtAddr::new(local.self_ptr as u64);
     GsBase::write(addr);

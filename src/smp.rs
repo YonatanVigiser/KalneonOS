@@ -1,63 +1,71 @@
 use crate::{gdt, interrupts, cpu_local, memory, drivers};
-use x86_64::structures::paging::{FrameAllocator, PageTableFlags, Mapper};
+use x86_64::structures::paging::{FrameAllocator, PageTableFlags, Mapper, PageSize};
 use x86_64::registers::control::Cr3;
 use x2apic::lapic::LocalApic;
-use acpi::platform::{Processor, ProcessorState, ProcessorInfo};
+use acpi::platform::{ProcessorState, ProcessorInfo};
 use core::sync::atomic::{AtomicBool, Ordering};
-use spin::Once;
+use spin::Mutex;
 use alloc::vec::Vec;
 
-static AP_CORE_INIT_FINISH: AtomicBool = AtomicBool::new(false);
-pub static ACTIVE_PROCESSORS: Once<Vec<Processor>> = Once::new();
+pub static ACTIVE_PROCESSORS: Mutex<Vec<u32>> = Mutex::new(Vec::new());
+static BSP_FINISH: AtomicBool = AtomicBool::new(false);
+
+#[repr(C)]
+struct ApCoreData {
+    stack_top_ptr: u64,
+    l4_table: u32,
+    cpu_id: u32,
+}
 
 pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! {
-    let mut frame_allocator_guard = memory::FRAME_ALLOCATOR.lock();
-    let frame_allocator = frame_allocator_guard.as_mut().expect("Frame allocator isn't init");
-    let code_frame = frame_allocator.allocate_frame().expect("Frame allocation failed");
-    unsafe { memory::MAPPER.lock().as_mut().unwrap().identity_map(code_frame, PageTableFlags::PRESENT | PageTableFlags::GLOBAL, frame_allocator).unwrap().flush(); }
+    let code_frame = memory::FRAME_ALLOCATOR.lock().as_mut().expect("Frame allocator isn't init").allocate_frame().expect("Frame allocation failed");
+    unsafe { memory::MAPPER.lock().as_mut().unwrap().identity_map(code_frame, PageTableFlags::PRESENT | PageTableFlags::GLOBAL, memory::FRAME_ALLOCATOR.lock().as_mut().expect("Frame allocator isn't init")).unwrap().flush(); }
     let dest = (code_frame.start_address().as_u64() + memory::HHDM_START) as *mut u8;
     let copy_start = &raw const ap_init;
     let copy_end = &raw const ap_init_end;
     let copy_size = (copy_end as u64 - copy_start as u64) as usize;
+    assert!(copy_size <= memory::FrameSize::SIZE as usize, "trampoline is greater than one page");
     unsafe { core::ptr::copy_nonoverlapping(copy_start, dest, copy_size) };
-    unsafe { core::ptr::write(copy_end as *mut u32, Cr3::read().0.start_address().as_u64() as u32); }
-    let mut active_cores = Vec::new();
-    active_cores.push(processor_info.boot_processor);
+    let ap_core_data = unsafe { &mut *((dest as usize + copy_size - size_of::<ApCoreData>()) as *mut ApCoreData) } as &mut ApCoreData;
+    let cr3_value = Cr3::read_raw();
+    debug_assert!(cr3_value.0.start_address().as_u64() < 0x1_0000_0000, "L4 page table frame above 4GB phys");
+    ap_core_data.l4_table = cr3_value.0.start_address().as_u64() as u32 | cr3_value.1 as u32;
+    ACTIVE_PROCESSORS.lock().push(processor_info.boot_processor.processor_uid);
     for core in processor_info.application_processors.iter().filter(|p| matches!(p.state, ProcessorState::WaitingForSipi)) {
+        log::info!("Trying to wake core {}", core.processor_uid);
+        ap_core_data.cpu_id = core.processor_uid;
         let stack = memory::allocate(memory::bsp_stack_range().count() + 1, PageTableFlags::PRESENT | PageTableFlags::GLOBAL | PageTableFlags::NO_EXECUTE | PageTableFlags::WRITABLE).expect("Stack allocation failed");
-        memory::MAPPER.lock().as_mut().unwrap().unmap(stack.start).unwrap(); // Stack guard
+        memory::MAPPER.lock().as_mut().unwrap().unmap(stack.start).expect("Stack page guard unmapping failed").1.flush(); // Unmap Stack guard
         let stack_top_ptr = stack.end.start_address().as_u64();
-        unsafe { core::ptr::write(copy_end.add(4) as *mut u64, stack_top_ptr); }
+        ap_core_data.stack_top_ptr = stack_top_ptr;
         let start_vector = (code_frame.start_address().as_u64() >> 12) as u8;
         unsafe {
             lapic.send_init_ipi(core.local_apic_id);
             drivers::stall(10_000_000);
             lapic.send_sipi(start_vector, core.local_apic_id);
-            drivers::stall(200_000);
-            if !AP_CORE_INIT_FINISH.load(Ordering::Acquire) {
-                lapic.send_sipi(start_vector, core.local_apic_id);
-                drivers::stall(200_000);
-            }
-            let mut core = core.clone();
-            core.state = if AP_CORE_INIT_FINISH.swap(false, Ordering::AcqRel) { ProcessorState::Running } else { ProcessorState::Disabled };
-            active_cores.push(core);
+            drivers::stall(1_000_000);
+            lapic.send_sipi(start_vector, core.local_apic_id);
         }
     }
-    ACTIVE_PROCESSORS.call_once(|| active_cores);
-    ap_start()
+    BSP_FINISH.store(true, Ordering::Release);
+    ap_start(processor_info.boot_processor.processor_uid)
 }
 
 #[unsafe(no_mangle)]
 #[inline(never)]
-pub extern "C" fn ap_start() -> ! {
+pub extern "C" fn ap_start(cpu_id: u32) -> ! {
     unsafe {
         gdt::load();
     }
     let lapic = interrupts::init_local();
-    cpu_local::init(lapic);
-    AP_CORE_INIT_FINISH.store(true, Ordering::Release);
+    while !BSP_FINISH.load(Ordering::Acquire) {
+        core::hint::spin_loop()
+    }
+    cpu_local::init(cpu_id, lapic);
+    interrupts::enable();
+    ACTIVE_PROCESSORS.lock().push(cpu_id);
     loop {
-        core::hint::spin_loop();
+        log::info!("Hello from core: {}", cpu_id);
     }
 }
 
