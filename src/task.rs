@@ -1,10 +1,11 @@
 pub mod executer;
 
-use core::{sync::atomic::{Ordering, AtomicU64}, pin::Pin, future::Future, task::{Context, ContextBuilder, Waker, RawWaker, RawWakerVTable}};
+use core::{sync::atomic::{Ordering, AtomicU64}, pin::Pin, future::Future};
 use alloc::boxed::Box;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-struct TaskId(u64);
+#[repr(transparent)]
+pub struct TaskId(u64);
 
 impl TaskId {
     fn new() -> Self {
