@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(alloc_error_handler)]
+#![feature(local_waker)]
 #![feature(abi_x86_interrupt)]
 
 pub mod acpi;
@@ -13,6 +14,7 @@ pub mod memory;
 pub mod cpu_local;
 pub mod smp;
 pub mod traits;
+pub mod task;
 
 extern crate alloc;
 
