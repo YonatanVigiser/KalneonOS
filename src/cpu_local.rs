@@ -1,21 +1,18 @@
 use x2apic::lapic::LocalApic;
 use x86_64::{VirtAddr, registers::model_specific::GsBase};
 
-use alloc::{boxed::Box, collections::VecDeque};
-use crate::task::TaskId;
-
 #[repr(C)]
 pub struct CpuLocal {
     pub self_ptr: *mut CpuLocal,
-    pub cpu_id: u32,
+    pub logical_id: usize,
+    pub acpi_processor_uid: u32,
     pub interrupts_depth: u16,
     pub lapic: LocalApic,
-    pub tasks: VecDeque<TaskId>,
     //pub current_task: *mut Task,
 }
 
-pub fn init(cpu_id: u32, lapic: LocalApic) {
-    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), cpu_id, lapic, interrupts_depth: 0, tasks: VecDeque::new() }));
+pub fn init(acpi_processor_uid: u32, logical_id: usize, lapic: LocalApic) {
+    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), logical_id, acpi_processor_uid, lapic, interrupts_depth: 0 }));
     local.self_ptr = local as *mut CpuLocal;
     let addr = VirtAddr::new(local.self_ptr as u64);
     GsBase::write(addr);

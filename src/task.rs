@@ -1,6 +1,6 @@
 pub mod executer;
 
-use core::{sync::atomic::{Ordering, AtomicU64}, pin::Pin, future::Future};
+use core::{future::Future, pin::Pin, sync::atomic::{AtomicU64, Ordering}};
 use alloc::boxed::Box;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -16,16 +16,23 @@ impl TaskId {
 
 pub struct Task {
     id: TaskId,
-    future: Pin<Box<dyn Future<Output = ()>>>,
+    future: Pin<Box<dyn Future<Output = ()> + Send + Sync>>,
 }
 
 impl Task {
-    pub fn new(future: impl Future<Output = ()> + 'static) -> Task {
-        Task {
+    pub fn new(future: impl Future<Output = ()> + Send + Sync + 'static) -> Self {
+        Self {
             id: TaskId::new(),
             future: Box::pin(future),
         }
     }
+
+    pub fn new_test() -> Self {
+        Self::new(test())
+    }
 }
 
+
+pub async fn test() {
+}
 

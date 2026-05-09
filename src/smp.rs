@@ -3,18 +3,16 @@ use x86_64::structures::paging::{FrameAllocator, PageTableFlags, Mapper, PageSiz
 use x86_64::registers::control::Cr3;
 use x2apic::lapic::LocalApic;
 use acpi::platform::{ProcessorState, ProcessorInfo};
-use core::sync::atomic::{AtomicBool, Ordering};
-use spin::Mutex;
-use alloc::vec::Vec;
+use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
-pub static ACTIVE_PROCESSORS: Mutex<Vec<u32>> = Mutex::new(Vec::new());
+pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(0);
 static BSP_FINISH: AtomicBool = AtomicBool::new(false);
 
 #[repr(C)]
 struct ApCoreData {
     stack_top_ptr: u64,
     l4_table: u32,
-    cpu_id: u32,
+    acpi_processor_uid: u32,
 }
 
 pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! {
@@ -30,10 +28,9 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! 
     let cr3_value = Cr3::read_raw();
     debug_assert!(cr3_value.0.start_address().as_u64() < 0x1_0000_0000, "L4 page table frame above 4GB phys");
     ap_core_data.l4_table = cr3_value.0.start_address().as_u64() as u32 | cr3_value.1 as u32;
-    ACTIVE_PROCESSORS.lock().push(processor_info.boot_processor.processor_uid);
     for core in processor_info.application_processors.iter().filter(|p| matches!(p.state, ProcessorState::WaitingForSipi)) {
         log::info!("Trying to wake core {}", core.processor_uid);
-        ap_core_data.cpu_id = core.processor_uid;
+        ap_core_data.acpi_processor_uid = core.processor_uid;
         let stack = memory::allocate(memory::bsp_stack_range().count() + 1, PageTableFlags::PRESENT | PageTableFlags::GLOBAL | PageTableFlags::NO_EXECUTE | PageTableFlags::WRITABLE).expect("Stack allocation failed");
         memory::MAPPER.lock().as_mut().unwrap().unmap(stack.start).expect("Stack page guard unmapping failed").1.flush(); // Unmap Stack guard
         let stack_top_ptr = stack.end.start_address().as_u64();
@@ -53,7 +50,7 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! 
 
 #[unsafe(no_mangle)]
 #[inline(never)]
-pub extern "C" fn ap_start(cpu_id: u32) -> ! {
+pub extern "C" fn ap_start(acpi_processor_uid: u32) -> ! {
     unsafe {
         gdt::load();
     }
@@ -61,11 +58,11 @@ pub extern "C" fn ap_start(cpu_id: u32) -> ! {
     while !BSP_FINISH.load(Ordering::Acquire) {
         core::hint::spin_loop()
     }
-    cpu_local::init(cpu_id, lapic);
+    let logical_id = ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
+    cpu_local::init(acpi_processor_uid, logical_id, lapic);
     interrupts::enable();
-    ACTIVE_PROCESSORS.lock().push(cpu_id);
     loop {
-        log::info!("Hello from core: {}", cpu_id);
+        log::info!("Hello from core: {}", logical_id);
     }
 }
 

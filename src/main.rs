@@ -39,7 +39,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     acpi::ACPI.call_once(|| acpi);
     let lapic = interrupts::init_local();
     let proccessors_info = &acpi::ACPI.get().unwrap().processor_info.as_ref().expect("No proccessor info found in ACPI tables!");
-    cpu_local::init(proccessors_info.boot_processor.processor_uid, lapic);
+    cpu_local::init(proccessors_info.boot_processor.processor_uid, 0, lapic);
     let lapic = &mut cpu_local::current_cpu().lapic;
     log::info!("Starting SMP...");
     unsafe { smp::start(lapic, proccessors_info); }
