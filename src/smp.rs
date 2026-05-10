@@ -61,8 +61,16 @@ pub extern "C" fn ap_start(acpi_processor_uid: u32) -> ! {
     let logical_id = ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
     cpu_local::init(acpi_processor_uid, logical_id, lapic);
     interrupts::enable();
+    use crate::task::{Task, executer::{Executor, EXECUTER}};
+    Executor::init(ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed));
+    EXECUTER.get().unwrap().spawn(Task::new(test()));
+    EXECUTER.get().unwrap().run()
+}
+
+async fn test() {
+    let logical_id = cpu_local::current_cpu().logical_id;
     loop {
-        log::info!("Hello from core: {}", logical_id);
+    log::info!("Hello from core: {}", logical_id);
     }
 }
 

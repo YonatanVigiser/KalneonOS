@@ -3,6 +3,7 @@
 #![feature(alloc_error_handler)]
 #![feature(local_waker)]
 #![feature(abi_x86_interrupt)]
+#![feature(unsafe_cell_access)]
 
 pub mod acpi;
 pub mod boot_info;

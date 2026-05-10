@@ -1,6 +1,6 @@
 pub mod executer;
 
-use core::{future::Future, pin::Pin, sync::atomic::{AtomicU64, Ordering}};
+use core::{future::Future, pin::Pin, sync::atomic::{AtomicU64, Ordering}, task::{Poll, Context}, cell::UnsafeCell};
 use alloc::boxed::Box;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -16,23 +16,22 @@ impl TaskId {
 
 pub struct Task {
     id: TaskId,
-    future: Pin<Box<dyn Future<Output = ()> + Send + Sync>>,
+    future: UnsafeCell<Pin<Box<dyn Future<Output = ()>>>>,
 }
 
 impl Task {
-    pub fn new(future: impl Future<Output = ()> + Send + Sync + 'static) -> Self {
+    pub fn new(future: impl Future<Output = ()> + 'static) -> Self {
         Self {
             id: TaskId::new(),
-            future: Box::pin(future),
+            future: UnsafeCell::new(Box::pin(future)),
         }
     }
 
-    pub fn new_test() -> Self {
-        Self::new(test())
+    pub fn poll(&self, context: &mut Context) -> Poll<()> {
+        (unsafe { self.future.as_mut_unchecked() }).as_mut().poll(context)
     }
 }
 
-
-pub async fn test() {
-}
+unsafe impl Send for Task {}
+unsafe impl Sync for Task {}
 

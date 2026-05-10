@@ -1,6 +1,8 @@
 use x2apic::lapic::LocalApic;
 use x86_64::{VirtAddr, registers::model_specific::GsBase};
 
+use alloc::boxed::Box;
+
 #[repr(C)]
 pub struct CpuLocal {
     pub self_ptr: *mut CpuLocal,
