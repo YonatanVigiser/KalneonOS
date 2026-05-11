@@ -19,7 +19,7 @@ impl Executor {
     pub fn init(threads_count: usize) {
         let mut tasks_queues = Vec::with_capacity(threads_count);
         for i in 0..threads_count {
-            tasks_queues[i] = Arc::new(ArrayQueue::new(TASKS_QUEUE_SIZE));
+            tasks_queues.push(Arc::new(ArrayQueue::new(TASKS_QUEUE_SIZE)));
         }
         EXECUTER.call_once(|| Self {
             tasks: Mutex::new(BTreeMap::new()),
@@ -48,6 +48,17 @@ impl Executor {
         }
     }
 
+    fn try_steal(&self) -> bool {
+        let core_id = crate::cpu_local::current_cpu().logical_id;
+        let task = self.tasks_queues.iter().enumerate().filter(|&(i, _)| i != core_id).map(|(_, q)| q).find(|q| !q.is_empty()).and_then(|q| q.pop());
+        if let Some(task) = task {
+            self.tasks_queues[core_id].push(task).expect("Current queue is full");
+            true
+        } else {
+            false
+        }
+    }
+
     fn sleep(&self) {
         let core_id = crate::cpu_local::current_cpu().logical_id;
         while self.tasks_queues[core_id].is_empty() {
@@ -56,9 +67,12 @@ impl Executor {
     }
 
     pub fn run(&self) -> ! {
+        let core_id = crate::cpu_local::current_cpu().logical_id;
         loop {
             self.run_ready();
-            self.sleep();
+            if !self.try_steal() {
+                self.sleep();
+            }
         }
     }
 }
