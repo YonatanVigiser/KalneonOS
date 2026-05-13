@@ -1,7 +1,7 @@
 pub mod heap;
 pub mod map;
-pub mod physical;
-pub mod virt;
+pub mod frame_allocator;
+pub mod vmm;
 use map::MemoryMap;
 use spin::Mutex;
 use x86_64::structures::paging::{
@@ -89,7 +89,7 @@ pub fn kernel_bss_range() -> PageRange<FrameSize> {
     )
 }
 
-/// Returns the byte offset between VMA and physical addresses for kernel sections.
+/// Returns the byte offset between VMA and frame_allocator addresses for kernel sections.
 pub fn vma_phys_offset() -> u64 {
     &raw const __vma_start as u64
 }
@@ -185,8 +185,8 @@ pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
     Some(pages)
 }
 
-pub static FRAME_ALLOCATOR: Mutex<Option<physical::BitmapAllocator>> = Mutex::new(None);
-pub static VMM: Mutex<Option<virt::VirtualMemoryManager>> = Mutex::new(None);
+pub static FRAME_ALLOCATOR: Mutex<Option<frame_allocator::BitmapAllocator>> = Mutex::new(None);
+pub static VMM: Mutex<Option<vmm::VirtualMemoryManager>> = Mutex::new(None);
 pub static MAPPER: Mutex<Option<OffsetPageTable>> = Mutex::new(None);
 
 pub fn allocate_frame() -> Option<PhysFrame<FrameSize>> {
@@ -217,7 +217,7 @@ pub fn unmap_page(page: Page<FrameSize>) {
 pub fn init(mmap: &MemoryMap, post_paging: impl FnOnce()) {
     heap::init();
     log::info!("Heap was initilized");
-    let mut allocator = physical::BitmapAllocator::from_memory_map(mmap);
+    let mut allocator = frame_allocator::BitmapAllocator::from_memory_map(mmap);
     log::info!("Frame allocator was initilized");
     let (mapper, l4_table_frame) = unsafe { crate::platform::paging::init(&mut allocator, mmap) };
     let mut allocated_virtual_ranges = alloc::collections::VecDeque::new();
@@ -226,7 +226,7 @@ pub fn init(mmap: &MemoryMap, post_paging: impl FnOnce()) {
         kernel_range().start,
         Page::containing_address(VirtAddr::new_truncate(u64::MAX)),
     ));
-    let vmm = virt::VirtualMemoryManager::new(allocated_virtual_ranges);
+    let vmm = vmm::VirtualMemoryManager::new(allocated_virtual_ranges);
     *FRAME_ALLOCATOR.lock() = Some(allocator);
     *VMM.lock() = Some(vmm);
     *MAPPER.lock() = Some(mapper);

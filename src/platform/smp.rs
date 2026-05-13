@@ -66,7 +66,7 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! 
     }
     BSP_FINISH.store(true, Ordering::Release);
     time::stall(1_000_000);
-    let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed) + 1;
+    let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed);
     log::info!("SMP: {} core(s) online", cores_count);
     crate::task::executor::Executor::init(cores_count);
     EXECUTOR_READY.store(true, Ordering::Release);
