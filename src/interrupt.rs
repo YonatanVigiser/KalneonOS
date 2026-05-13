@@ -1,13 +1,12 @@
-pub mod apic;
-pub mod idt;
+pub mod handlers;
 
 use acpi::platform::InterruptModel;
 use x2apic::lapic::LocalApic;
 
 pub fn init_local() -> LocalApic {
-    idt::init();
-    let mut lapic = apic::init_lapic();
-    apic::init_lapic_timer(&mut lapic, 10000);
+    crate::platform::idt::init();
+    let mut lapic = crate::platform::apic::init_lapic();
+    crate::platform::apic::init_lapic_timer(&mut lapic, 10000);
     lapic
 }
 
@@ -21,14 +20,15 @@ pub fn disable() {
 
 pub fn init_global(interrupt_model: &InterruptModel) {
     match interrupt_model {
-        InterruptModel::Apic(apic) => apic::set_lapic_addr(apic.local_apic_address as usize),
+        InterruptModel::Apic(apic) => {
+            crate::platform::apic::set_lapic_addr(apic.local_apic_address as usize)
+        }
         _ => panic!("Unsupported interrupts mode!"),
     };
 }
 
-
+use crate::platform::cpu::current_cpu;
 use core::ops::{Deref, DerefMut};
-use crate::cpu_local::current_cpu;
 
 pub struct InterruptSafe<T>(T);
 
@@ -48,32 +48,26 @@ impl<'a, T> Deref for InterruptGuard<'a, T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        let interrupts_depth = &mut current_cpu().interrupts_depth;
-        if *interrupts_depth == 0 {
-            disable();
-        }
-        *interrupts_depth += 1;
+        let cpu = current_cpu();
+        if cpu.interrupt_depth() == 0 { disable(); }
+        cpu.enter_interrupt();
         self.0
     }
 }
 
 impl<'a, T> DerefMut for InterruptGuard<'a, T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        let interrupts_depth = &mut current_cpu().interrupts_depth;
-        if *interrupts_depth == 0 {
-            disable();
-        }
-        *interrupts_depth += 1;
+        let cpu = current_cpu();
+        if cpu.interrupt_depth() == 0 { disable(); }
+        cpu.enter_interrupt();
         self.0
     }
 }
 
 impl<'a, T> Drop for InterruptGuard<'a, T> {
     fn drop(&mut self) {
-        let interrupts_depth = &mut current_cpu().interrupts_depth;
-        *interrupts_depth -= 1;
-        if *interrupts_depth == 0 {
-            enable();
-        }
+        let cpu = current_cpu();
+        cpu.leave_interrupt();
+        if cpu.interrupt_depth() == 0 { enable(); }
     }
 }

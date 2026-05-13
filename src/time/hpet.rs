@@ -1,5 +1,5 @@
-use crate::acpi::AcpiRuntimeHandler;
 use crate::memory::map_mmio_ptr;
+use crate::platform::acpi::AcpiRuntimeHandler;
 use acpi::{AcpiTables, sdt::hpet::HpetInfo};
 use core::num::NonZero;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};

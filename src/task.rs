@@ -1,8 +1,15 @@
-pub mod executer;
+pub mod executor;
+pub mod scheduler;
 pub mod sleep;
 
-use core::{future::Future, pin::Pin, sync::atomic::{AtomicU64, Ordering}, task::{Poll, Context}, cell::UnsafeCell};
 use alloc::boxed::Box;
+use core::{
+    cell::UnsafeCell,
+    future::Future,
+    pin::Pin,
+    sync::atomic::{AtomicU64, Ordering},
+    task::{Context, Poll},
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(transparent)]
@@ -29,7 +36,9 @@ impl Task {
     }
 
     pub fn poll(&self, context: &mut Context) -> Poll<()> {
-        (unsafe { self.future.as_mut_unchecked() }).as_mut().poll(context)
+        (unsafe { self.future.as_mut_unchecked() })
+            .as_mut()
+            .poll(context)
     }
 }
 
@@ -55,4 +64,3 @@ impl Future for YieldNow {
 pub fn yield_now() -> YieldNow {
     YieldNow(false)
 }
-

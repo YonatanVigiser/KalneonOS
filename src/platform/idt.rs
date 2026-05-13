@@ -49,5 +49,7 @@ extern "x86-interrupt" fn double_fault_handler(
 }
 
 extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
-    unsafe { crate::cpu_local::current_cpu().lapic.end_of_interrupt(); }
+    unsafe {
+        crate::platform::cpu::current_cpu().lapic.end_of_interrupt();
+    }
 }

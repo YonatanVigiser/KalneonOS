@@ -10,7 +10,7 @@ use x86_64::structures::paging::{
 };
 use x86_64::{PhysAddr, VirtAddr};
 
-use super::{FrameSize, HHDM_START, map::MemoryMap};
+use crate::memory::{FrameSize, HHDM_START, map::MemoryMap};
 
 struct IdentityMapper;
 
@@ -30,7 +30,6 @@ pub unsafe fn init(
         l4_ptr.write(PageTable::new());
     }
     let mut mapper = unsafe { MappedPageTable::new(&mut *l4_ptr, IdentityMapper) };
-    // Map the hhdm
     let max_phys_frame = mmap.entires().last().unwrap().range.end.start_address();
     let max_phys_aligned = max_phys_frame.as_u64().next_multiple_of(Size1GiB::SIZE);
     let hhdm_flags =
@@ -45,48 +44,50 @@ pub unsafe fn init(
                 .ignore();
         }
     }
-    // Map the kernel sections
-    let vma_to_phys =
-        |vma: VirtAddr| PhysAddr::new(vma.as_u64() - &raw const super::__vma_start as u64);
+    let vma_offset = crate::memory::vma_phys_offset();
+    let vma_to_phys = |vma: VirtAddr| PhysAddr::new(vma.as_u64() - vma_offset);
     unsafe {
         map_section(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::kernel_code_range(),
+            crate::memory::kernel_code_range(),
             Flags::PRESENT | Flags::GLOBAL,
         );
         map_section(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::kernel_rodata_range(),
+            crate::memory::kernel_rodata_range(),
             Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE,
         );
         map_section(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::kernel_data_range(),
+            crate::memory::kernel_data_range(),
             Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE | Flags::WRITABLE,
         );
         map_section(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::kernel_bss_range(),
+            crate::memory::kernel_bss_range(),
             Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE | Flags::WRITABLE,
         );
         map_section(
             &mut mapper,
             allocator,
             vma_to_phys,
-            super::bsp_stack_range(),
+            crate::memory::bsp_stack_range(),
             Flags::PRESENT | Flags::GLOBAL | Flags::NO_EXECUTE | Flags::WRITABLE,
         );
     };
     let l4_hhdm_ptr = (l4_table_frame.start_address().as_u64() + HHDM_START) as *mut PageTable;
-    (unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) }, l4_table_frame)
+    (
+        unsafe { OffsetPageTable::new(&mut *l4_hhdm_ptr, VirtAddr::new(HHDM_START)) },
+        l4_table_frame,
+    )
 }
 
 const MSR_PAT_ENTRY: u32 = 0x277;

@@ -1,6 +1,11 @@
-use core::task::{Waker, Context, Poll};
+use core::task::{Context, Poll, Waker};
 
-use alloc::{collections::btree_map::BTreeMap, sync::{Arc, Weak}, task::Wake, vec::Vec};
+use alloc::{
+    collections::btree_map::BTreeMap,
+    sync::{Arc, Weak},
+    task::Wake,
+    vec::Vec,
+};
 use crossbeam_queue::ArrayQueue;
 use spin::{Mutex, Once};
 
@@ -32,27 +37,47 @@ impl Executor {
         if self.tasks.lock().insert(task.id, task.clone()).is_some() {
             panic!("Task with the same ID was already in tasks!");
         }
-        let lightest_queue = self.tasks_queues.iter().min_by(|x, y| x.len().cmp(&y.len())).unwrap();
-        lightest_queue.push(Arc::downgrade(&task)).expect("All task queues are full");
+        let lightest_queue = self
+            .tasks_queues
+            .iter()
+            .min_by(|x, y| x.len().cmp(&y.len()))
+            .unwrap();
+        lightest_queue
+            .push(Arc::downgrade(&task))
+            .expect("All task queues are full");
     }
 
     fn run_ready(&self) {
-        let core_id = crate::cpu_local::current_cpu().logical_id;
+        let core_id = crate::platform::cpu::current_cpu().logical_id;
         let task_queue = &self.tasks_queues[core_id];
-        while let Some(task) = task_queue.pop() && let Some(task) = task.upgrade() {
-            let waker: Waker = TaskWaker::new(Arc::downgrade(&task.clone()), task_queue.clone());
+        while let Some(weak_task) = task_queue.pop()
+            && let Some(task) = weak_task.upgrade()
+        {
+            let waker: Waker = TaskWaker::new(Arc::downgrade(&task), task_queue.clone());
             let mut context = Context::from_waker(&waker);
             if let Poll::Ready(()) = task.poll(&mut context) {
-                self.tasks.lock().remove(&task.id).expect("Shouldn't panic!");
+                self.tasks
+                    .lock()
+                    .remove(&task.id)
+                    .expect("Shouldn't panic!");
             }
         }
     }
 
     fn try_steal(&self) -> bool {
-        let core_id = crate::cpu_local::current_cpu().logical_id;
-        let task = self.tasks_queues.iter().enumerate().filter(|&(i, _)| i != core_id).map(|(_, q)| q).find(|q| !q.is_empty()).and_then(|q| q.pop());
+        let core_id = crate::platform::cpu::current_cpu().logical_id;
+        let task = self
+            .tasks_queues
+            .iter()
+            .enumerate()
+            .filter(|&(i, _)| i != core_id)
+            .map(|(_, q)| q)
+            .find(|q| !q.is_empty())
+            .and_then(|q| q.pop());
         if let Some(task) = task {
-            self.tasks_queues[core_id].push(task).expect("Current queue is full");
+            self.tasks_queues[core_id]
+                .push(task)
+                .expect("Current queue is full");
             true
         } else {
             false
@@ -60,14 +85,14 @@ impl Executor {
     }
 
     fn sleep(&self) {
-        let core_id = crate::cpu_local::current_cpu().logical_id;
+        let core_id = crate::platform::cpu::current_cpu().logical_id;
         while self.tasks_queues[core_id].is_empty() {
             core::hint::spin_loop();
         }
     }
 
     pub fn run(&self) -> ! {
-        let core_id = crate::cpu_local::current_cpu().logical_id;
+        let core_id = crate::platform::cpu::current_cpu().logical_id;
         loop {
             self.run_ready();
             if !self.try_steal() {
@@ -84,16 +109,14 @@ struct TaskWaker {
 
 impl TaskWaker {
     fn new(task: Weak<Task>, task_queue: Arc<ArrayQueue<Weak<Task>>>) -> Waker {
-        Waker::from(Arc::new(Self {
-            task,
-            task_queue,
-        }))
+        Waker::from(Arc::new(Self { task, task_queue }))
     }
 }
 
 impl Wake for TaskWaker {
     fn wake(self: Arc<Self>) {
-        self.task_queue.push(self.task.clone()).expect("Task pushing failed");
+        self.task_queue
+            .push(self.task.clone())
+            .expect("Task pushing failed");
     }
 }
-

@@ -10,11 +10,29 @@ pub struct CpuLocal {
     pub acpi_processor_uid: u32,
     pub interrupts_depth: u16,
     pub lapic: LocalApic,
-    //pub current_task: *mut Task,
+    pub kernel_stack_top: u64,
+}
+
+impl CpuLocal {
+    #[inline]
+    pub fn enter_interrupt(&mut self) { self.interrupts_depth += 1; }
+
+    #[inline]
+    pub fn leave_interrupt(&mut self) { self.interrupts_depth -= 1; }
+
+    #[inline]
+    pub fn interrupt_depth(&self) -> u16 { self.interrupts_depth }
 }
 
 pub fn init(acpi_processor_uid: u32, logical_id: usize, lapic: LocalApic) {
-    let local = Box::leak(Box::new(CpuLocal { self_ptr: core::ptr::null_mut(), logical_id, acpi_processor_uid, lapic, interrupts_depth: 0 }));
+    let local = Box::leak(Box::new(CpuLocal {
+        self_ptr: core::ptr::null_mut(),
+        logical_id,
+        acpi_processor_uid,
+        lapic,
+        interrupts_depth: 0,
+        kernel_stack_top: 0,
+    }));
     local.self_ptr = local as *mut CpuLocal;
     let addr = VirtAddr::new(local.self_ptr as u64);
     GsBase::write(addr);
@@ -32,4 +50,3 @@ pub fn current_cpu() -> &'static mut CpuLocal {
         &mut *ptr
     }
 }
-

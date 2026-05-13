@@ -25,5 +25,7 @@ macro_rules! interrupt_handler {
 }
 
 unsafe extern "C" fn timer_irq_handler() {
-    unsafe { crate::cpu_local::current_cpu().lapic.end_of_interrupt(); }
+    unsafe {
+        crate::platform::cpu::current_cpu().lapic.end_of_interrupt();
+    }
 }
