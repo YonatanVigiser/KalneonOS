@@ -15,8 +15,6 @@ pub mod utils;
 
 extern crate alloc;
 
-use core::sync::atomic::Ordering;
-
 #[unsafe(link_section = ".multiboot")]
 #[used]
 static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboot_header.bin"))
@@ -26,40 +24,16 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     utils::log::init_boot_logger();
-    let boot_info = platform::boot::load(boot_magic, boot_info_ptr);
+    platform::init_boot(boot_magic, boot_info_ptr);
+    platform::init_smp()
+}
 
-    memory::init(&boot_info.mmap, || {
-        let mut guard = drivers::display::vga::VGA.lock();
-        let vga = guard.as_mut().expect("VGA not initialized before paging");
-        let ptr = memory::map_mmio_ptr(vga.get_ptr() as usize, vga.get_buffer_size())
-            .expect("VGA MMIO remap failed") as *mut u16;
-        vga.update_ptr(ptr);
-    });
-    let acpi = platform::acpi::platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
-    time::hpet::init_hpet(&acpi.tables).expect("HPET init failed");
-    interrupt::init_global(&acpi.interrupt_model);
-    platform::acpi::ACPI.call_once(|| acpi);
-    let lapic = interrupt::init_local();
-    let processor_info = platform::acpi::ACPI
-        .get()
-        .unwrap()
-        .processor_info
-        .as_ref()
-        .expect("No processor info in ACPI tables!");
-    let bsp_logical_id = platform::smp::ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
-    platform::cpu::init(
-        processor_info.boot_processor.processor_uid,
-        bsp_logical_id,
-        lapic,
-    );
-    log::info!("Starting SMP...");
-    let lapic = &mut platform::cpu::current_cpu().lapic;
-    unsafe {
-        platform::smp::start(lapic, processor_info);
-    }
+pub fn ap_main() -> ! {
 }
 
 use core::panic::PanicInfo;
+
+use x86_64::instructions::interrupts;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -68,7 +42,7 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 pub fn halt_loop() -> ! {
-    x86_64::instructions::interrupts::disable();
+    interrupts::disable();
     loop {
         x86_64::instructions::hlt();
     }
@@ -76,5 +50,5 @@ pub fn halt_loop() -> ! {
 
 #[alloc_error_handler]
 fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
-    panic!("Allocation failed: {:?}", layout)
+    panic!("Heap allocation failed: {:?}", layout)
 }

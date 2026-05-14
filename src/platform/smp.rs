@@ -1,13 +1,12 @@
-use crate::{interrupt, memory, time};
-use acpi::platform::{ProcessorInfo, ProcessorState};
+use crate::{memory, time};
+use acpi::platform::{self, ProcessorInfo, ProcessorState};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use x2apic::lapic::LocalApic;
 use x86_64::registers::control::Cr3;
 use x86_64::structures::paging::{PageSize, PageTableFlags};
 
-pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(0);
+pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(1);
 static BSP_FINISH: AtomicBool = AtomicBool::new(false);
-static EXECUTOR_READY: AtomicBool = AtomicBool::new(false);
 
 #[repr(C)]
 struct ApCoreData {
@@ -68,30 +67,18 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! 
     time::stall(1_000_000);
     let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed);
     log::info!("SMP: {} core(s) online", cores_count);
-    crate::task::executor::Executor::init(cores_count);
-    EXECUTOR_READY.store(true, Ordering::Release);
-    crate::task::executor::EXECUTER.get().expect("Executor not initialized").run()
+    crate::ap_main()
 }
 
 #[unsafe(no_mangle)]
 #[inline(never)]
-pub extern "C" fn ap_start(acpi_processor_uid: u32) -> ! {
-    unsafe {
-        crate::platform::gdt::load();
-    }
-    let lapic = interrupt::init_local();
+pub extern "C" fn ap_start(processor_uid: u32) -> ! {
     while !BSP_FINISH.load(Ordering::Acquire) {
         core::hint::spin_loop()
     }
     let logical_id = ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
-    crate::platform::cpu::init(acpi_processor_uid, logical_id, lapic);
-    while !EXECUTOR_READY.load(Ordering::Acquire) {
-        core::hint::spin_loop()
-    }
-    crate::task::executor::EXECUTER
-        .get()
-        .expect("Executor not initialized")
-        .run()
+    super::init_cpu(processor_uid, logical_id);
+    crate::ap_main()
 }
 
 unsafe extern "C" {

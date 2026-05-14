@@ -11,7 +11,7 @@ const LAPIC_MMIO_SIZE: usize = 0x1000;
 
 pub static LAPIC_ADDR: AtomicUsize = AtomicUsize::new(0);
 
-pub fn set_lapic_addr(lapic_addr: usize) {
+pub(super) fn set_lapic_addr(lapic_addr: usize) {
     LAPIC_ADDR.store(lapic_addr, Ordering::Relaxed);
 }
 

@@ -28,7 +28,7 @@ impl From<MemoryAreaTypeId> for MemoryType {
     }
 }
 
-pub fn load(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
+pub fn load_boot_info(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
     if boot_magic == multiboot2::MAGIC {
         let boot_info = unsafe {
             BootInformation::load(boot_info_ptr as *const BootInformationHeader).unwrap()

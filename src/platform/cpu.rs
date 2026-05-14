@@ -5,10 +5,10 @@ use alloc::boxed::Box;
 
 #[repr(C)]
 pub struct CpuLocal {
-    pub self_ptr: *mut CpuLocal,
+    self_ptr: *mut CpuLocal,
     pub logical_id: usize,
-    pub acpi_processor_uid: u32,
-    pub interrupts_depth: u16,
+    pub processor_uid: u32,
+    interrupts_depth: u16,
     pub lapic: LocalApic,
     pub kernel_stack_top: u64,
 }
@@ -24,11 +24,11 @@ impl CpuLocal {
     pub fn interrupt_depth(&self) -> u16 { self.interrupts_depth }
 }
 
-pub(super) fn init(acpi_processor_uid: u32, logical_id: usize, lapic: LocalApic) {
+pub(super) fn init(uid: u32, logical_id: usize, lapic: LocalApic) {
     let local = Box::leak(Box::new(CpuLocal {
         self_ptr: core::ptr::null_mut(),
         logical_id,
-        acpi_processor_uid,
+        processor_uid: uid,
         lapic,
         interrupts_depth: 0,
         kernel_stack_top: 0,

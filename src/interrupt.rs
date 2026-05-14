@@ -1,30 +1,11 @@
 pub mod handlers;
 
-use acpi::platform::InterruptModel;
-use x2apic::lapic::LocalApic;
-
-pub fn init_local() -> LocalApic {
-    crate::platform::idt::init();
-    let mut lapic = crate::platform::apic::init_lapic();
-    crate::platform::apic::init_lapic_timer(&mut lapic, 10000);
-    lapic
-}
-
 pub fn enable() {
     x86_64::instructions::interrupts::enable();
 }
 
 pub fn disable() {
     x86_64::instructions::interrupts::disable();
-}
-
-pub fn init_global(interrupt_model: &InterruptModel) {
-    match interrupt_model {
-        InterruptModel::Apic(apic) => {
-            crate::platform::apic::set_lapic_addr(apic.local_apic_address as usize)
-        }
-        _ => panic!("Unsupported interrupts mode!"),
-    };
 }
 
 use crate::platform::cpu::current_cpu;
