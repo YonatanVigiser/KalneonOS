@@ -25,10 +25,16 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     utils::log::init_boot_logger();
     platform::init_boot(boot_magic, boot_info_ptr);
-    platform::init_smp()
+    platform::init_smp();
+    time::stall(1_000_000);
+    let executor = task::executor::Executor::init(platform::cores_count());
+    task::executor::EXECUTER.call_once(|| executor);
+    ap_main();
 }
 
 pub fn ap_main() -> ! {
+    log::info!("Hello from core: {}", platform::cpu::current_cpu().logical_id);
+    task::executor::EXECUTER.wait().run()
 }
 
 use core::panic::PanicInfo;

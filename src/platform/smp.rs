@@ -15,7 +15,7 @@ struct ApCoreData {
     acpi_processor_uid: u32,
 }
 
-pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! {
+pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
     let code_frame = memory::allocate_frame().expect("Frame allocation failed");
     memory::identity_map_frame(code_frame, PageTableFlags::PRESENT | PageTableFlags::GLOBAL);
     let dest = (code_frame.start_address().as_u64() + memory::HHDM_START) as *mut u8;
@@ -67,7 +67,6 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) -> ! 
     time::stall(1_000_000);
     let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed);
     log::info!("SMP: {} core(s) online", cores_count);
-    crate::ap_main()
 }
 
 #[unsafe(no_mangle)]

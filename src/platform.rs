@@ -1,17 +1,18 @@
 use acpi::platform::InterruptModel;
 use acpi::platform::AcpiPlatform;
 use spin::Once;
+use core::sync::atomic::Ordering;
 
 use boot::BootInfo;
 
-pub mod acpi;
-pub mod apic;
-pub mod boot;
+mod acpi;
+mod apic;
+mod boot;
 pub mod cpu;
-mod gdt;
+pub mod gdt;
 mod idt;
-pub mod paging;
-pub mod smp;
+mod paging;
+mod smp;
 
 static BOOT_INFO: Once<BootInfo> = Once::new();
 static ACPI: Once<AcpiPlatform> = Once::new();
@@ -42,7 +43,11 @@ pub fn init_cpu(uid: u32, logical_id: usize) {
     cpu::init(uid, logical_id, lapic);
 }
 
-pub fn init_smp() -> ! {
+pub fn init_smp() -> usize {
     log::info!("Starting SMP...");
-    smp::start(&mut cpu::current_cpu().lapic, ACPI.get().unwrap().processor_info())
+    unsafe { smp::start(&mut cpu::current_cpu().lapic, ACPI.get().unwrap().processor_info()) };
+}
+
+pub fn cores_count() -> usize {
+    smp::ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed)
 }
