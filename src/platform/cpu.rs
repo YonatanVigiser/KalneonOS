@@ -24,7 +24,7 @@ impl CpuLocal {
     pub fn interrupt_depth(&self) -> u16 { self.interrupts_depth }
 }
 
-pub fn init(acpi_processor_uid: u32, logical_id: usize, lapic: LocalApic) {
+pub(super) fn init(acpi_processor_uid: u32, logical_id: usize, lapic: LocalApic) {
     let local = Box::leak(Box::new(CpuLocal {
         self_ptr: core::ptr::null_mut(),
         logical_id,

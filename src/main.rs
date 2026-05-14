@@ -25,9 +25,6 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
-    unsafe {
-        platform::gdt::load();
-    }
     utils::log::init_boot_logger();
     let boot_info = platform::boot::load(boot_magic, boot_info_ptr);
 

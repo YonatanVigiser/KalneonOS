@@ -13,8 +13,8 @@ lazy_static! {
     };
 }
 
-pub fn init() {
-    IDT.load();
+pub unsafe fn load() {
+    without_interrupts(|| IDT.load() );
 }
 
 fn general_handler(stack_frame: InterruptStackFrame, index: u8, error_code: Option<u64>) {
