@@ -1,9 +1,10 @@
-use crate::{memory, time};
-use acpi::platform::{self, ProcessorInfo, ProcessorState};
+use crate::memory;
+use crate::utils::time::stall;
+use acpi::platform::{ProcessorInfo, ProcessorState};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use x2apic::lapic::LocalApic;
+use x2apic::lapic::{IpiAllShorthand, LocalApic};
 use x86_64::registers::control::Cr3;
-use x86_64::structures::paging::{PageSize, PageTableFlags};
+use x86_64::structures::paging::{self, PageSize, PageTableFlags};
 
 pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(1);
 static BSP_FINISH: AtomicBool = AtomicBool::new(false);
@@ -57,15 +58,15 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
         let start_vector = (code_frame.start_address().as_u64() >> 12) as u8;
         unsafe {
             lapic.send_init_ipi(core.local_apic_id);
-            time::stall(10_000_000);
+            stall(10_000_000);
             lapic.send_sipi(start_vector, core.local_apic_id);
-            time::stall(1_000_000);
+            stall(1_000_000);
             lapic.send_sipi(start_vector, core.local_apic_id);
         }
     }
     BSP_FINISH.store(true, Ordering::Release);
-    time::stall(1_000_000);
-    let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Relaxed);
+    stall(1_000_000);
+    let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Acquire);
     log::info!("SMP: {} core(s) online", cores_count);
 }
 
@@ -78,6 +79,12 @@ pub extern "C" fn ap_start(processor_uid: u32) -> ! {
     let logical_id = ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
     super::init_cpu(processor_uid, logical_id);
     crate::ap_main()
+}
+
+pub unsafe fn halt(lapic: &mut LocalApic) {
+    unsafe {
+        lapic.send_nmi_all(IpiAllShorthand::AllExcludingSelf);
+    }
 }
 
 unsafe extern "C" {

@@ -119,15 +119,15 @@ pub fn map_frame(frame: PhysFrame, flags: PageTableFlags) -> Option<Page> {
 
 pub fn map_phys_range(phys_range: PhysFrameRange, flags: PageTableFlags) -> Option<PageRange> {
     let virt_range = VMM
-        .try_lock()?
+        .lock()
         .as_mut()
         .expect("map() should only be called after memory::init()!")
         .allocate_range(phys_range.len() as usize)?;
-    let mut mapper_lock = MAPPER.try_lock()?;
+    let mut mapper_lock = MAPPER.lock();
     let mapper = mapper_lock
         .as_mut()
         .expect("map() should only be called after memory::init()!");
-    let mut frame_allocator_lock = FRAME_ALLOCATOR.try_lock()?;
+    let mut frame_allocator_lock = FRAME_ALLOCATOR.lock();
     let frame_allocator = frame_allocator_lock
         .as_mut()
         .expect("map() should only be called after memory::init()!");

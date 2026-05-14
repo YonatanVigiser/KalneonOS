@@ -10,7 +10,6 @@ pub mod interrupt;
 pub mod memory;
 pub mod platform;
 pub mod task;
-pub mod time;
 pub mod utils;
 
 extern crate alloc;
@@ -26,9 +25,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     utils::log::init_boot_logger();
     platform::init_boot(boot_magic, boot_info_ptr);
     platform::init_smp();
-    time::stall(1_000_000);
-    let executor = task::executor::Executor::init(platform::cores_count());
-    task::executor::EXECUTER.call_once(|| executor);
+    task::executor::Executor::init(platform::cores_count());
     ap_main();
 }
 
@@ -43,6 +40,7 @@ use x86_64::instructions::interrupts;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    unsafe { platform::halt_smp(); }
     log::error!("{}", info);
     halt_loop()
 }

@@ -23,7 +23,7 @@ pub struct Executor {
 impl Executor {
     pub fn init(threads_count: usize) {
         let mut tasks_queues = Vec::with_capacity(threads_count);
-        for i in 0..threads_count {
+        for _ in 0..threads_count {
             tasks_queues.push(Arc::new(ArrayQueue::new(TASKS_QUEUE_SIZE)));
         }
         EXECUTER.call_once(|| Self {
@@ -53,7 +53,7 @@ impl Executor {
         while let Some(weak_task) = task_queue.pop()
             && let Some(task) = weak_task.upgrade()
         {
-            let waker: Waker = TaskWaker::new(Arc::downgrade(&task), task_queue.clone());
+            let waker: Waker = TaskWaker::new_waker(Arc::downgrade(&task), task_queue.clone());
             let mut context = Context::from_waker(&waker);
             if let Poll::Ready(()) = task.poll(&mut context) {
                 self.tasks
@@ -92,7 +92,6 @@ impl Executor {
     }
 
     pub fn run(&self) -> ! {
-        let core_id = crate::platform::cpu::current_cpu().logical_id;
         loop {
             self.run_ready();
             if !self.try_steal() {
@@ -108,7 +107,7 @@ struct TaskWaker {
 }
 
 impl TaskWaker {
-    fn new(task: Weak<Task>, task_queue: Arc<ArrayQueue<Weak<Task>>>) -> Waker {
+    fn new_waker(task: Weak<Task>, task_queue: Arc<ArrayQueue<Weak<Task>>>) -> Waker {
         Waker::from(Arc::new(Self { task, task_queue }))
     }
 }

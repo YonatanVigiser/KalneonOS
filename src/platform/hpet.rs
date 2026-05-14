@@ -1,5 +1,6 @@
 use crate::memory::map_mmio_ptr;
 use core::num::NonZero;
+use acpi::HpetInfo;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};
 use spin::Mutex;
 
@@ -22,8 +23,8 @@ impl HpetState {
     }
 }
 
-pub fn init_hpet(hpet_base_addr: usize) -> Option<()> {
-    let ptr = map_mmio_ptr(hpet_base_addr, HPET_MMIO_SIZE)?;
+pub fn init_hpet(hpet_info: HpetInfo) -> Option<()> {
+    let ptr = map_mmio_ptr(hpet_info.base_address, HPET_MMIO_SIZE)?;
     let mut hpet = unsafe { Hpet::new(NonZero::new(ptr)?) };
     hpet.set_enable(false);
     hpet.set_main_counter_value(0);
