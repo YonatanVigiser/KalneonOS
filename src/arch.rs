@@ -4,8 +4,6 @@ use core::sync::atomic::Ordering;
 
 use boot::BootInfo;
 
-extern crate acpi as acpi_crate;
-
 mod boot;
 pub mod cpu;
 pub mod gdt;

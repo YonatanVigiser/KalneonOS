@@ -38,6 +38,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     ap_main();
 }
 
+// This is called from init_smp, and all cores should enter this when they are fully initilized
 pub fn ap_main() -> ! {
     log::info!("Hello from core: {}", arch::cpu::current_cpu().logical_id);
     interrupt::enable();
