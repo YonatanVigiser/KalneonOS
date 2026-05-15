@@ -1,4 +1,4 @@
-use crate::platform::cpu::CpuLocal;
+use crate::arch::cpu::CpuLocal;
 
 const KERNEL_STACK_TOP_OFFSET: usize = core::mem::offset_of!(CpuLocal, kernel_stack_top);
 core::arch::global_asm!(
@@ -87,10 +87,10 @@ impl CpuContext {
             r14: 0,
             r15: 0,
             rip: code_entry.as_u64(),
-            cs: crate::platform::gdt::kernel_code_selector().0 as u64,
+            cs: crate::arch::gdt::kernel_code_selector().0 as u64,
             rflags: starting_flags.bits(),
             rsp: stack_top.as_u64(),
-            ss: crate::platform::gdt::kernel_data_selector().0 as u64,
+            ss: crate::arch::gdt::kernel_data_selector().0 as u64,
         }
     }
 }

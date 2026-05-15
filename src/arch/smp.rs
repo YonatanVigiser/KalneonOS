@@ -1,10 +1,10 @@
 use crate::memory;
-use crate::utils::time::stall;
+use crate::time::stall;
 use acpi::platform::{ProcessorInfo, ProcessorState};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use x2apic::lapic::{IpiAllShorthand, LocalApic};
 use x86_64::registers::control::Cr3;
-use x86_64::structures::paging::{self, PageSize, PageTableFlags};
+use x86_64::structures::paging::{PageSize, PageTableFlags};
 
 pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(1);
 static BSP_FINISH: AtomicBool = AtomicBool::new(false);

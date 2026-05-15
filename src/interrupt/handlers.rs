@@ -41,7 +41,7 @@ pub extern "x86-interrupt" fn page_fault_handler(
 
     panic!(
         "EXCEPTION: PAGE FAULT (core: {})\nAccessed Address: {:?}\nError Code: {:?}\n{:#?}",
-        crate::platform::cpu::current_cpu().logical_id,
+        crate::arch::cpu::current_cpu().logical_id,
         Cr2::read(),
         error_code,
         stack_frame
@@ -67,6 +67,6 @@ pub extern "x86-interrupt" fn debug_handler(_stack_frame: InterruptStackFrame) {
 
 pub extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
     unsafe {
-        crate::platform::cpu::current_cpu().lapic.end_of_interrupt();
+        crate::arch::cpu::current_cpu().lapic.end_of_interrupt();
     }
 }

@@ -8,8 +8,10 @@
 pub mod drivers;
 pub mod interrupt;
 pub mod memory;
+pub mod arch;
 pub mod platform;
 pub mod task;
+pub mod time;
 pub mod utils;
 
 extern crate alloc;
@@ -22,25 +24,34 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
+    interrupt::disable();
     utils::log::init_boot_logger();
-    platform::init_boot(boot_magic, boot_info_ptr);
-    platform::init_smp();
-    task::executor::Executor::init(platform::cores_count());
+    let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
+    memory::init(&boot_info.mmap);
+    let acpi = platform::acpi::init_platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
+    interrupt::init_global(&acpi.interrupt_model);
+    time::hpet::init_hpet(HpetInfo::new(&acpi.tables).expect("No HPET info in ACPI tables!"));
+    let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
+    arch::init_cpu(processor_info.boot_processor.processor_uid, 0);
+    arch::init_smp(processor_info);
+    task::executor::Executor::init(arch::cores_count());
     ap_main();
 }
 
 pub fn ap_main() -> ! {
-    log::info!("Hello from core: {}", platform::cpu::current_cpu().logical_id);
+    log::info!("Hello from core: {}", arch::cpu::current_cpu().logical_id);
+    interrupt::enable();
     task::executor::EXECUTER.wait().run()
 }
 
 use core::panic::PanicInfo;
 
+use acpi::HpetInfo;
 use x86_64::instructions::interrupts;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    unsafe { platform::halt_smp(); }
+    unsafe { arch::halt_smp(); }
     log::error!("{}", info);
     halt_loop()
 }

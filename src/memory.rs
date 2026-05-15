@@ -2,6 +2,8 @@ pub mod heap;
 pub mod map;
 pub mod frame_allocator;
 pub mod vmm;
+pub mod paging;
+
 use map::MemoryMap;
 use spin::Mutex;
 use x86_64::structures::paging::{
@@ -35,7 +37,7 @@ unsafe extern "C" {
     static __vma_end: u8;
 }
 
-pub fn kernel_phys_range() -> PhysFrameRange {
+fn kernel_phys_range() -> PhysFrameRange {
     let start_addr = &raw const __phys_start as u64;
     let end_addr = &raw const __phys_end as u64;
     PhysFrame::range(
@@ -44,7 +46,7 @@ pub fn kernel_phys_range() -> PhysFrameRange {
     )
 }
 
-pub fn kernel_range() -> PageRange<FrameSize> {
+fn kernel_range() -> PageRange<FrameSize> {
     let start_addr = &raw const __vma_start as u64;
     let end_addr = &raw const __vma_end as u64;
     Page::range(
@@ -53,7 +55,7 @@ pub fn kernel_range() -> PageRange<FrameSize> {
     )
 }
 
-pub fn kernel_code_range() -> PageRange<FrameSize> {
+fn kernel_code_range() -> PageRange<FrameSize> {
     let start_addr = &raw const __text_start as u64;
     let end_addr = &raw const __text_end as u64;
     Page::range(
@@ -62,7 +64,7 @@ pub fn kernel_code_range() -> PageRange<FrameSize> {
     )
 }
 
-pub fn kernel_rodata_range() -> PageRange<FrameSize> {
+fn kernel_rodata_range() -> PageRange<FrameSize> {
     let start_addr = &raw const __rodata_start as u64;
     let end_addr = &raw const __rodata_end as u64;
     Page::range(
@@ -71,7 +73,7 @@ pub fn kernel_rodata_range() -> PageRange<FrameSize> {
     )
 }
 
-pub fn kernel_data_range() -> PageRange<FrameSize> {
+fn kernel_data_range() -> PageRange<FrameSize> {
     let start_addr = &raw const __data_start as u64;
     let end_addr = &raw const __data_end as u64;
     Page::range(
@@ -80,7 +82,7 @@ pub fn kernel_data_range() -> PageRange<FrameSize> {
     )
 }
 
-pub fn kernel_bss_range() -> PageRange<FrameSize> {
+fn kernel_bss_range() -> PageRange<FrameSize> {
     let start_addr = &raw const __bss_start as u64;
     let end_addr = &raw const __bss_end as u64;
     Page::range(
@@ -90,7 +92,7 @@ pub fn kernel_bss_range() -> PageRange<FrameSize> {
 }
 
 /// Returns the byte offset between VMA and frame_allocator addresses for kernel sections.
-pub fn vma_phys_offset() -> u64 {
+fn vma_phys_offset() -> u64 {
     &raw const __vma_start as u64
 }
 
@@ -103,7 +105,7 @@ pub fn bsp_stack_range() -> PageRange<FrameSize> {
     )
 }
 
-pub fn hhdm_range(mmap: &MemoryMap) -> PageRange {
+fn hhdm_range(mmap: &MemoryMap) -> PageRange {
     let max_phys_frame = mmap.entires().last().unwrap().range.end.start_address();
     let max_phys_aligned = max_phys_frame.as_u64().next_multiple_of(Size1GiB::SIZE);
     let virt_end_addr = VirtAddr::new(max_phys_aligned + HHDM_START);
@@ -214,12 +216,12 @@ pub fn unmap_page(page: Page<FrameSize>) {
         .flush();
 }
 
-pub fn init(mmap: &MemoryMap, post_paging: impl FnOnce()) {
+pub fn init(mmap: &MemoryMap) {
     heap::init();
     log::info!("Heap was initilized");
     let mut allocator = frame_allocator::BitmapAllocator::from_memory_map(mmap);
     log::info!("Frame allocator was initilized");
-    let (mapper, l4_table_frame) = unsafe { crate::platform::paging::init(&mut allocator, mmap) };
+    let (mapper, l4_table_frame) = unsafe { paging::init(&mut allocator, mmap) };
     let mut allocated_virtual_ranges = alloc::collections::VecDeque::new();
     allocated_virtual_ranges.push_back(Page::range(hhdm_range(mmap).end, kernel_range().start));
     allocated_virtual_ranges.push_back(Page::range(
@@ -230,9 +232,17 @@ pub fn init(mmap: &MemoryMap, post_paging: impl FnOnce()) {
     *FRAME_ALLOCATOR.lock() = Some(allocator);
     *VMM.lock() = Some(vmm);
     *MAPPER.lock() = Some(mapper);
-    unsafe { crate::platform::paging::enable(l4_table_frame) };
+    unsafe { paging::enable(l4_table_frame) };
     post_paging();
     log::info!("Paging was initilized");
+}
+
+fn post_paging() {
+    let mut guard = crate::drivers::display::vga::VGA.lock();
+    let vga = guard.as_mut().expect("VGA not initialized before paging");
+    let ptr = crate::memory::map_mmio_ptr(vga.get_ptr() as usize, vga.get_buffer_size())
+        .expect("VGA MMIO remap failed") as *mut u16;
+    vga.update_ptr(ptr);
 }
 
 #[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
