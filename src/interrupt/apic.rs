@@ -4,9 +4,6 @@ use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 
 use crate::memory::map_mmio_ptr;
 
-pub const SUPRIOUS_VECTOR: u8 = 0xFF;
-pub const APIC_ERROR_VECTOR: u8 = 0xFE;
-pub const TIMER_VECOTR: u8 = 0x30;
 const LAPIC_MMIO_SIZE: usize = 0x1000;
 
 pub static LAPIC_ADDR: AtomicUsize = AtomicUsize::new(0);
@@ -21,9 +18,9 @@ pub fn init_lapic() -> LocalApic {
         map_mmio_ptr(LAPIC_ADDR.load(Ordering::Relaxed), LAPIC_MMIO_SIZE).expect("MMIO map failed");
     let mut lapic = LocalApicBuilder::new()
         .set_xapic_base(lapic_ptr as u64)
-        .spurious_vector(SUPRIOUS_VECTOR as usize)
-        .error_vector(APIC_ERROR_VECTOR as usize)
-        .timer_vector(TIMER_VECOTR as usize)
+        .spurious_vector(super::SUPRIOUS_VECTOR as usize)
+        .error_vector(super::CONTROLLER_ERROR_VECTOR as usize)
+        .timer_vector(super::TIMER_VECOTR as usize)
         .timer_mode(TimerMode::OneShot)
         .timer_divide(TimerDivide::Div16)
         .timer_initial(0)
@@ -45,7 +42,7 @@ pub fn init_lapic_timer(lapic: &mut LocalApic, nanos_per_int: u64) {
         unsafe {
             lapic.set_timer_initial(u32::MAX);
         }
-        crate::utils::time::stall(nanos_per_int);
+        crate::time::stall(nanos_per_int);
         ticks_sum += u32::MAX - unsafe { lapic.timer_current() };
     }
     let tick_avrg = ticks_sum / CALIBRATION_ITERATION_COUNT;

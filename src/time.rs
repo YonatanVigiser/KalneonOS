@@ -1,4 +1,8 @@
-use crate::platform::uptime_nano;
+pub mod hpet;
+
+pub fn uptime_nano() -> u64 {
+    hpet::uptime_nano()
+}
 
 pub fn stall(nanos: u64) {
     let start = uptime_nano();

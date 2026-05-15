@@ -48,7 +48,7 @@ impl Executor {
     }
 
     fn run_ready(&self) {
-        let core_id = crate::platform::cpu::current_cpu().logical_id;
+        let core_id = crate::arch::cpu::current_cpu().logical_id;
         let task_queue = &self.tasks_queues[core_id];
         while let Some(weak_task) = task_queue.pop()
             && let Some(task) = weak_task.upgrade()
@@ -65,7 +65,7 @@ impl Executor {
     }
 
     fn try_steal(&self) -> bool {
-        let core_id = crate::platform::cpu::current_cpu().logical_id;
+        let core_id = crate::arch::cpu::current_cpu().logical_id;
         let task = self
             .tasks_queues
             .iter()
@@ -85,7 +85,7 @@ impl Executor {
     }
 
     fn sleep(&self) {
-        let core_id = crate::platform::cpu::current_cpu().logical_id;
+        let core_id = crate::arch::cpu::current_cpu().logical_id;
         while self.tasks_queues[core_id].is_empty() {
             core::hint::spin_loop();
         }

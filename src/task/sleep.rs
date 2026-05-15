@@ -3,7 +3,7 @@ use core::{
     task::{Context, Poll},
 };
 
-use crate::platform::uptime_nano;
+use crate::time::uptime_nano;
 
 
 pub struct Sleep {
