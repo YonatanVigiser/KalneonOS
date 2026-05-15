@@ -2,7 +2,7 @@ use crate::memory::{
     MemoryType,
     map::{MemoryMap, TypedPhysFrameRange},
 };
-use crate::traits::Indexable;
+use crate::utils::traits::Indexable;
 use multiboot2::{
     BootInformation, BootInformationHeader, MemoryArea, MemoryAreaType, MemoryAreaTypeId,
 };
@@ -28,7 +28,7 @@ impl From<MemoryAreaTypeId> for MemoryType {
     }
 }
 
-pub fn load(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
+pub fn load_boot_info(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
     if boot_magic == multiboot2::MAGIC {
         let boot_info = unsafe {
             BootInformation::load(boot_info_ptr as *const BootInformationHeader).unwrap()
@@ -77,7 +77,6 @@ fn frames_from_mmap(memory_areas: &[MemoryArea]) -> MemoryMap {
         let end = PhysFrame::containing_address(PhysAddr::new(memory_area.end_address()));
         if let Some(last) = frames.last() {
             if start > last.range.end {
-                // Hole
                 if typ == MemoryType::Reserved {
                     if last.typ == MemoryType::Reserved {
                         frames.last_mut().unwrap().range.end = end;
@@ -100,8 +99,6 @@ fn frames_from_mmap(memory_areas: &[MemoryArea]) -> MemoryMap {
                 frames.last_mut().unwrap().range.end = end;
                 continue;
             } else if start < last.range.end {
-                // Overlapping - check priority. On lower, move self. On higher, move last. Not
-                // equal, because we checked earlier
                 if last.typ > typ {
                     start = last.range.end;
                 } else if last.typ < typ {

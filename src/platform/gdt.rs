@@ -36,3 +36,11 @@ pub unsafe fn load() {
         }
     });
 }
+
+pub fn kernel_code_selector() -> SegmentSelector {
+    GDT.1.kernel_code_selector
+}
+
+pub fn kernel_data_selector() -> SegmentSelector {
+    GDT.1.kernel_data_selector
+}

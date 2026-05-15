@@ -1,7 +1,7 @@
 use x86_64::structures::paging::frame::{PhysFrame, PhysFrameRange};
 
 use super::MemoryType;
-use crate::traits::Indexable;
+use crate::utils::traits::Indexable;
 
 #[derive(Clone, Copy)]
 pub struct TypedPhysFrameRange {

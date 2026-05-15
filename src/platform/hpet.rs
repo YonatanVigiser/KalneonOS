@@ -1,7 +1,6 @@
-use crate::acpi::AcpiRuntimeHandler;
 use crate::memory::map_mmio_ptr;
-use acpi::{AcpiTables, sdt::hpet::HpetInfo};
 use core::num::NonZero;
+use acpi::HpetInfo;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};
 use spin::Mutex;
 
@@ -24,8 +23,7 @@ impl HpetState {
     }
 }
 
-pub fn init_hpet(tables: &AcpiTables<AcpiRuntimeHandler>) -> Option<()> {
-    let hpet_info = HpetInfo::new(tables).ok()?;
+pub fn init_hpet(hpet_info: HpetInfo) -> Option<()> {
     let ptr = map_mmio_ptr(hpet_info.base_address, HPET_MMIO_SIZE)?;
     let mut hpet = unsafe { Hpet::new(NonZero::new(ptr)?) };
     hpet.set_enable(false);

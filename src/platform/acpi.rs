@@ -137,11 +137,11 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn nanos_since_boot(&self) -> u64 {
-        crate::drivers::uptime_nano()
+        crate::platform::uptime_nano()
     }
 
     fn stall(&self, microseconds: u64) {
-        crate::drivers::stall(microseconds * 1000)
+        crate::utils::time::stall(microseconds * 1000)
     }
 
     fn sleep(&self, _milliseconds: u64) {

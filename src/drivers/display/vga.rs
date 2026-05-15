@@ -262,7 +262,7 @@ impl Vga {
         match video_type {
             VideoType::Color => 0xB8000 as *mut u16,
             VideoType::Monochrome => 0xB0000 as *mut u16,
-            VideoType::None => 0xB8000 as *mut u16, // Fake vmem
+            VideoType::None => 0xB8000 as *mut u16,
         }
     }
 
