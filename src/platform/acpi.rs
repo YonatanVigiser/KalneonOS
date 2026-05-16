@@ -145,7 +145,6 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn sleep(&self, _milliseconds: u64) {
-        todo!();
     }
 
     fn create_mutex(&self) -> acpi::Handle {

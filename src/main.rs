@@ -35,6 +35,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     arch::init_cpu(processor_info.boot_processor.processor_uid, 0);
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
+    task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers()));
     ap_main();
 }
 
@@ -42,13 +43,15 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
 pub fn ap_main() -> ! {
     log::info!("Hello from core: {}", arch::cpu::current_cpu().logical_id);
     interrupt::enable();
-    task::executor::EXECUTER.wait().run()
+    task::executor::EXECUTOR.wait().run()
 }
 
 use core::panic::PanicInfo;
 
 use acpi::HpetInfo;
 use x86_64::instructions::interrupts;
+
+use crate::task::Task;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {

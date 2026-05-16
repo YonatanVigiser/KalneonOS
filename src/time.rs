@@ -1,4 +1,5 @@
 pub mod hpet;
+pub mod timer;
 
 pub fn uptime_nano() -> u64 {
     hpet::uptime_nano()

@@ -1,6 +1,7 @@
 pub mod executor;
 pub mod scheduler;
 pub mod sleep;
+pub mod waker;
 
 use alloc::boxed::Box;
 use core::{
@@ -22,9 +23,13 @@ impl TaskId {
     }
 }
 
+const DEFAULT_AFFINITY_THRESHOLD_RATIO: f64 = 3.0;
+
 pub struct Task {
     id: TaskId,
     future: UnsafeCell<Pin<Box<dyn Future<Output = ()>>>>,
+    pinned: bool,
+    affinity_threshold: f64,
 }
 
 impl Task {
@@ -32,7 +37,27 @@ impl Task {
         Self {
             id: TaskId::new(),
             future: UnsafeCell::new(Box::pin(future)),
+            pinned: false,
+            affinity_threshold: DEFAULT_AFFINITY_THRESHOLD_RATIO,
         }
+    }
+
+    pub fn pin(mut self) -> Self {
+        self.pinned = true;
+        self
+    }
+
+    pub fn with_affinity_threshold(mut self, affinity_threshold: f64) -> Self {
+        self.affinity_threshold = affinity_threshold;
+        self
+    }
+
+    pub fn is_pinned(&self) -> bool {
+        self.pinned
+    }
+
+    pub fn affinity_threshold(&self) -> f64 {
+        self.affinity_threshold
     }
 
     pub fn poll(&self, context: &mut Context) -> Poll<()> {
@@ -45,6 +70,7 @@ impl Task {
 unsafe impl Send for Task {}
 unsafe impl Sync for Task {}
 
+#[must_use]
 pub struct YieldNow(bool);
 
 impl Future for YieldNow {
