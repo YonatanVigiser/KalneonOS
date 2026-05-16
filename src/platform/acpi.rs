@@ -7,7 +7,7 @@ use x86_64::instructions::port::{PortReadOnly, PortWriteOnly};
 use spin::Once;
 pub static ACPI: Once<AcpiPlatform<AcpiRuntimeHandler>> = Once::new();
 
-pub fn platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> AcpiPlatform<AcpiRuntimeHandler> {
+pub fn init_platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> &'static AcpiPlatform<AcpiRuntimeHandler> {
     log::info!("{:?}", rsdt_addr);
     let tables = unsafe {
         AcpiTables::from_rsdt(
@@ -17,7 +17,7 @@ pub fn platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> AcpiPlatform<Acp
         )
     }
     .expect("Acpi tables parsing failed!");
-    AcpiPlatform::new(tables, AcpiRuntimeHandler()).expect("Acpi platform creation failed!")
+    ACPI.call_once(|| AcpiPlatform::new(tables, AcpiRuntimeHandler()).expect("Acpi arch creation failed!"))
 }
 
 #[derive(Clone)]
@@ -137,15 +137,14 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn nanos_since_boot(&self) -> u64 {
-        crate::drivers::uptime_nano()
+        crate::time::uptime_nano()
     }
 
     fn stall(&self, microseconds: u64) {
-        crate::drivers::stall(microseconds * 1000)
+        crate::time::stall(microseconds * 1000)
     }
 
     fn sleep(&self, _milliseconds: u64) {
-        todo!();
     }
 
     fn create_mutex(&self) -> acpi::Handle {

@@ -14,6 +14,7 @@ acpi = "6.1"
 pic8259 = "0.11"
 x2apic = "0.5"
 ez_hpet = "1.0"
+crossbeam-queue = { version = "0.3", default-features = false, features = ["alloc"] }
 
 [dependencies.bitvec]
 version = "1"

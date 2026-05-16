@@ -1,4 +1,4 @@
-use crate::drivers::vga::{VGA, Vga};
+use crate::drivers::display::vga::{VGA, Vga};
 use core::fmt::Write;
 use log::{Level, LevelFilter, Log, Metadata, Record};
 

@@ -1,5 +1,5 @@
 use super::{FrameSize, MemoryMap, MemoryType};
-use crate::traits::Indexable;
+use crate::utils::traits::Indexable;
 
 use bitvec::prelude::{BitVec, Lsb0, bitvec};
 use x86_64::structures::paging::{
