@@ -13,6 +13,7 @@ pub mod platform;
 pub mod task;
 pub mod time;
 pub mod utils;
+pub mod dev;
 
 extern crate alloc;
 
