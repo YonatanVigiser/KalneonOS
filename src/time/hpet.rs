@@ -1,48 +1,52 @@
-use crate::memory::map_mmio_ptr;
-use core::num::NonZero;
+use crate::{dev::Read, memory::map_mmio_ptr, time::KernelInstant};
+use core::{num::NonZero, sync::atomic::{AtomicU64, Ordering}, task::Poll, u32};
 use acpi::HpetInfo;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};
-use spin::Mutex;
 
-static HPET: Mutex<Option<HpetState>> = Mutex::new(None);
-
-struct HpetState {
+pub(super) struct HpetDriver {
     hpet: Hpet<'static>,
-    last_low: u32,
-    high: u64,
+    last_tick : AtomicU64,
+    supports_u64: bool,
+    period_fs: u64,
 }
 
-impl HpetState {
-    fn read_ticks(&mut self) -> u64 {
-        let current = self.hpet.main_counter_value() as u32;
-        if current < self.last_low {
-            self.high += 1u64 << 32;
+impl HpetDriver {
+    pub fn new(hpet_info: HpetInfo) -> Self {
+        let ptr = map_mmio_ptr(hpet_info.base_address, HPET_MMIO_SIZE).expect("MMIO mapping failed!");
+        let mut hpet = unsafe { Hpet::new(NonZero::new(ptr).unwrap()) };
+        hpet.set_enable(false);
+        hpet.set_main_counter_value(0);
+        hpet.set_enable(true);
+        let supports_u64 = hpet.supports_64_bit_mode();
+        let period_fs = hpet.main_counter_tick_period() as u64;
+        HpetDriver { hpet, last_tick: AtomicU64::new(0), supports_u64, period_fs }
+    }
+
+    fn read_ticks(&self) -> u64 {
+        if self.supports_u64 {
+            self.hpet.main_counter_value()
+        } else {
+            let current = self.hpet.main_counter_value() & (u32::MAX as u64);
+            loop {
+                let last = self.last_tick.load(Ordering::Acquire);
+                let last_low = last & (u32::MAX as u64);
+                let widened = (last & !(u32::MAX as u64)) + current + if current < last_low { 1u64 << 32 } else { 0 };
+
+                match self.last_tick.compare_exchange_weak(last, widened, Ordering::AcqRel, Ordering::Acquire) {
+                    Ok(_) => return widened,
+                    Err(_) => continue,
+                }
+            }
         }
-        self.last_low = current;
-        self.high | current as u64
+    }
+
+    fn uptime_nano(&self) -> u64 {
+        (self.read_ticks() as u128 * self.period_fs as u128 / 1_000_000) as u64
     }
 }
 
-pub fn init_hpet(hpet_info: HpetInfo) -> Option<()> {
-    let ptr = map_mmio_ptr(hpet_info.base_address, HPET_MMIO_SIZE)?;
-    let mut hpet = unsafe { Hpet::new(NonZero::new(ptr)?) };
-    hpet.set_enable(false);
-    hpet.set_main_counter_value(0);
-    hpet.set_enable(true);
-    *HPET.lock() = Some(HpetState {
-        hpet,
-        last_low: 0,
-        high: 0,
-    });
-    Some(())
-}
-
-pub fn uptime_nano() -> u64 {
-    let mut hpet_guard = HPET.lock();
-    let state = hpet_guard
-        .as_mut()
-        .expect("uptime_nano() was called before hpet was init");
-    let ticks = state.read_ticks();
-    let period_fs = state.hpet.main_counter_tick_period() as u64;
-    (ticks as u128 * period_fs as u128 / 1_000_000) as u64
+impl Read<KernelInstant> for HpetDriver {
+    fn read(&self, _cx: &mut core::task::Context) -> Poll<Result<KernelInstant, crate::dev::DeviceError>> {
+        Poll::Ready(Ok(KernelInstant::from_ticks(self.uptime_nano())))
+    }
 }

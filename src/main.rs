@@ -47,6 +47,10 @@ pub fn ap_main() -> ! {
     task::executor::EXECUTOR.wait().run()
 }
 
+pub async fn kernel_init_task() {
+    task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers(), ));
+}
+
 use core::panic::PanicInfo;
 
 use acpi::HpetInfo;

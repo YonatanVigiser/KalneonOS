@@ -3,7 +3,7 @@ pub mod scheduler;
 pub mod sleep;
 pub mod waker;
 
-use alloc::boxed::Box;
+use alloc::{boxed::Box, sync::Arc};
 use core::{
     cell::UnsafeCell,
     future::Future,
@@ -11,6 +11,8 @@ use core::{
     sync::atomic::{AtomicU64, Ordering},
     task::{Context, Poll},
 };
+
+use crate::dev::registry::Registry;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(transparent)]
@@ -30,15 +32,17 @@ pub struct Task {
     future: UnsafeCell<Pin<Box<dyn Future<Output = ()>>>>,
     pinned: bool,
     affinity_threshold: f64,
+    device_registry: Arc<Registry>,
 }
 
 impl Task {
-    pub fn new(future: impl Future<Output = ()> + 'static) -> Self {
+    pub fn new(future: impl Future<Output = ()> + 'static, device_registry: Arc<Registry>) -> Self {
         Self {
             id: TaskId::new(),
             future: UnsafeCell::new(Box::pin(future)),
             pinned: false,
             affinity_threshold: DEFAULT_AFFINITY_THRESHOLD_RATIO,
+            device_registry,
         }
     }
 
@@ -58,6 +62,10 @@ impl Task {
 
     pub fn affinity_threshold(&self) -> f64 {
         self.affinity_threshold
+    }
+
+    pub fn device_registry(&self) -> Arc<Registry> {
+        self.device_registry.clone()
     }
 
     pub fn poll(&self, context: &mut Context) -> Poll<()> {

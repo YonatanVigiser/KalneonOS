@@ -36,3 +36,4 @@ type ErasedDevice = Box<dyn Any + Send + Sync>;
 pub trait Device: Send + Sync + 'static {
     fn capabilities(self: Arc<Self>) -> Vec<(TypeId, ErasedDevice)>;
 }
+
