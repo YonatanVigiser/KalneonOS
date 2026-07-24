@@ -1,14 +1,10 @@
 use core::{sync::atomic::{AtomicU64, Ordering}, task::{Context, Poll, Waker}};
 
-use alloc::{
-    collections::btree_map::BTreeMap,
-    sync::{Arc, Weak},
-    vec::Vec,
-};
+use alloc::{collections::btree_map::BTreeMap, sync::{Arc, Weak}, vec::Vec};
 use crossbeam_queue::ArrayQueue;
 use spin::{Mutex, Once};
 
-use crate::{arch::cpu::current_cpu, task::{Task, TaskId, executor, waker::TaskWaker, yield_now}, time::uptime_nano};
+use crate::{arch::cpu::current_cpu, task::{Task, TaskId, TaskState::*, waker::TaskWaker}, time::uptime};
 
 const TASKS_QUEUE_SIZE: usize = 100;
 const DEFAULT_AVRAGE: u64 = 50_000;
@@ -49,6 +45,7 @@ impl Executor {
             .iter()
             .min_by(|x, y| x.len().cmp(&y.len()))
             .unwrap();
+        task.state.store(Scheduled, Ordering::Release);
         lightest_queue
             .push(Arc::downgrade(&task))
             .expect("All task queues are full");
@@ -69,11 +66,11 @@ impl Executor {
         let avg = &self.avrage_runtimes[core_id];
         loop {
             if let Some(weak_task) = task_queue.pop() && let Some(task) = weak_task.upgrade() {
-                let start_time = uptime_nano();
+                let start_time = uptime();
                 self.execute_task(&task);
-                let end_time = uptime_nano();
+                let end_time = uptime();
 
-                let delta_time = (end_time - start_time) as f64;
+                let delta_time = (end_time - start_time).as_nanos() as f64;
                 let old_time = avg.load(Ordering::Relaxed) as f64;
                 let new_avg = old_time * (1.0 - EWMA_CONSTANT) + delta_time * EWMA_CONSTANT;
                 avg.store(new_avg as u64, Ordering::Relaxed);
@@ -82,18 +79,31 @@ impl Executor {
     }
 
     fn execute_task(&self, task: &Arc<Task>) {
+        task.state.store(Running, Ordering::Release);
         let core_id = current_cpu().logical_id;
+        current_cpu().current_task_id = Some(task.id);
         let waker: Waker = TaskWaker::new_waker(Arc::downgrade(task), core_id);
         let mut context = Context::from_waker(&waker);
-        if let Poll::Ready(()) = task.poll(&mut context) {
-            self.tasks
-                .lock()
-                .remove(&task.id)
-                .expect("Shouldn't panic!");
+        loop {
+            match task.poll(&mut context) {
+                Poll::Ready(()) => { task.state.store(Completed, Ordering::Release); self.tasks.lock().remove(&task.id).expect("Shouldn't panic!"); break; },
+                Poll::Pending => {
+                    match task.state.compare_exchange(Running, Idle, Ordering::AcqRel, Ordering::Acquire) {
+                        Ok(_) => break,
+                        Err(Notified) => {
+                            task.state.store(Scheduled, Ordering::Release);
+                            self.enqueue(task, core_id);
+                            break;
+                        },
+                        Err(other) => panic!("unexpected task state: {:?}", other),
+                    }
+                },
+            }
         }
+        current_cpu().current_task_id = None;
     }
 
-    pub(super) fn wake_task(&self, task: &Arc<Task>, prev_core: usize) {
+    fn enqueue(&self, task: &Arc<Task>, prev_core: usize) {
         let queue = if !task.is_pinned() {
             let iter = self.tasks_queues.iter().zip(self.avrage_runtimes.iter()).map(|(queue, avg)| avg.load(Ordering::Relaxed) * queue.len() as u64).enumerate();
             let (estimate_sum, count) = iter.clone().fold((0u64, 0u64), |(sum, count), x| (sum + x.1, count + 1));
@@ -110,5 +120,25 @@ impl Executor {
             &self.tasks_queues[prev_core]
         };
         queue.push(Arc::downgrade(task)).expect("Task queue is full");
+    }
+
+
+    pub(super) fn wake_task(&self, task: &Arc<Task>, prev_core: usize) {
+        loop {
+            match task.state.compare_exchange_weak(Idle, Scheduled, Ordering::AcqRel, Ordering::Acquire) {
+                Ok(_) => break,
+                Err(Running) => {
+                    if task.state.compare_exchange(Running, Notified, Ordering::AcqRel, Ordering::Acquire).is_ok() { return }
+                }
+                Err(Scheduled | Notified) => return,
+                Err(Completed) => return,
+                Err(Idle) => {}
+            }
+        }
+        self.enqueue(task, prev_core);
+    }
+
+    pub fn get_task(&self, id: TaskId) -> Option<Arc<Task>> {
+        self.tasks.lock().get(&id).map(|t| t.clone())
     }
 }

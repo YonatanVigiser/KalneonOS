@@ -256,7 +256,7 @@ pub enum MemoryType {
     Other,
 }
 
-use crate::utils::traits::Indexable;
+use crate::common::traits::Indexable;
 impl<S: PageSize> Indexable for PhysFrame<S> {
     fn as_index(&self) -> usize {
         (self.start_address().as_u64() / S::SIZE) as usize

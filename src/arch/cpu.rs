@@ -3,6 +3,8 @@ use x86_64::{VirtAddr, registers::model_specific::GsBase};
 
 use alloc::boxed::Box;
 
+use crate::task::TaskId;
+
 #[repr(C)]
 pub struct CpuLocal {
     self_ptr: *mut CpuLocal,
@@ -11,6 +13,7 @@ pub struct CpuLocal {
     interrupts_depth: u16,
     pub lapic: LocalApic,
     pub kernel_stack_top: u64,
+    pub current_task_id: Option<TaskId>,
 }
 
 impl CpuLocal {
@@ -32,6 +35,7 @@ pub(super) fn init(uid: u32, logical_id: usize, lapic: LocalApic) {
         lapic,
         interrupts_depth: 0,
         kernel_stack_top: 0,
+        current_task_id: None,
     }));
     local.self_ptr = local as *mut CpuLocal;
     let addr = VirtAddr::new(local.self_ptr as u64);

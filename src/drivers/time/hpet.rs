@@ -1,4 +1,4 @@
-use crate::{dev::Read, memory::map_mmio_ptr, time::KernelInstant};
+use crate::{allow, dev::{GLOBAL_REGISTRY, Info, Read}, device_caps, memory::map_mmio_ptr, time::{KernelDuration, KernelInstant, TimerResolution}};
 use core::{num::NonZero, sync::atomic::{AtomicU64, Ordering}, task::Poll, u32};
 use acpi::HpetInfo;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};
@@ -49,4 +49,17 @@ impl Read<KernelInstant> for HpetDriver {
     fn read(&self, _cx: &mut core::task::Context) -> Poll<Result<KernelInstant, crate::dev::DeviceError>> {
         Poll::Ready(Ok(KernelInstant::from_ticks(self.uptime_nano())))
     }
+}
+
+impl Info<TimerResolution> for HpetDriver {
+    fn info(&self) -> TimerResolution {
+        TimerResolution::from_nanos(self.period_fs / 1_000_000)
+    }
+}
+
+device_caps!(HpetDriver: dyn Read<KernelInstant>, dyn Info<TimerResolution>);
+
+pub fn init(hpet_info: HpetInfo) {
+    let hpet = HpetDriver::new(hpet_info);
+    GLOBAL_REGISTRY.lock().register(hpet, allow!(dyn Read<KernelInstant>, dyn Info<TimerResolution>));
 }

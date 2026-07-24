@@ -10,16 +10,15 @@ pub struct DeviceId(u64);
 #[macro_export]
 macro_rules! device_caps {
     ($ty:ty : $($iface:ty),+ $(,)?) => {
-        impl $crate::Device for $ty {
+        impl $crate::dev::Device for $ty {
             fn capabilities(
                 self: ::alloc::sync::Arc<Self>,
-            ) -> ::alloc::vec::Vec<(::core::any::TypeId, $crate::Erased)> {
+            ) -> ::alloc::vec::Vec<(::core::any::TypeId, $crate::dev::ErasedDevice)> {
                 ::alloc::vec![
                     $((
                         ::core::any::TypeId::of::<$iface>(),
-                        ::alloc::boxed::Box::new(::alloc::sync::Arc::downgrade(
-                            &(::alloc::sync::Arc::clone(&self) as ::alloc::sync::Arc<$iface>),
-                        )) as $crate::Erased,
+                        ::alloc::boxed::Box::new(::alloc::sync::Arc::downgrade( &(::alloc::sync::Arc::clone(&self) as ::alloc::sync::Arc<$iface>),
+                        )) as $crate::dev::ErasedDevice,
                     ),)+
                 ]
             }
@@ -28,7 +27,7 @@ macro_rules! device_caps {
 }
  
 #[macro_export]
-macro_rules! ifaces {
+macro_rules! allow {
     ($($iface:ty),* $(,)?) => {{
         let mut set: ::alloc::collections::BTreeSet<::core::any::TypeId> =
             ::alloc::collections::BTreeSet::new();
@@ -38,19 +37,19 @@ macro_rules! ifaces {
 }
  
 struct Registration {
-    anchor: Option<Arc<dyn Device>>,
+    anchor: Option<Arc<dyn Device>>, // Represents device ownership, keeps the device alive
     allowed: BTreeMap<TypeId, ErasedDevice>,
 }
  
-pub struct Registry {
+pub struct DeviceRegistry {
     next_id: u64,
     devices: BTreeMap<DeviceId, Registration>,
     index: BTreeMap<TypeId, Vec<DeviceId>>,
 }
  
-impl Registry {
+impl DeviceRegistry {
     pub const fn new() -> Self {
-        Registry {
+        DeviceRegistry {
             next_id: 0,
             devices: BTreeMap::new(),
             index: BTreeMap::new(),
@@ -63,7 +62,7 @@ impl Registry {
         id
     }
 
-    pub fn register<D: Device>(&mut self, dev: D, allow: &BTreeSet<TypeId>) -> DeviceId {
+    pub fn register<D: Device>(&mut self, dev: D, allow: BTreeSet<TypeId>) -> DeviceId {
         let anchor: Arc<D> = Arc::new(dev);
         let caps = Arc::clone(&anchor).capabilities();
         let id = self.next_id();
@@ -88,12 +87,12 @@ impl Registry {
 
     pub fn borrow(
         &mut self,
-        from: &Registry,
+        from: &DeviceRegistry,
         id: DeviceId,
         allow: &BTreeSet<TypeId>,
     ) -> Option<DeviceId> {
         let src = from.devices.get(&id)?;
-        let anchor = src.anchor.as_ref()?; // None ⇒ `from` is itself a borrower
+        let anchor = src.anchor.as_ref()?;
  
         let caps = Arc::clone(anchor).capabilities();
  
@@ -120,6 +119,28 @@ impl Registry {
         );
         Some(new_id)
     }
+
+    pub fn get<T: ?Sized + 'static>(&self, id: DeviceId) -> Option<Arc<T>> {
+        let tid = TypeId::of::<T>();
+        let reg = self.devices.get(&id)?;
+        let erased = reg.allowed.get(&tid)?;
+        let weak = erased.downcast_ref::<Weak<T>>()?;
+        Some(weak.upgrade()?)
+    }
+
+    pub fn find<T: ?Sized + 'static>(&self) -> Vec<DeviceId> {
+        let tid = TypeId::of::<T>();
+        let mut out = Vec::new();
+        let Some(ids) = self.index.get(&tid) else {
+            return out;
+        };
+        for id in ids {
+            if let Some(_) = self.get::<T>(*id) {
+                out.push(*id);
+            }
+        }
+        out
+    }
  
     pub fn query<T: ?Sized + 'static>(&self) -> Vec<Arc<T>> {
         let tid = TypeId::of::<T>();
@@ -128,40 +149,13 @@ impl Registry {
             return out;
         };
         for id in ids {
-            let Some(reg) = self.devices.get(id) else {
-                continue;
-            };
-            let Some(erased) = reg.allowed.get(&tid) else {
-                continue;
-            };
-            let Some(weak) = erased.downcast_ref::<Weak<T>>() else {
-                continue; // unreachable if handles were built by device_caps!
-            };
-            if let Some(strong) = weak.upgrade() {
-                out.push(strong);
+            if let Some(dev) = self.get(*id) {
+                out.push(dev);
             }
         }
         out
     }
- 
-    pub fn with_each<T: ?Sized + 'static>(&self, mut f: impl FnMut(&T)) {
-        let tid = TypeId::of::<T>();
-        let Some(ids) = self.index.get(&tid) else {
-            return;
-        };
-        for id in ids {
-            let strong = self
-                .devices
-                .get(id)
-                .and_then(|reg| reg.allowed.get(&tid))
-                .and_then(|erased| erased.downcast_ref::<Weak<T>>())
-                .and_then(|weak| weak.upgrade());
-            if let Some(strong) = strong {
-                f(&strong); // the Arc lives only for this call frame
-            }
-        }
-    }
- 
+
     pub fn remove(&mut self, id: DeviceId) -> bool {
         let Some(reg) = self.devices.remove(&id) else {
             return false;
@@ -182,7 +176,7 @@ impl Registry {
     }
 }
  
-impl Default for Registry {
+impl Default for DeviceRegistry {
     fn default() -> Self {
         Self::new()
     }

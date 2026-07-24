@@ -2,7 +2,7 @@ use core::sync::atomic::{AtomicUsize, Ordering};
 use pic8259::ChainedPics;
 use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 
-use crate::memory::map_mmio_ptr;
+use crate::{memory::map_mmio_ptr, time::KernelDuration};
 
 const LAPIC_MMIO_SIZE: usize = 0x1000;
 
@@ -42,7 +42,7 @@ pub fn init_lapic_timer(lapic: &mut LocalApic, nanos_per_int: u64) {
         unsafe {
             lapic.set_timer_initial(u32::MAX);
         }
-        crate::time::stall(nanos_per_int);
+        crate::time::stall(KernelDuration::from_nanos(nanos_per_int));
         ticks_sum += u32::MAX - unsafe { lapic.timer_current() };
     }
     let tick_avrg = ticks_sum / CALIBRATION_ITERATION_COUNT;
