@@ -29,8 +29,10 @@ pub fn init_smp(processor_info: &ProcessorInfo) {
 }
 
 pub unsafe fn halt_smp() {
-    let lapic = &mut cpu::current_cpu().lapic;
-    unsafe { smp::halt(lapic) }
+    if cores_count() > 1 {
+        let lapic = &mut cpu::current_cpu().lapic;
+        unsafe { smp::halt(lapic) }
+    }
 }
 
 pub fn cores_count() -> usize {

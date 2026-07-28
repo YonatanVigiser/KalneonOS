@@ -35,7 +35,6 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::init_global(&acpi.interrupt_model);
     let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
     arch::init_cpu(processor_info.boot_processor.processor_uid, 0);
-    log::info!("Got here!");
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
     common::log::swap_to_async_logging(EXECUTOR.poll().unwrap());
@@ -44,7 +43,6 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
 
 // This is called from init_smp, and all cores should enter this when they are fully initilized
 pub fn ap_main() -> ! {
-    log::info!("Hello from core: {}", arch::cpu::current_cpu().logical_id);
     interrupt::enable();
     task::executor::EXECUTOR.wait().run()
 }
