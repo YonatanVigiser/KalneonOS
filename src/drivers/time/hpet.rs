@@ -1,6 +1,7 @@
-use crate::{allow, dev::{GLOBAL_REGISTRY, Info, ReadSync}, device_caps, memory::map_mmio_ptr, time::{KernelInstant, TimerResolution}};
+use crate::{dev::{registry::DEVICE_REGISTRY, traits::UptimeSource}, memory::map_mmio_ptr, time::{KernelInstant, TimerResolution}};
 use core::{num::NonZero, sync::atomic::{AtomicU64, Ordering}, u32};
 use acpi::HpetInfo;
+use alloc::sync::Arc;
 use ez_hpet::{HPET_MMIO_SIZE, Hpet};
 
 pub(super) struct HpetDriver {
@@ -45,21 +46,17 @@ impl HpetDriver {
     }
 }
 
-impl ReadSync<KernelInstant> for HpetDriver {
-    fn read_sync(&self) -> Result<KernelInstant, crate::dev::DeviceError> {
-        Ok(KernelInstant::from_ticks(self.uptime_nano()))
+impl UptimeSource for HpetDriver {
+    fn uptime(&self) -> KernelInstant {
+        KernelInstant::from_ticks(self.uptime_nano())
     }
-}
 
-impl Info<TimerResolution> for HpetDriver {
-    fn info(&self) -> TimerResolution {
+    fn resolution(&self) -> TimerResolution {
         TimerResolution::from_nanos(self.period_fs / 1_000_000)
     }
 }
 
-device_caps!(HpetDriver: dyn ReadSync<KernelInstant>, dyn Info<TimerResolution>);
-
 pub fn init(hpet_info: HpetInfo) {
     let hpet = HpetDriver::new(hpet_info);
-    GLOBAL_REGISTRY.lock().register(hpet, allow!(dyn ReadSync<KernelInstant>, dyn Info<TimerResolution>));
+    DEVICE_REGISTRY.write().register::<dyn UptimeSource>(Arc::new(hpet));
 }

@@ -85,7 +85,7 @@ impl From<VgaCell> for u16 {
 
 pub use spin::Mutex;
 
-pub static VGA: Mutex<Option<Vga>> = Mutex::new(None);
+use crate::dev::traits::LogSink;
 
 pub struct Vga {
     vmem_ptr: *mut u16,
@@ -354,5 +354,11 @@ impl core::fmt::Write for Vga {
         self.write_string(s)
             .map(|_| ())
             .map_err(|_| core::fmt::Error)
+    }
+}
+
+impl LogSink for Vga {
+    fn log(&self, msg: &str) {
+        let _ = self.write_str(msg);
     }
 }

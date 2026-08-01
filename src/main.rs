@@ -27,6 +27,7 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
+    DEVICE_REGISTRY.read().register(Arc::new(Vga::init(80, 25)));
     common::log::init_logger();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
@@ -37,7 +38,6 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     arch::init_cpu(processor_info.boot_processor.processor_uid, 0);
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
-    common::log::swap_to_async_logging(EXECUTOR.poll().unwrap());
     ap_main();
 }
 
@@ -53,9 +53,13 @@ pub async fn kernel_init_task() {
 
 use core::panic::PanicInfo;
 
+use alloc::sync::Arc;
 use x86_64::instructions::interrupts;
 
 use crate::task::{Task, executor::EXECUTOR};
+
+use self::dev::registry::DEVICE_REGISTRY;
+use self::drivers::display::vga::Vga;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
