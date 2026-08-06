@@ -8,7 +8,7 @@ pub const TIMER_VECOTR: u8 = 0x30;
 
 pub fn init_global(interrupts_model: &InterruptModel) {
     match interrupts_model {
-        InterruptModel::Apic(addr) => apic::set_lapic_addr(addr.local_apic_address as usize),
+        InterruptModel::Apic(apic_info) => apic::set_lapic_addr(apic_info.local_apic_address as usize),
         _ => panic!("Unsupported interrupts model"),
     };
 }

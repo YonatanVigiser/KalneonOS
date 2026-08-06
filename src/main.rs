@@ -5,6 +5,7 @@
 #![feature(abi_x86_interrupt)]
 #![feature(unsafe_cell_access)]
 #![feature(trait_alias)]
+#![feature(sync_unsafe_cell)]
 
 pub mod drivers;
 pub mod interrupt;
@@ -15,7 +16,6 @@ pub mod task;
 pub mod time;
 pub mod common;
 pub mod dev;
-
 extern crate alloc;
 
 #[unsafe(link_section = ".multiboot")]
@@ -27,7 +27,8 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
-    DEVICE_REGISTRY.read().register(Arc::new(Vga::init(80, 25)));
+    memory::heap::init();
+    log::info!("Heap was initilized");
     common::log::init_logger();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
@@ -51,22 +52,26 @@ pub async fn kernel_init_task() {
     task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers()));
 }
 
+use core::cell::SyncUnsafeCell;
+use core::fmt::Write;
 use core::panic::PanicInfo;
 
-use alloc::sync::Arc;
+use alloc::boxed::Box;
 use x86_64::instructions::interrupts;
 
-use crate::task::{Task, executor::EXECUTOR};
 
-use self::dev::registry::DEVICE_REGISTRY;
-use self::drivers::display::vga::Vga;
-
+pub static PANIC_CONSOLE: SyncUnsafeCell<Option<Box<dyn Write + Sync>>> = SyncUnsafeCell::new(None);
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     unsafe { arch::halt_smp(); }
-    log::error!("{}", info);
+    if let Some(mut console) = unsafe { &mut *PANIC_CONSOLE.get() }.take() {
+        writeln!(console, "ERROR - {info}");
+    }
+    log::error!("{info}");
     halt_loop()
 }
+
+use crate::task::Task;
 
 pub fn halt_loop() -> ! {
     interrupts::disable();

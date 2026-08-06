@@ -217,8 +217,6 @@ pub fn unmap_page(page: Page<FrameSize>) {
 }
 
 pub fn init(mmap: &MemoryMap) {
-    heap::init();
-    log::info!("Heap was initilized");
     let mut allocator = frame_allocator::BitmapAllocator::from_memory_map(mmap);
     log::info!("Frame allocator was initilized");
     let (mapper, l4_table_frame) = unsafe { paging::init(&mut allocator, mmap) };
