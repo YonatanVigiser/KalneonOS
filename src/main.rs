@@ -52,26 +52,28 @@ pub async fn kernel_init_task() {
     task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers()));
 }
 
-use core::cell::SyncUnsafeCell;
-use core::fmt::Write;
 use core::panic::PanicInfo;
 
-use alloc::boxed::Box;
+use alloc::sync::Arc;
+use spin::Once;
 use x86_64::instructions::interrupts;
 
 
-pub static PANIC_CONSOLE: SyncUnsafeCell<Option<Box<dyn Write + Sync>>> = SyncUnsafeCell::new(None);
+pub static PANIC_LOG_SINK: Once<Arc<dyn LogSink>> = Once::new();
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     unsafe { arch::halt_smp(); }
-    if let Some(mut console) = unsafe { &mut *PANIC_CONSOLE.get() }.take() {
-        writeln!(console, "ERROR - {info}");
+    if let Some(panic_log_sink) = PANIC_LOG_SINK.get() {
+        let msg = heapless::format!("{info}").and_then(|msg| Ok(msg.as_str())).unwrap_or("Panic! Formatting failed!");
+        panic_log_sink.log(msg);
     }
     log::error!("{info}");
     halt_loop()
 }
 
 use crate::task::Task;
+
+use self::dev::traits::LogSink;
 
 pub fn halt_loop() -> ! {
     interrupts::disable();

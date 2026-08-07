@@ -1,91 +1,127 @@
 use core::sync::atomic::{AtomicUsize, Ordering};
-use acpi::platform::interrupt::{Apic, IoApic as IoApicInfo};
+use acpi::platform::interrupt::{Apic, InterruptSourceOverride, IoApic as IoApicInfo};
 use acpi::sdt::madt::{Polarity, TriggerMode};
+use alloc::sync::Arc;
 use alloc::vec::Vec;
 use pic8259::ChainedPics;
+use spin::Mutex;
 use x2apic::ioapic::{IoApic, IrqFlags, IrqMode, RedirectionTableEntry};
 use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 use x86_64::structures::paging::PageSize;
 
+use crate::dev::registry::DEVICE_REGISTRY;
+use crate::dev::traits::GlobalIrqController;
 use crate::memory::FrameSize;
 use crate::{memory::map_mmio_ptr, time::KernelDuration};
 
 const LAPIC_MMIO_SIZE: usize = 0x1000;
 
-pub const IRQ_BASE: u8 = 0x20;
+pub const IRQ_BASE: u8 = 0x30;
 
-pub static LAPIC_ADDR: AtomicUsize = AtomicUsize::new(0);
+static LAPIC_PTR: AtomicUsize = AtomicUsize::new(0);
 
-pub struct IoApicBase(u32);
-
-pub struct ChainedIoApics {
-    io_apics: Vec<(IoApicInfo, IoApic)>,
+struct IoApicEntry {
+    info: IoApicInfo,
+    io_apic: IoApic,
+    max_entry: u8,
 }
 
+struct ChainedIoApics {
+    io_apics: Vec<IoApicEntry>,
+    iso: Vec<InterruptSourceOverride>,
+}
+
+struct IoApicDevice(Mutex<ChainedIoApics>);
+
 impl ChainedIoApics {
-    pub fn new(io_apics_info: Vec<IoApicInfo>) -> Self {
+    fn new(info: Apic) -> Self {
         let mut io_apics = Vec::new();
-        for io_apic_info in io_apics_info {
+        for io_apic_info in info.io_apics {
             let mmio_addr = map_mmio_ptr(io_apic_info.address as usize, FrameSize::SIZE as usize).expect("MMIO mapping failed") as u64;
-            let io_apic = unsafe { IoApic::new(mmio_addr) };
-            io_apics.push((io_apic_info, io_apic));
-        }
-        Self { io_apics }
-    }
-
-    pub fn get_ioapic(&mut self, gsi: u32) -> Option<(&IoApicInfo, &mut IoApic)> {
-        for io_apic in &mut self.io_apics {
-            let base = io_apic.0.global_system_interrupt_base;
-            let end = base + unsafe { io_apic.1.max_table_entry() } as u32;
-            if gsi >= base && gsi <= end {
-                return Some((&io_apic.0, &mut io_apic.1));
+            let mut io_apic = unsafe { IoApic::new(mmio_addr) };
+            let max_entry = unsafe { io_apic.max_table_entry() };
+            for irq in 0..=max_entry {
+                let mut entry = RedirectionTableEntry::default();
+                entry.set_mode(IrqMode::Fixed);
+                entry.set_flags(IrqFlags::MASKED);
+                unsafe { io_apic.set_table_entry(irq, entry); }
             }
+            io_apics.push(IoApicEntry { info: io_apic_info, io_apic, max_entry });
         }
-        None
+        let mut chained_io_apics = Self { io_apics, iso: info.interrupt_source_overrides };
+        for nmi_source in info.nmi_sources {
+            let io_apic_entry = chained_io_apics.get_ioapic_entry(nmi_source.global_system_interrupt).expect("IOAPIC with corrponding GSI number doesn't exist");
+            let irq = (nmi_source.global_system_interrupt - io_apic_entry.info.global_system_interrupt_base) as u8;
+            let mut entry = unsafe { io_apic_entry.io_apic.table_entry(irq) };
+            entry.set_mode(IrqMode::NonMaskable);
+            let mut flags = entry.flags();
+            flags.remove(IrqFlags::MASKED);
+            if let Polarity::ActiveLow = nmi_source.polarity { flags |= IrqFlags::LOW_ACTIVE; }
+            if let TriggerMode::Level = nmi_source.trigger_mode { flags |= IrqFlags::LEVEL_TRIGGERED; }
+            entry.set_flags(flags);
+            unsafe { io_apic_entry.io_apic.set_table_entry(irq, entry); }
+        }
+        chained_io_apics
     }
 
-    pub fn set_irq(&mut self, gsi: u32, vector: u8, dest: u8) {
-        let io_apic = self.get_ioapic(gsi);
-        let (_, io_apic) = io_apic.expect("IOAPIC with corrponding GSI number doesn't exist");
+    fn get_ioapic_entry(&mut self, gsi: u32) -> Option<&mut IoApicEntry> {
+        self.io_apics.iter_mut().find(|e| {
+            let base = e.info.global_system_interrupt_base;
+            gsi >= base && gsi <= base + e.max_entry as u32
+        })
+    }
+
+    fn resolve_isa(&self, isa: u8) -> (u32, IrqFlags) {
+        match self.iso.iter().find(|o| o.isa_source == isa) {
+            Some(o) => (o.global_system_interrupt, flags_from(o.polarity, o.trigger_mode)),
+            None => (isa as u32, IrqFlags::empty()), // edge, active-high
+        }
+    }
+
+    fn set_irq(&mut self, gsi: u32, vector: u8, dest: u8, flags: IrqFlags) {
+        let io_apic_entry = self.get_ioapic_entry(gsi).expect("IOAPIC with corrponding GSI number doesn't exist");
+        let mut entry = RedirectionTableEntry::default();
+        entry.set_mode(IrqMode::Fixed);
+        entry.set_vector(vector);
+        entry.set_dest(dest);
+        entry.set_flags(flags | IrqFlags::MASKED);
+        unsafe { io_apic_entry.io_apic.set_table_entry((gsi - io_apic_entry.info.global_system_interrupt_base) as u8, entry); }
+    }
+
+    fn set_masked(&mut self, gsi: u32, masked: bool) {
+        let io_apic_entry = self.get_ioapic_entry(gsi).expect("IOAPIC with corrponding GSI number doesn't exist");
+        let mut entry = unsafe { io_apic_entry.io_apic.table_entry((gsi - io_apic_entry.info.global_system_interrupt_base) as u8) };
+        let mut flags = entry.flags();
+        flags.set(IrqFlags::MASKED, masked);
+        entry.set_flags(flags);
+        unsafe { io_apic_entry.io_apic.set_table_entry((gsi - io_apic_entry.info.global_system_interrupt_base) as u8, entry); }
+    }
+}
+
+impl GlobalIrqController for IoApicDevice {
+    fn set_irq_routing(&self, isa_irq: u8, dest_core_id: u8) {
+        let mut inner = self.0.lock();
+        let (gsi, flags) = inner.resolve_isa(isa_irq);
+        inner.set_irq(gsi, IRQ_BASE + isa_irq, dest_core_id, flags);
+    }
+
+    fn set_masked(&self, isa_irq: u8, masked: bool) {
+        let mut inner = self.0.lock();
+        let gsi = inner.resolve_isa(isa_irq).0;
+        inner.set_masked(gsi, masked);
     }
 }
 
 pub fn init_global(info: Apic) {
     disable_pic();
-    LAPIC_ADDR.store(info.local_apic_address as usize, Ordering::Relaxed);
-    let mut io_apics = ChainedIoApics::new(info.io_apics);
-    for iso in info.interrupt_source_overrides {
-        let mut entry = RedirectionTableEntry::default();
-        entry.set_mode(IrqMode::Fixed);
-        entry.set_vector(iso.isa_source + IRQ_BASE);
-        let mut flags = IrqFlags::MASKED;
-        if let Polarity::ActiveLow = iso.polarity {
-            flags |= IrqFlags::LOW_ACTIVE;
-        }
-        if let TriggerMode::Level = iso.trigger_mode {
-            flags |= IrqFlags::LEVEL_TRIGGERED;
-        }
-        entry.set_flags(flags);
-        let (io_apic_info, io_apic) = io_apics.get_ioapic(iso.global_system_interrupt).expect("IOAPIC with corrponding GSI number doesn't exist");
-        unsafe { io_apic.set_table_entry((iso.global_system_interrupt - io_apic_info.global_system_interrupt_base) as u8, entry); }
-    }
-    for nmi_source in info.nmi_sources {
-        let (io_apic_info, io_apic) = io_apics.get_ioapic(nmi_source.global_system_interrupt).expect("IOAPIC with corrponding GSI number doesn't exist");
-        let irq = (nmi_source.global_system_interrupt - io_apic_info.global_system_interrupt_base) as u8;
-        let mut entry = unsafe { io_apic.table_entry(irq) };
-        entry.set_mode(IrqMode::NonMaskable);
-        let mut flags = entry.flags();
-        flags.remove(IrqFlags::MASKED);
-        if let Polarity::ActiveLow = nmi_source.polarity { flags |= IrqFlags::LOW_ACTIVE; }
-        if let TriggerMode::Level = nmi_source.trigger_mode { flags |= IrqFlags::LEVEL_TRIGGERED; }
-        entry.set_flags(flags);
-        unsafe { io_apic.set_table_entry(irq, entry); }
-    }
+    let lapic_ptr = map_mmio_ptr(info.local_apic_address as usize, LAPIC_MMIO_SIZE).expect("MMIO map failed");
+    LAPIC_PTR.store(lapic_ptr, Ordering::Release);
+    let io_apic_dev = IoApicDevice(Mutex::new(ChainedIoApics::new(info)));
+    DEVICE_REGISTRY.write().register(Arc::new(io_apic_dev) as Arc<dyn GlobalIrqController>);
 }
 
 pub fn init_lapic() -> LocalApic {
-    let lapic_ptr =
-        map_mmio_ptr(LAPIC_ADDR.load(Ordering::Relaxed), LAPIC_MMIO_SIZE).expect("MMIO map failed");
+    let lapic_ptr = LAPIC_PTR.load(Ordering::Acquire);
     let mut lapic = LocalApicBuilder::new()
         .set_xapic_base(lapic_ptr as u64)
         .spurious_vector(super::SUPRIOUS_VECTOR as usize)
@@ -129,3 +165,11 @@ fn disable_pic() {
         pic.disable();
     }
 }
+
+fn flags_from(polarity: Polarity, trigger_mode: TriggerMode) -> IrqFlags {
+    let mut flags = IrqFlags::empty();
+    if let Polarity::ActiveLow = polarity { flags |= IrqFlags::LOW_ACTIVE }
+    if let TriggerMode::Level = trigger_mode { flags |= IrqFlags::LEVEL_TRIGGERED }
+    flags
+}
+

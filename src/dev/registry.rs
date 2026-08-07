@@ -10,7 +10,7 @@ pub struct DeviceId(u64);
 impl DeviceId {
     fn next() -> Self {
         static NEXT_ID: AtomicU64 = AtomicU64::new(0);
-        Self(NEXT_ID.load(Ordering::Relaxed))
+        Self(NEXT_ID.fetch_add(1, Ordering::Relaxed))
     }
 }
 
@@ -75,15 +75,6 @@ macro_rules! define_registry {
                 }
             }
 
-            pub fn remove(&mut self, id: DeviceId) -> bool {
-                let mut found = false;
-                $( if self.$field.remove(id) { found = true; } )+
-                if found {
-                    self.generation += 1;
-                }
-                found
-            }
-
             pub fn ids(&self) -> Vec<DeviceId> {
                 let mut out = Vec::new();
                 $( for (id, _) in self.$field.entries() {
@@ -107,6 +98,7 @@ use super::traits::*;
 define_registry! {
     uptime_source: dyn UptimeSource,
     log_sink: dyn LogSink,
+    global_irq_controller: dyn GlobalIrqController,
 }
 
 impl DeviceRegistry {
@@ -122,8 +114,8 @@ impl DeviceRegistry {
         self.generation += 1;
     }
 
-    pub fn query<R: Role + ?Sized>(&self) -> &[(DeviceId, Arc<R>)] {
-        R::slot(self).entries()
+    pub fn query<R: Role + ?Sized>(&self) -> Vec<(DeviceId, Arc<R>)> {
+        R::slot(self).entries().iter().collect()
     }
 
     pub fn get<R: Role + ?Sized>(&self, id: DeviceId) -> Option<Arc<R>> {
