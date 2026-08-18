@@ -236,11 +236,6 @@ pub fn init(mmap: &MemoryMap) {
 }
 
 fn post_paging() {
-    let mut guard = crate::drivers::display::vga::VGA.lock();
-    let vga = guard.as_mut().expect("VGA not initialized before paging");
-    let ptr = crate::memory::map_mmio_ptr(vga.get_ptr() as usize, vga.get_buffer_size())
-        .expect("VGA MMIO remap failed") as *mut u16;
-    vga.update_ptr(ptr);
 }
 
 #[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]

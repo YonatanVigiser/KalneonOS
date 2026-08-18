@@ -83,6 +83,8 @@ impl From<VgaCell> for u16 {
     }
 }
 
+use core::fmt::Write;
+
 pub use spin::Mutex;
 
 use crate::dev::traits::LogSink;
@@ -340,10 +342,6 @@ impl Vga {
         self.vmem_ptr
     }
 
-    pub fn update_ptr(&mut self, new_ptr: *mut u16) {
-        self.vmem_ptr = new_ptr;
-    }
-
     pub fn get_buffer_size(&self) -> usize {
         self.width as usize * self.height as usize * u16::BITS as usize
     }
@@ -357,8 +355,11 @@ impl core::fmt::Write for Vga {
     }
 }
 
-impl LogSink for Vga {
+struct VgaDev(Mutex<Vga>);
+
+impl LogSink for VgaDev {
     fn log(&self, msg: &str) {
-        let _ = self.write_str(msg);
+        let mut lock = self.0.lock();
+        let _ = (&mut *lock).write_str(msg);
     }
 }

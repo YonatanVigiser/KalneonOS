@@ -28,6 +28,7 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
     memory::heap::init();
+    drivers::init_early();
     log::info!("Heap was initilized");
     common::log::init_logger();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
@@ -45,6 +46,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
 // This is called from init_smp, and all cores should enter this when they are fully initilized
 pub fn ap_main() -> ! {
     interrupt::enable();
+    log::info!("Hello from core {}", current_cpu().logical_id);
     task::executor::EXECUTOR.wait().run()
 }
 
@@ -52,9 +54,11 @@ pub async fn kernel_init_task() {
     task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers()));
 }
 
+use core::fmt::Write;
 use core::panic::PanicInfo;
 
 use alloc::sync::Arc;
+use heapless::String;
 use spin::Once;
 use x86_64::instructions::interrupts;
 
@@ -64,8 +68,9 @@ pub static PANIC_LOG_SINK: Once<Arc<dyn LogSink>> = Once::new();
 fn panic(info: &PanicInfo) -> ! {
     unsafe { arch::halt_smp(); }
     if let Some(panic_log_sink) = PANIC_LOG_SINK.get() {
-        let msg = heapless::format!("{info}").and_then(|msg| Ok(msg.as_str())).unwrap_or("Panic! Formatting failed!");
-        panic_log_sink.log(msg);
+        let mut message: String<1024> = String::new();
+        let _ = writeln!(message, "{info}");
+        panic_log_sink.log(&message.as_str());
     }
     log::error!("{info}");
     halt_loop()
@@ -73,6 +78,7 @@ fn panic(info: &PanicInfo) -> ! {
 
 use crate::task::Task;
 
+use self::arch::cpu::current_cpu;
 use self::dev::traits::LogSink;
 
 pub fn halt_loop() -> ! {

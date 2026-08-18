@@ -99,6 +99,7 @@ define_registry! {
     uptime_source: dyn UptimeSource,
     log_sink: dyn LogSink,
     global_irq_controller: dyn GlobalIrqController,
+    char_out: dyn CharOut,
 }
 
 impl DeviceRegistry {
@@ -114,7 +115,7 @@ impl DeviceRegistry {
         self.generation += 1;
     }
 
-    pub fn query<R: Role + ?Sized>(&self) -> Vec<(DeviceId, Arc<R>)> {
+    pub fn query<R: Role + ?Sized>(&self) -> Vec<&(DeviceId, Arc<R>)> {
         R::slot(self).entries().iter().collect()
     }
 

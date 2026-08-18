@@ -1,11 +1,11 @@
 build_mode  := "debug"
 target_arch := "x86_64"
-limine_ver  := "v12.x-binary"
+limine_ver  := "v11.x-binary"
 
 limine_bin := "build/limine/limine"
 limine_dir := "build/limine"
 
-default: (run "bios" target_arch "true")
+default: (run "bios" target_arch "false")
 
 _limine:
     @test -x "{{limine_bin}}" && test -e "{{limine_dir}}/limine-bios.sys" \
@@ -34,11 +34,13 @@ iso arch=target_arch: (build arch) _limine
     {{limine_bin}} bios-install build/kalneon_os-{{arch}}.iso
 
 run firmware="bios" arch=target_arch vnc="false": (iso arch)
+    mkdir -p logs/
     {{ if arch == "x86" { "qemu-system-i386" } else { "qemu-system-x86_64" } }} \
         {{ if firmware == "uefi" { "-bios /usr/share/ovmf/OVMF.fd" } else { "" } }} \
         {{ if path_exists("/dev/kvm") == "true" { "-enable-kvm -cpu host" } else { "" } }} \
         -drive file=build/kalneon_os-{{arch}}.iso,format=raw,if=ide,media=disk \
         -m 1024M -smp 4 \
-        -gdb tcp::26000 -S -d cpu_reset -D /tmp/qemu.log \
+        -serial file:logs/serial.log \
+        -gdb tcp::26000 -S -d cpu_reset -D logs/qemu.log \
         {{ if vnc == "true" { "-vnc :1"} else { "" } }} &
-    gdb-multiarch build/iso-{{arch}}/boot/kernel
+    gdb build/iso-{{arch}}/boot/kernel
