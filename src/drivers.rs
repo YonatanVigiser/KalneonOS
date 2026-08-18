@@ -19,5 +19,5 @@ pub fn init() {
     let acpi = ACPI.poll().unwrap();
     time::hpet::init(HpetInfo::new(&acpi.tables).expect("No HPET info in ACPI tables!"));
     display::vga::init();
-    log::info!("Driver where init!");
+    log::info!("Drivers were init!");
 }

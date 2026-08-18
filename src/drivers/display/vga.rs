@@ -105,13 +105,12 @@ pub struct Vga {
 }
 
 unsafe impl Send for Vga {}
-unsafe impl Sync for Vga {}
 
 impl Vga {
     pub fn init(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
-        let vmem_ptr = map_mmio_ptr(vmem_ptr as usize, width as usize * height as usize * u16::BITS as usize).expect("MMIO failed") as *mut u16;
+        let vmem_ptr = map_mmio_ptr(vmem_ptr as usize, width as usize * height as usize * size_of::<u16>() as usize).expect("MMIO failed") as *mut u16;
         let mut vga = Self {
             vmem_ptr,
             cx: 0,
@@ -256,7 +255,7 @@ impl Vga {
 
     fn get_video_type_bda() -> VideoType {
         let bda_detected_hardware_ptr = 0x410;
-        let bda_detected_hardware_ptr = map_mmio_ptr(bda_detected_hardware_ptr as usize, usize::BITS as usize).expect("MMIO failed") as *const u8;
+        let bda_detected_hardware_ptr = map_mmio_ptr(bda_detected_hardware_ptr as usize, size_of::<*const u8>() as usize).expect("MMIO failed") as *const u8;
         unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
     }
 
@@ -343,7 +342,7 @@ impl Vga {
     }
 
     pub fn get_buffer_size(&self) -> usize {
-        self.width as usize * self.height as usize * u16::BITS as usize
+        self.width as usize * self.height as usize * size_of::<u16>() as usize
     }
 }
 
