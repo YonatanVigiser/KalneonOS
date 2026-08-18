@@ -29,23 +29,8 @@ impl<R: ?Sized> Slot<R> {
         self.generation += 1;
     }
 
-    fn remove(&mut self, id: DeviceId) -> bool {
-        let before = self.entries.len();
-        self.entries.retain(|(d, _)| *d != id);
-        if self.entries.len() != before {
-            self.generation += 1;
-            true
-        } else {
-            false
-        }
-    }
-
     fn entries(&self) -> &[(DeviceId, Arc<R>)] {
         &self.entries
-    }
-
-    fn generation(&self) -> u64 {
-        self.generation
     }
 }
 
@@ -115,8 +100,8 @@ impl DeviceRegistry {
         self.generation += 1;
     }
 
-    pub fn query<R: Role + ?Sized>(&self) -> Vec<&(DeviceId, Arc<R>)> {
-        R::slot(self).entries().iter().collect()
+    pub fn query<R: Role + ?Sized>(&self) -> Vec<(DeviceId, Arc<R>)> {
+        R::slot(self).entries().iter().cloned().collect()
     }
 
     pub fn get<R: Role + ?Sized>(&self, id: DeviceId) -> Option<Arc<R>> {

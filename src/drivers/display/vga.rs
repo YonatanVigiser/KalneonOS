@@ -83,11 +83,12 @@ impl From<VgaCell> for u16 {
     }
 }
 
-use core::fmt::Write;
-
+use alloc::sync::Arc;
 pub use spin::Mutex;
 
+use crate::dev::registry::DEVICE_REGISTRY;
 use crate::dev::traits::LogSink;
+use crate::memory::map_mmio_ptr;
 
 pub struct Vga {
     vmem_ptr: *mut u16,
@@ -103,9 +104,6 @@ pub struct Vga {
     cell_under_cursor: VgaCell,
 }
 
-// SAFETY: Vga contains a pointer to memory-mapped I/O (VGA text buffer at 0xB8000).
-// This is not heap memory and is safe to access from any execution context.
-// The hardware handles concurrent access, and VGA text mode operations are atomic at the u16 level.
 unsafe impl Send for Vga {}
 unsafe impl Sync for Vga {}
 
@@ -113,6 +111,7 @@ impl Vga {
     pub fn init(width: u8, height: u8) -> Self {
         let video_type = Self::get_video_type_bda();
         let vmem_ptr = Self::get_vmem_ptr(&video_type);
+        let vmem_ptr = map_mmio_ptr(vmem_ptr as usize, width as usize * height as usize * u16::BITS as usize).expect("MMIO failed") as *mut u16;
         let mut vga = Self {
             vmem_ptr,
             cx: 0,
@@ -256,7 +255,8 @@ impl Vga {
     }
 
     fn get_video_type_bda() -> VideoType {
-        let bda_detected_hardware_ptr: *const u8 = 0x410 as *const u8;
+        let bda_detected_hardware_ptr = 0x410;
+        let bda_detected_hardware_ptr = map_mmio_ptr(bda_detected_hardware_ptr as usize, usize::BITS as usize).expect("MMIO failed") as *const u8;
         unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
     }
 
@@ -347,19 +347,17 @@ impl Vga {
     }
 }
 
-impl core::fmt::Write for Vga {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        self.write_string(s)
-            .map(|_| ())
-            .map_err(|_| core::fmt::Error)
-    }
-}
-
 struct VgaDev(Mutex<Vga>);
 
 impl LogSink for VgaDev {
     fn log(&self, msg: &str) {
         let mut lock = self.0.lock();
-        let _ = (&mut *lock).write_str(msg);
+        let _ = (&mut *lock).write_string(msg);
     }
 }
+
+pub fn init() {
+    let vga_dev = VgaDev(Mutex::new(Vga::init(80, 25)));
+    DEVICE_REGISTRY.write().register::<dyn LogSink>(Arc::new(vga_dev));
+}
+

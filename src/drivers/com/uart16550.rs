@@ -1,7 +1,9 @@
+use core::fmt::Write;
+
 use alloc::sync::Arc;
 use spin::Mutex;
 use uart_16550::backend::{Backend, PioBackend};
-use uart_16550::{Config, Uart16550};
+use uart_16550::{Config, Uart16550, Uart16550Tty};
 
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::dev::traits::{CharOut, LogSink};
@@ -29,12 +31,18 @@ pub fn init() {
     }
 }
 
+pub fn emergency_tty() -> Option<impl Write> {
+    unsafe { Uart16550Tty::new_port(COM1_IO_PORT, Config::default()) }.ok()
+}
+
 struct UartDev<B: Backend>(Mutex<Uart16550<B>>);
 
 impl<B: Backend> CharOut for UartDev<B> {
     fn out(&self, c: char) {
         let mut buf = [0u8; 4];
-        self.0.lock().send_bytes_exact(c.encode_utf8(&mut buf).as_bytes());
+        self.0
+            .lock()
+            .send_bytes_exact(c.encode_utf8(&mut buf).as_bytes());
     }
 }
 

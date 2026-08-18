@@ -29,8 +29,8 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
     memory::heap::init();
     drivers::init_early();
-    log::info!("Heap was initilized");
     common::log::init_logger();
+    log::info!("Heap was initilized");
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
     let acpi = platform::acpi::init_platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
@@ -57,29 +57,22 @@ pub async fn kernel_init_task() {
 use core::fmt::Write;
 use core::panic::PanicInfo;
 
-use alloc::sync::Arc;
-use heapless::String;
-use spin::Once;
 use x86_64::instructions::interrupts;
 
 
-pub static PANIC_LOG_SINK: Once<Arc<dyn LogSink>> = Once::new();
+//pub static PANIC_LOG_SINK: Once<Arc<dyn LogSink>> = Once::new();
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     unsafe { arch::halt_smp(); }
-    if let Some(panic_log_sink) = PANIC_LOG_SINK.get() {
-        let mut message: String<1024> = String::new();
-        let _ = writeln!(message, "{info}");
-        panic_log_sink.log(&message.as_str());
+    if let Some(mut panic_log_sink) = drivers::panic_log_sink() {
+        let _ = writeln!(panic_log_sink, "{info}");
     }
-    log::error!("{info}");
     halt_loop()
 }
 
 use crate::task::Task;
 
 use self::arch::cpu::current_cpu;
-use self::dev::traits::LogSink;
 
 pub fn halt_loop() -> ! {
     interrupts::disable();

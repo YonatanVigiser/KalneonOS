@@ -8,6 +8,6 @@ set disassembly-flavor intel
 set architecture auto
 layout asm
 layout reg
-#hbreak _start
+b _start
 #b main
 target remote localhost:26000

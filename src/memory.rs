@@ -231,11 +231,7 @@ pub fn init(mmap: &MemoryMap) {
     *VMM.lock() = Some(vmm);
     *MAPPER.lock() = Some(mapper);
     unsafe { paging::enable(l4_table_frame) };
-    post_paging();
     log::info!("Paging was initilized");
-}
-
-fn post_paging() {
 }
 
 #[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
