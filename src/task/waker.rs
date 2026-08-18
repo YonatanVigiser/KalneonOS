@@ -17,8 +17,8 @@ impl TaskWaker {
 
 impl Wake for TaskWaker {
     fn wake(self: Arc<Self>) {
-        if let Some(task) = self.task.upgrade() {
-            EXECUTOR.get().expect("Executer not init when wake was called!").wake_task(&task, self.prev_core);
-        }
+        let Some(task) = self.task.upgrade() else { return };
+        let executor = EXECUTOR.get().expect("Executer not init when wake was called!");
+        executor.wake_task(&task, self.prev_core);
     }
 }

@@ -1,5 +1,5 @@
 use crate::memory;
-use crate::time::stall;
+use crate::time::{KernelDuration, stall};
 use acpi::platform::{ProcessorInfo, ProcessorState};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use x2apic::lapic::{IpiAllShorthand, LocalApic};
@@ -58,14 +58,14 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
         let start_vector = (code_frame.start_address().as_u64() >> 12) as u8;
         unsafe {
             lapic.send_init_ipi(core.local_apic_id);
-            stall(10_000_000);
+            stall(KernelDuration::from_nanos(10_000_000));
             lapic.send_sipi(start_vector, core.local_apic_id);
-            stall(1_000_000);
+            stall(KernelDuration::from_nanos(1_000_000));
             lapic.send_sipi(start_vector, core.local_apic_id);
         }
     }
     BSP_FINISH.store(true, Ordering::Release);
-    stall(1_000_000);
+    stall(KernelDuration::from_nanos(1_000_000));
     let cores_count = ACTIVE_PROCESSORS_COUNTER.load(Ordering::Acquire);
     log::info!("SMP: {} core(s) online", cores_count);
 }
