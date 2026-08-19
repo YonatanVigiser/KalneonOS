@@ -217,8 +217,6 @@ pub fn unmap_page(page: Page<FrameSize>) {
 }
 
 pub fn init(mmap: &MemoryMap) {
-    heap::init();
-    log::info!("Heap was initilized");
     let mut allocator = frame_allocator::BitmapAllocator::from_memory_map(mmap);
     log::info!("Frame allocator was initilized");
     let (mapper, l4_table_frame) = unsafe { paging::init(&mut allocator, mmap) };
@@ -233,16 +231,7 @@ pub fn init(mmap: &MemoryMap) {
     *VMM.lock() = Some(vmm);
     *MAPPER.lock() = Some(mapper);
     unsafe { paging::enable(l4_table_frame) };
-    post_paging();
     log::info!("Paging was initilized");
-}
-
-fn post_paging() {
-    let mut guard = crate::drivers::display::vga::VGA.lock();
-    let vga = guard.as_mut().expect("VGA not initialized before paging");
-    let ptr = crate::memory::map_mmio_ptr(vga.get_ptr() as usize, vga.get_buffer_size())
-        .expect("VGA MMIO remap failed") as *mut u16;
-    vga.update_ptr(ptr);
 }
 
 #[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
@@ -256,7 +245,7 @@ pub enum MemoryType {
     Other,
 }
 
-use crate::utils::traits::Indexable;
+use crate::common::traits::Indexable;
 impl<S: PageSize> Indexable for PhysFrame<S> {
     fn as_index(&self) -> usize {
         (self.start_address().as_u64() / S::SIZE) as usize

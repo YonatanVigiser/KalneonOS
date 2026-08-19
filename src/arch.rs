@@ -1,6 +1,6 @@
 use acpi::platform::ProcessorInfo;
 use spin::Once;
-use core::sync::atomic::Ordering;
+use core::sync::atomic::{AtomicBool, Ordering};
 
 use boot::BootInfo;
 
@@ -29,8 +29,11 @@ pub fn init_smp(processor_info: &ProcessorInfo) {
 }
 
 pub unsafe fn halt_smp() {
-    let lapic = &mut cpu::current_cpu().lapic;
-    unsafe { smp::halt(lapic) }
+    static HALTING_SMP: AtomicBool = AtomicBool::new(false);
+    if cores_count() > 1 && !HALTING_SMP.swap(true, Ordering::Release) {
+        let lapic = &mut cpu::current_cpu().lapic;
+        unsafe { smp::halt(lapic) }
+    }
 }
 
 pub fn cores_count() -> usize {

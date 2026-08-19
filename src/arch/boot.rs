@@ -2,7 +2,7 @@ use crate::memory::{
     MemoryType,
     map::{MemoryMap, TypedPhysFrameRange},
 };
-use crate::utils::traits::Indexable;
+use crate::common::traits::Indexable;
 use multiboot2::{
     BootInformation, BootInformationHeader, MemoryArea, MemoryAreaType, MemoryAreaTypeId,
 };

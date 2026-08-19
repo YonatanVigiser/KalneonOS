@@ -1,4 +1,5 @@
 use crate::memory::HHDM_START;
+use crate::time::KernelDuration;
 use acpi::{AcpiTables, Handler, platform::AcpiPlatform};
 use core::ptr::NonNull;
 use x86_64::PhysAddr;
@@ -8,7 +9,6 @@ use spin::Once;
 pub static ACPI: Once<AcpiPlatform<AcpiRuntimeHandler>> = Once::new();
 
 pub fn init_platform_info(rsdt_addr: PhysAddr, rsdt_revision: u8) -> &'static AcpiPlatform<AcpiRuntimeHandler> {
-    log::info!("{:?}", rsdt_addr);
     let tables = unsafe {
         AcpiTables::from_rsdt(
             AcpiRuntimeHandler(),
@@ -137,11 +137,11 @@ impl Handler for AcpiRuntimeHandler {
     }
 
     fn nanos_since_boot(&self) -> u64 {
-        crate::time::uptime_nano()
+        crate::time::uptime().duration_since_epoch().as_nanos()
     }
 
     fn stall(&self, microseconds: u64) {
-        crate::time::stall(microseconds * 1000)
+        crate::time::stall(KernelDuration::from_micros(microseconds))
     }
 
     fn sleep(&self, _milliseconds: u64) {

@@ -1,4 +1,4 @@
-use crate::utils::traits::Indexable;
+use crate::common::traits::Indexable;
 use alloc::collections::VecDeque;
 use x86_64::structures::paging::page::{Page, PageRange};
 

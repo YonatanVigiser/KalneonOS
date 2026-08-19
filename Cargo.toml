@@ -16,6 +16,11 @@ x2apic = "0.5"
 ez_hpet = "1.0"
 crossbeam-queue = { version = "0.3", default-features = false, features = ["alloc"] }
 lock_api = "0.4"
+fugit = "0.4"
+simple-psf = "0.1"
+heapless = "0.9"
+atomic_enum = "0.3"
+uart_16550 = "0.6"
 
 [dependencies.bitvec]
 version = "1"

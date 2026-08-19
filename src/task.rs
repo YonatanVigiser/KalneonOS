@@ -3,7 +3,8 @@ pub mod scheduler;
 pub mod sleep;
 pub mod waker;
 
-use alloc::boxed::Box;
+use alloc::{boxed::Box, sync::Arc};
+use atomic_enum::atomic_enum;
 use core::{
     cell::UnsafeCell,
     future::Future,
@@ -12,34 +13,61 @@ use core::{
     task::{Context, Poll},
 };
 
+use crate::{arch::cpu::current_cpu, task::executor::EXECUTOR};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(transparent)]
 pub struct TaskId(u64);
 
 impl TaskId {
+    pub const EMPTY: Self = Self(0);
+
     fn new() -> Self {
-        static NEXT_ID: AtomicU64 = AtomicU64::new(0);
+        static NEXT_ID: AtomicU64 = AtomicU64::new(1);
         Self(NEXT_ID.fetch_add(1, Ordering::Relaxed))
+    }
+
+    pub fn current() -> Option<Self> {
+        Some(current_cpu().current_task_id?)
+    }
+
+    pub const fn as_u64(&self) -> u64 {
+        self.0
     }
 }
 
 const DEFAULT_AFFINITY_THRESHOLD_RATIO: f64 = 3.0;
 
+#[atomic_enum]
+pub enum TaskState {
+    Idle,
+    Scheduled,
+    Running,
+    Notified,
+    Completed,
+}
+
 pub struct Task {
     id: TaskId,
+    state: AtomicTaskState,
     future: UnsafeCell<Pin<Box<dyn Future<Output = ()>>>>,
     pinned: bool,
     affinity_threshold: f64,
 }
 
 impl Task {
-    pub fn new(future: impl Future<Output = ()> + 'static) -> Self {
+    pub fn new(future: impl Future<Output = ()> + Send + 'static) -> Self {
         Self {
             id: TaskId::new(),
+            state: AtomicTaskState::new(TaskState::Idle),
             future: UnsafeCell::new(Box::pin(future)),
             pinned: false,
             affinity_threshold: DEFAULT_AFFINITY_THRESHOLD_RATIO,
         }
+    }
+
+    pub fn current() -> Option<Arc<Self>> {
+        Some(EXECUTOR.get()?.get_task(TaskId::current()?)?.clone())
     }
 
     pub fn pin(mut self) -> Self {
@@ -60,7 +88,7 @@ impl Task {
         self.affinity_threshold
     }
 
-    pub fn poll(&self, context: &mut Context) -> Poll<()> {
+    fn poll(&self, context: &mut Context) -> Poll<()> {
         (unsafe { self.future.as_mut_unchecked() })
             .as_mut()
             .poll(context)

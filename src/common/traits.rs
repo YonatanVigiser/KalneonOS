@@ -26,3 +26,4 @@ pub trait Indexable {
         Self::from_index(self.as_index() - nth)
     }
 }
+
