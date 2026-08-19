@@ -1,5 +1,6 @@
 pub mod handlers;
 pub mod guard;
+pub mod mutex;
 mod apic;
 
 pub const SUPRIOUS_VECTOR: u8 = 0xFF;
@@ -25,6 +26,14 @@ pub fn enable() {
 
 pub fn disable() {
     x86_64::instructions::interrupts::disable();
+}
+
+pub fn set(enabled: bool) {
+    if enabled { enable() }
+}
+
+pub fn are_enabled() -> bool {
+    x86_64::instructions::interrupts::are_enabled()
 }
 
 use acpi::platform::InterruptModel;

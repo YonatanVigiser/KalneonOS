@@ -1,4 +1,7 @@
+use spin::mutex::SpinMutex;
 use talc::{OomHandler, Span, Talc, Talck};
+
+use crate::interrupt::mutex::RawInterruptSafeMutex;
 
 const BOOT_HEAP_SIZE: usize = 1024 * 1024;
 static mut BOOT_HEAP: [u8; BOOT_HEAP_SIZE] = [0; BOOT_HEAP_SIZE];
@@ -12,7 +15,7 @@ impl OomHandler for KernelOomHandler {
 }
 
 #[global_allocator]
-static ALLOCATOR: Talck<spin::Mutex<()>, KernelOomHandler> = Talc::new(KernelOomHandler).lock();
+static ALLOCATOR: Talck<RawInterruptSafeMutex<SpinMutex<()>>, KernelOomHandler> = Talc::new(KernelOomHandler).lock();
 
 pub fn init() {
     unsafe {

@@ -124,6 +124,7 @@ dependencies = [
  "crossbeam-queue",
  "ez_hpet",
  "lazy_static",
+ "lock_api",
  "log",
  "multiboot2",
  "multiboot2-header",
