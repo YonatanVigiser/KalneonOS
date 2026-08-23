@@ -21,6 +21,7 @@ simple-psf = "0.1"
 heapless = "0.9"
 atomic_enum = "0.3"
 uart_16550 = "0.6"
+futures = { version = "0.3", default-features = false }
 
 [dependencies.bitvec]
 version = "1"

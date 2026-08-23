@@ -14,6 +14,8 @@ use crate::dev::traits::GlobalIrqController;
 use crate::memory::FrameSize;
 use crate::{memory::map_mmio_ptr, time::KernelDuration};
 
+use super::{GlobalInterruptController, LocalInterruptController};
+
 const LAPIC_MMIO_SIZE: usize = 0x1000;
 
 pub const IRQ_BASE: u8 = 0x30;
@@ -30,8 +32,6 @@ struct ChainedIoApics {
     io_apics: Vec<IoApicEntry>,
     iso: Vec<InterruptSourceOverride>,
 }
-
-struct IoApicDevice(Mutex<ChainedIoApics>);
 
 impl ChainedIoApics {
     fn new(info: Apic) -> Self {
@@ -98,17 +98,30 @@ impl ChainedIoApics {
     }
 }
 
-impl GlobalIrqController for IoApicDevice {
-    fn set_irq_routing(&self, isa_irq: u8, dest_core_id: u8) {
-        let mut inner = self.0.lock();
-        let (gsi, flags) = inner.resolve_isa(isa_irq);
-        inner.set_irq(gsi, IRQ_BASE + isa_irq, dest_core_id, flags);
+struct IoApicDevice {
+    device: Mutex<ChainedIoApics>,
+    local_interrupt_controllers: Vec<Arc<dyn LocalInterruptController>>,
+}
+
+impl GlobalInterruptController for IoApicDevice {
+    fn add_local_interrupt_controller(&self, local_interrupt_controller: Arc<dyn super::LocalInterruptController>) {
     }
 
-    fn set_masked(&self, isa_irq: u8, masked: bool) {
-        let mut inner = self.0.lock();
-        let gsi = inner.resolve_isa(isa_irq).0;
-        inner.set_masked(gsi, masked);
+    fn register_event(&self, source: super::GlobalInterruptSource, event: alloc::sync::Weak<super::IrqEvent>) -> Result<(), super::GICError> {
+    }
+
+    fn gis_count(&self, source: super::GlobalInterruptSource) -> u64 {
+    }
+
+    fn total_gis_count(&self) -> u64 {
+    }
+
+    fn mask(&self, source: super::GlobalInterruptSource) {
+        self.device.lock().set_masked(source.0, true);
+    }
+
+    fn unmask(&self, source: super::GlobalInterruptSource) {
+        self.device.lock().set_masked(source.0, true);
     }
 }
 
