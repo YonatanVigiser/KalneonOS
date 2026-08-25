@@ -12,8 +12,3 @@ pub trait LogSink: Send + Sync {
 pub trait CharOut: Send + Sync {
     fn out(&self, c: char);
 }
-
-pub trait GlobalIrqController: Send + Sync {
-    fn set_irq_routing(&self, isa_irq: u8, dest_core_id: u8);
-    fn set_masked(&self, isa_irq: u8, masked: bool);
-}

@@ -73,10 +73,11 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn ap_start(processor_uid: u32) -> ! {
+    crate::interrupts::disable();
     while !BSP_FINISH.load(Ordering::Acquire) {
         core::hint::spin_loop()
     }
-    let logical_id = ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed);
+    let logical_id = super::cpu::CpuId(ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed));
     super::init_cpu(processor_uid, logical_id);
     crate::ap_main()
 }

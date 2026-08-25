@@ -27,6 +27,7 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
+    arch::init_cpu(0, CpuId(0));
     memory::heap::init();
     drivers::init_early();
     common::log::init_logger();
@@ -37,7 +38,6 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     drivers::init();
     interrupt::init_global(&acpi.interrupt_model);
     let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
-    arch::init_cpu(processor_info.boot_processor.processor_uid, 0);
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
     ap_main();
@@ -72,7 +72,7 @@ fn panic(info: &PanicInfo) -> ! {
 
 use crate::task::Task;
 
-use self::arch::cpu::current_cpu;
+use self::arch::cpu::{CpuId, current_cpu};
 
 pub fn halt_loop() -> ! {
     interrupts::disable();

@@ -62,8 +62,8 @@ impl Executor {
 
     pub fn run(&self) -> ! {
         let core_id = current_cpu().logical_id;
-        let task_queue = &self.tasks_queues[core_id];
-        let avg = &self.avrage_runtimes[core_id];
+        let task_queue = &self.tasks_queues[core_id.0];
+        let avg = &self.avrage_runtimes[core_id.0];
         loop {
             if let Some(weak_task) = task_queue.pop() && let Some(task) = weak_task.upgrade() {
                 let start_time = uptime();
@@ -82,7 +82,7 @@ impl Executor {
         task.state.store(Running, Ordering::Release);
         let core_id = current_cpu().logical_id;
         current_cpu().current_task_id = Some(task.id);
-        let waker: Waker = TaskWaker::new_waker(Arc::downgrade(task), core_id);
+        let waker: Waker = TaskWaker::new_waker(Arc::downgrade(task), core_id.0);
         let mut context = Context::from_waker(&waker);
         loop {
             match task.poll(&mut context) {
@@ -92,7 +92,7 @@ impl Executor {
                         Ok(_) => break,
                         Err(Notified) => {
                             task.state.store(Scheduled, Ordering::Release);
-                            self.enqueue(task, core_id);
+                            self.enqueue(task, core_id.0);
                             break;
                         },
                         Err(other) => panic!("unexpected task state: {:?}", other),

@@ -1,17 +1,30 @@
-use x2apic::lapic::LocalApic;
+use core::fmt::Display;
+
+use alloc::sync::Arc;
 use x86_64::{VirtAddr, registers::model_specific::GsBase};
 
 use alloc::boxed::Box;
 
+use crate::interrupt::apic::LocalApicDevice;
 use crate::task::TaskId;
+
+#[repr(transparent)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct CpuId(pub usize);
+
+impl Display for CpuId {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Logical CPU ID: {}", self.0)
+    }
+}
 
 #[repr(C)]
 pub struct CpuLocal {
     self_ptr: *mut CpuLocal,
-    pub logical_id: usize,
+    pub logical_id: CpuId,
     pub processor_uid: u32,
     interrupts_depth: u16,
-    pub lapic: LocalApic,
+    pub lapic: Option<Arc<LocalApicDevice>>,
     pub kernel_stack_top: u64,
     pub current_task_id: Option<TaskId>,
 }
@@ -27,12 +40,12 @@ impl CpuLocal {
     pub fn interrupt_depth(&self) -> u16 { self.interrupts_depth }
 }
 
-pub(super) fn init(uid: u32, logical_id: usize, lapic: LocalApic) {
+pub(super) fn init(uid: u32, logical_id: CpuId) {
     let local = Box::leak(Box::new(CpuLocal {
         self_ptr: core::ptr::null_mut(),
         logical_id,
         processor_uid: uid,
-        lapic,
+        lapic: None,
         interrupts_depth: 0,
         kernel_stack_top: 0,
         current_task_id: None,
