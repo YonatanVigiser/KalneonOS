@@ -11,15 +11,15 @@ use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 use x86_64::structures::paging::PageSize;
 
 use crate::arch::cpu::{CpuId, current_cpu};
-use crate::dev::registry::DEVICE_REGISTRY;
-use crate::interrupt::{CONTROLLER_ERROR_VECTOR, SPURIOUS_VECTOR, TIMER_IRQ_VECTOR};
+use crate::dev::registry::{DEVICE_REGISTRY};
+use crate::interrupt::{CONTROLLER_ERROR_VECTOR, InterruptSlot, InterruptSourceState, SPURIOUS_VECTOR, TIMER_IRQ_VECTOR};
 use crate::memory::FrameSize;
 use crate::{memory::map_mmio_ptr, time::KernelDuration};
 
 use super::mutex::InterruptSafeMutex;
 use super::{
     GlobalInterruptController, GlobalInterruptControllerError, GlobalInterruptSource,
-    InterruptSlot, LocalInterruptController, LocalInterruptControllerError, LocalInterruptSource,
+    LocalInterruptController, LocalInterruptControllerError, LocalInterruptSource,
     LocalInterruptTarget,
 };
 
@@ -75,7 +75,7 @@ impl ChainedIoApics {
         for nmi_source in info.nmi_sources {
             let io_apic_entry = chained_io_apics
                 .get_ioapic_entry(nmi_source.global_system_interrupt)
-                .expect("IOAPIC with corrponding GSI number doesn't exist");
+                .expect("IOAPIC with corresponding GSI number doesn't exist");
             let irq = Self::irq_from_gsi(nmi_source.global_system_interrupt, &io_apic_entry.info);
             let mut entry = unsafe { io_apic_entry.io_apic.table_entry(irq) };
             entry.set_mode(IrqMode::NonMaskable);
@@ -98,7 +98,7 @@ impl ChainedIoApics {
     fn set_irq(&mut self, gsi: u32, vector: u8, dest: u8, flags: IrqFlags) {
         let io_apic_entry = self
             .get_ioapic_entry(gsi)
-            .expect("IOAPIC with corrponding GSI number doesn't exist");
+            .expect("IOAPIC with corresponding GSI number doesn't exist");
         let mut entry = RedirectionTableEntry::default();
         entry.set_mode(IrqMode::Fixed);
         entry.set_vector(vector);
@@ -115,11 +115,13 @@ impl ChainedIoApics {
     fn clear_irq(&mut self, gsi: u32) {
         let io_apic_entry = self
             .get_ioapic_entry(gsi)
-            .expect("IOAPIC with corrponding GSI number doesn't exist");
+            .expect("IOAPIC with corresponding GSI number doesn't exist");
+        let mut entry = RedirectionTableEntry::default();
+        entry.set_flags(IrqFlags::MASKED);
         unsafe {
             io_apic_entry.io_apic.set_table_entry(
                 Self::irq_from_gsi(gsi, &io_apic_entry.info),
-                RedirectionTableEntry::default(),
+                entry,
             );
         }
     }
@@ -127,12 +129,12 @@ impl ChainedIoApics {
     fn set_masked(&mut self, gsi: u32, masked: bool) {
         let io_apic_entry = self
             .get_ioapic_entry(gsi)
-            .expect("IOAPIC with corrponding GSI number doesn't exist");
+            .expect("IOAPIC with corresponding GSI number doesn't exist");
         unsafe {
             if masked {
-                io_apic_entry.io_apic.enable_irq(Self::irq_from_gsi(gsi, &io_apic_entry.info));
-            } else {
                 io_apic_entry.io_apic.disable_irq(Self::irq_from_gsi(gsi, &io_apic_entry.info));
+            } else {
+                io_apic_entry.io_apic.enable_irq(Self::irq_from_gsi(gsi, &io_apic_entry.info));
             }
         }
     }
@@ -154,7 +156,7 @@ impl ChainedIoApics {
     fn can_mask(&mut self, gsi: u32) -> bool {
         let io_apic_entry = self
             .get_ioapic_entry(gsi)
-            .expect("IOAPIC with corrponding GSI number doesn't exist");
+            .expect("IOAPIC with corresponding GSI number doesn't exist");
         !matches!(unsafe { io_apic_entry.io_apic.table_entry(Self::irq_from_gsi(gsi, &io_apic_entry.info)) }.mode(), IrqMode::NonMaskable)
     }
 
@@ -172,8 +174,8 @@ impl IoApicDevice {
             return Err(GlobalInterruptControllerError::NoLocalInterruptControllers);
         }
         lics.iter()
-            .filter(|lic| lic.avaible_local_sources_count() > 0)
-            .max_by_key(|lic| lic.avaible_local_sources_count())
+            .filter(|lic| lic.available_local_sources_count() > 0)
+            .max_by_key(|lic| lic.available_local_sources_count())
             .cloned()
             .ok_or(GlobalInterruptControllerError::OutOfLocalSources)
     }
@@ -224,17 +226,21 @@ impl GlobalInterruptController for IoApicDevice {
         target: LocalInterruptTarget,
     ) -> Result<(), GlobalInterruptControllerError> {
         let mut bindings = self.bindings.lock();
+        let mut device = self.device.lock();
 
         if let Some(routed_target) = bindings.get(&source) {
             return Err(GlobalInterruptControllerError::AlreadyRouted(
                 *routed_target,
             ));
         };
-        if !self.device.lock().has_gsi(source.0) {
+        if !device.has_gsi(source.0) {
             return Err(GlobalInterruptControllerError::InvalidGIS(source));
         }
 
-        let mut device = self.device.lock();
+        if !device.can_mask(source.0) {
+            return Err(GlobalInterruptControllerError::NonMaskableInterrupt(source));
+        }
+
         let flags = device.flags_for_gsi(source.0);
         device.set_irq(
             source.0,
@@ -248,10 +254,13 @@ impl GlobalInterruptController for IoApicDevice {
     }
 
     fn unroute(&self, source: GlobalInterruptSource) -> Result<(), GlobalInterruptControllerError> {
+        let mut bindings = self.bindings.lock();
         let mut device = self.device.lock();
         if !device.has_gsi(source.0) { return Err(GlobalInterruptControllerError::InvalidGIS(source)) }
-        let _ = self.unmask(source); // Ignore NMI interrupt error
+        let (lic, local_source) = self.find_routing(source).ok_or(GlobalInterruptControllerError::NotRouted(source))?;
+        lic.free_local_source(local_source).map_err(|e| GlobalInterruptControllerError::LocalInterruptControllerError(e))?;
         device.clear_irq(source.0);
+        bindings.remove(&source);
         Ok(())
     }
 
@@ -365,9 +374,9 @@ impl SendLocalApic {
 
 pub struct LocalApicDevice {
     lapic: InterruptSafeMutex<SendLocalApic>,
-    slots: InterruptSafeMutex<[Option<Arc<InterruptSlot>>; VECTOR_COUNT]>,
+    slots: InterruptSafeMutex<[InterruptSourceState; VECTOR_COUNT]>,
     cpu_id: CpuId,
-    interrupt_cpount: AtomicUsize,
+    interrupt_count: AtomicUsize,
     spurious_count: AtomicUsize,
 }
 
@@ -375,16 +384,17 @@ impl LocalApicDevice {
     pub fn new(lapic: LocalApic, cpu_id: CpuId) -> Self {
         let dev = Self {
             lapic: InterruptSafeMutex::new(SendLocalApic(lapic)),
-            slots: InterruptSafeMutex::new([const { None }; VECTOR_COUNT]),
+            slots: InterruptSafeMutex::new([const { InterruptSourceState::Free }; VECTOR_COUNT]),
             cpu_id,
-            interrupt_cpount: AtomicUsize::new(0),
+            interrupt_count: AtomicUsize::new(0),
             spurious_count: AtomicUsize::new(0),
         };
-        let _ = dev
-            .slots
-            .lock()
-            .get(TIMER_IRQ_VECTOR as usize)
-            .insert(&Some(Arc::new(InterruptSlot::default())));
+        for i in 0..IRQ_BASE {
+            dev.reserve(LocalInterruptSource(i as u32)).unwrap();
+        }
+        for reserved_vector in [TIMER_IRQ_VECTOR, SPURIOUS_VECTOR, CONTROLLER_ERROR_VECTOR] {
+            dev.reserve(LocalInterruptSource(reserved_vector as u32)).unwrap();
+        }
         dev
     }
 
@@ -394,53 +404,67 @@ impl LocalApicDevice {
 }
 
 impl LocalInterruptController for LocalApicDevice {
+    fn reserve(&self, source: LocalInterruptSource) -> Result<Arc<InterruptSlot>, LocalInterruptControllerError> {
+        let slot = Arc::new(InterruptSlot::default());
+        let mut slots = self.slots.lock();
+        let entry = slots
+            .get_mut(source.0 as usize)
+            .ok_or(LocalInterruptControllerError::InvalidLIS(source))?;
+        match entry {
+            InterruptSourceState::Free => {
+                *entry = InterruptSourceState::Reserved(Arc::clone(&slot));
+                Ok(slot)
+            }
+            _ => Err(LocalInterruptControllerError::AlreadyAllocated(source)),
+        }
+    }
+
     fn allocate_local_source(
         &self,
     ) -> Result<(LocalInterruptSource, Arc<InterruptSlot>), LocalInterruptControllerError> {
-        let mut slots = self.slots.lock();
-        let index = slots
-            .iter()
-            .enumerate()
-            .skip(IRQ_BASE as usize)
-            .find(|(i, s)| s.is_none() && !is_reserved_vector(*i as u8))
-            .map(|(i, _)| i)
-            .ok_or(LocalInterruptControllerError::OutOfSources)?;
         let slot = Arc::new(InterruptSlot::default());
-        slots[index] = Some(slot.clone());
+        let mut slots = self.slots.lock();
+        let index = slots.iter()
+            .position(|s| matches!(s, InterruptSourceState::Free))
+            .ok_or(LocalInterruptControllerError::OutOfSources)?;
+        slots[index] = InterruptSourceState::Allocated(Arc::clone(&slot));
         Ok((LocalInterruptSource(index as u32), slot))
     }
 
-    fn free_local_source(&self, source: LocalInterruptSource) -> Result<Arc<InterruptSlot>, LocalInterruptControllerError> {
-        self.slots.lock().get_mut(source.0 as usize).ok_or(LocalInterruptControllerError::InvalidLIS(source))?.take().ok_or(LocalInterruptControllerError::SourceNotAllocated)
+    fn free_local_source(&self, source: LocalInterruptSource) -> Result<(), LocalInterruptControllerError> {
+        let mut slots = self.slots.lock();
+        let entry = slots
+            .get_mut(source.0 as usize)
+            .ok_or(LocalInterruptControllerError::InvalidLIS(source))?;
+        match entry {
+            InterruptSourceState::Allocated(_) => {
+                *entry = InterruptSourceState::Free;
+                Ok(())
+            },
+            InterruptSourceState::Reserved(_) => Err(LocalInterruptControllerError::SourceReserved(source)),
+            InterruptSourceState::Free => Err(LocalInterruptControllerError::SourceNotAllocated)
+        }
     }
 
-    fn avaible_local_sources_count(&self) -> usize {
-        self.slots
-            .lock()
-            .iter()
-            .enumerate()
-            .skip(IRQ_BASE as usize)
-            .filter(|(i, s)| s.is_none() && !is_reserved_vector(*i as u8))
-            .count()
+    fn available_local_sources_count(&self) -> usize {
+        self.slots.lock().iter().filter(|slot_state| matches!(slot_state, InterruptSourceState::Free)).count()
     }
 
     fn enter_interrupt(
         &self,
         source: LocalInterruptSource,
     ) -> Result<(), LocalInterruptControllerError> {
-        self.interrupt_cpount.fetch_add(1, Ordering::Relaxed);
-        let slot = self
-            .slots
-            .lock()
+        self.interrupt_count.fetch_add(1, Ordering::Relaxed);
+
+        let slot = self.slots.lock()
             .get(source.0 as usize)
-            .and_then(|s| s.clone());
+            .and_then(|s| s.slot().cloned());
+
         let result = match slot {
-            Some(slot) => {
-                slot.dispatch();
-                Ok(())
-            }
+            Some(slot) => { slot.dispatch(); Ok(()) }
             None => Err(LocalInterruptControllerError::SourceNotAllocated),
         };
+
         unsafe { self.lapic.lock().get(self.cpu_id).end_of_interrupt() };
         result
     }
@@ -466,23 +490,24 @@ impl LocalInterruptController for LocalApicDevice {
     }
 
     fn interrupts_count(&self) -> usize {
-        self.interrupt_cpount.load(Ordering::Relaxed)
+        self.interrupt_count.load(Ordering::Relaxed)
+    }
+
+    fn state(&self, source: LocalInterruptSource) -> InterruptSourceState {
+        self.slots.lock().get(source.0 as usize).cloned().unwrap_or_default()
     }
 
     fn slot(&self, source: LocalInterruptSource) -> Option<Arc<InterruptSlot>> {
-        self.slots.lock().get(source.0 as usize)?.clone()
+        self.state(source).slot().cloned()
     }
 
     fn cpu_id(&self) -> CpuId {
         self.cpu_id
     }
-}
 
-fn is_reserved_vector(vector: u8) -> bool {
-    matches!(
-        vector,
-        SPURIOUS_VECTOR | CONTROLLER_ERROR_VECTOR | TIMER_IRQ_VECTOR
-    )
+    fn interrupt_destination_id(&self) -> usize {
+        unsafe { self.lapic.lock().get(self.cpu_id).id() as usize }
+    }
 }
 
 fn init_lapic_timer(lapic: &mut LocalApic) {
@@ -498,10 +523,10 @@ fn init_lapic_timer(lapic: &mut LocalApic) {
         crate::time::stall(DURATION_PER_TIMER_INTERRUPT);
         ticks_sum += u32::MAX - unsafe { lapic.timer_current() };
     }
-    let tick_avrg = ticks_sum / CALIBRATION_ITERATION_COUNT;
+    let tick_avg = ticks_sum / CALIBRATION_ITERATION_COUNT;
     unsafe {
         lapic.set_timer_mode(TimerMode::Periodic);
-        lapic.set_timer_initial(tick_avrg);
+        lapic.set_timer_initial(tick_avg);
     }
 }
 

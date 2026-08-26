@@ -53,7 +53,7 @@ pub fn are_enabled() -> bool {
 }
 
 use core::error::Error;
-use core::fmt::Display;
+use core::fmt::{Display};
 use core::future::poll_fn;
 use core::sync::atomic::{AtomicU32, AtomicUsize, Ordering};
 use core::task::{Context, Poll};
@@ -72,15 +72,9 @@ use self::mutex::InterruptSafeMutex;
 
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct LocalInterruptSource(u32);
+pub struct LocalInterruptSource(pub u32);
 
-impl LocalInterruptSource {
-    pub fn as_u32(&self) -> u32 {
-        self.0
-    }
-}
-
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct InterruptSlot {
     count: AtomicUsize,
     consumers: InterruptSafeMutex<Vec<Arc<InterruptEvent>>>,
@@ -115,14 +109,25 @@ pub enum LocalInterruptControllerError {
     InvalidLIS(LocalInterruptSource),
     OutOfSources,
     SourceNotAllocated,
+    SourceReserved(LocalInterruptSource),
+    AlreadyAllocated(LocalInterruptSource),
     MaskingNotSupported,
 }
 
-impl Error for LocalInterruptControllerError {}
+#[derive(Debug, Default, Clone)]
+pub enum InterruptSourceState {
+    #[default]
+    Free,
+    Reserved(Arc<InterruptSlot>),
+    Allocated(Arc<InterruptSlot>),
+}
 
-impl Display for LocalInterruptControllerError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Local Interrupt Controller Error: {:?}", self)
+impl InterruptSourceState {
+    pub fn slot(&self) -> Option<&Arc<InterruptSlot>> {
+        match self {
+            Self::Free => None,
+            Self::Reserved(s) | Self::Allocated(s) => Some(s),
+        }
     }
 }
 
@@ -130,9 +135,11 @@ pub trait LocalInterruptController: Send + Sync {
     fn allocate_local_source(
         &self,
     ) -> Result<(LocalInterruptSource, Arc<InterruptSlot>), LocalInterruptControllerError>;
-    fn free_local_source(&self, source: LocalInterruptSource) -> Result<Arc<InterruptSlot>, LocalInterruptControllerError>;
+    fn free_local_source(&self, source: LocalInterruptSource) -> Result<(), LocalInterruptControllerError>;
+    fn reserve(&self, source: LocalInterruptSource) -> Result<Arc<InterruptSlot>, LocalInterruptControllerError>;
     fn slot(&self, source: LocalInterruptSource) -> Option<Arc<InterruptSlot>>;
-    fn avaible_local_sources_count(&self) -> usize;
+    fn state(&self, source: LocalInterruptSource) -> InterruptSourceState;
+    fn available_local_sources_count(&self) -> usize;
     fn enter_interrupt(
         &self,
         source: LocalInterruptSource,
@@ -144,6 +151,7 @@ pub trait LocalInterruptController: Send + Sync {
     fn interrupts_count(&self) -> usize;
     fn spurious_interrupts_count(&self) -> usize;
     fn cpu_id(&self) -> CpuId;
+    fn interrupt_destination_id(&self) -> usize;
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -176,7 +184,7 @@ impl InterruptEvent {
 }
 
 impl InterruptListener {
-    fn slot(&self) -> &Arc<InterruptSlot> {
+    pub fn slot(&self) -> &Arc<InterruptSlot> {
         &self.slot
     }
 
@@ -229,14 +237,7 @@ pub enum GlobalInterruptControllerError {
     NonMaskableInterrupt(GlobalInterruptSource),
     AlreadyRouted(LocalInterruptTarget),
     NotRouted(GlobalInterruptSource),
-}
-
-impl Error for GlobalInterruptControllerError {}
-
-impl Display for GlobalInterruptControllerError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Global Interrupt Controller Error: {:?}", self)
-    }
+    UnknownTarget(CpuId),
 }
 
 pub trait GlobalInterruptController: Send + Sync {
@@ -247,6 +248,14 @@ pub trait GlobalInterruptController: Send + Sync {
     fn allocate_target(
         &self,
     ) -> Result<(LocalInterruptTarget, Arc<InterruptSlot>), GlobalInterruptControllerError>;
+    /// Routes `source` to `target`.
+    ///
+    /// The line is left **masked**. Call [`unmask`] once a listener is
+    /// registered on the target's slot — otherwise the first interrupt
+    /// arrives before anyone is waiting for it.
+    ///
+    /// Fails with [`NonMaskableInterrupt`] if the platform has configured
+    /// this source as an NMI.
     fn route(
         &self,
         source: GlobalInterruptSource,
@@ -259,4 +268,51 @@ pub trait GlobalInterruptController: Send + Sync {
     fn interrupt_target(&self, gis: GlobalInterruptSource) -> Option<LocalInterruptTarget>;
     fn interrupt_count(&self, gis: GlobalInterruptSource) -> Option<usize>;
     fn total_interrupt_count(&self) -> usize;
+}
+
+impl Display for LocalInterruptControllerError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::InvalidLIS(s) => write!(f, "invalid local interrupt source {}", s.0),
+            Self::OutOfSources => f.write_str("no free local interrupt sources"),
+            Self::SourceNotAllocated => f.write_str("local interrupt source is not allocated"),
+            Self::SourceReserved(s) => write!(f, "local interrupt source {} is reserved", s.0),
+            Self::AlreadyAllocated(s) => write!(f, "local interrupt source {} is already in use", s.0),
+            Self::MaskingNotSupported => f.write_str("this controller cannot mask local sources"),
+        }
+    }
+}
+
+impl Error for LocalInterruptControllerError {}
+
+impl Display for GlobalInterruptControllerError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::InvalidGIS(s) => write!(f, "invalid global interrupt source {}", s.0),
+            Self::NoLocalInterruptControllers => f.write_str("no local interrupt controllers registered"),
+            Self::LocalInterruptControllerError(e) => write!(f, "local controller: {e}"),
+            Self::OutOfLocalSources => f.write_str("no local interrupt controller has a free source"),
+            Self::NonMaskableInterrupt(s) => write!(f, "global interrupt source {} is non-maskable", s.0),
+            Self::AlreadyRouted(t) => write!(
+                f, "already routed to cpu {:?} source {}", t.cpu_id, t.local_source.0
+            ),
+            Self::NotRouted(s) => write!(f, "global interrupt source {} is not routed", s.0),
+            Self::UnknownTarget(id) => write!(f, "no local interrupt controller for the following {:?}", id),
+        }
+    }
+}
+
+impl Error for GlobalInterruptControllerError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::LocalInterruptControllerError(e) => Some(e),
+            _ => None,
+        }
+    }
+}
+
+impl From<LocalInterruptControllerError> for GlobalInterruptControllerError {
+    fn from(e: LocalInterruptControllerError) -> Self {
+        Self::LocalInterruptControllerError(e)
+    }
 }
