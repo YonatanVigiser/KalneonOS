@@ -12,7 +12,7 @@ lazy_static! {
         idt.page_fault.set_handler_fn(page_fault_handler);
         idt.breakpoint.set_handler_fn(debug_handler);
         idt.non_maskable_interrupt.set_handler_fn(non_maskable_handler);
-        idt[crate::interrupt::TIMER_VECOTR].set_handler_fn(timer_irq_handler);
+        idt[crate::interrupt::TIMER_IRQ_VECTOR].set_handler_fn(timer_irq_handler);
         idt
     };
 }

@@ -1,5 +1,9 @@
 use x86_64::structures::idt::{InterruptStackFrame, PageFaultErrorCode};
 
+use crate::arch::cpu::current_cpu;
+
+use super::{LocalInterruptController, LocalInterruptSource, TIMER_IRQ_VECTOR};
+
 macro_rules! _interrupt_handler {
     ($handler:ident) => {{
         #[naked]
@@ -62,11 +66,13 @@ pub extern "x86-interrupt" fn non_maskable_handler(_stack_frame: InterruptStackF
     crate::halt_loop()
 }
 
-pub extern "x86-interrupt" fn debug_handler(_stack_frame: InterruptStackFrame) {
-}
+pub extern "x86-interrupt" fn debug_handler(_stack_frame: InterruptStackFrame) {}
 
 pub extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
-    unsafe {
-        crate::arch::cpu::current_cpu().lapic.end_of_interrupt();
-    }
+    current_cpu()
+        .lapic
+        .as_mut()
+        .expect("No local interrupt controller was configured!")
+        .enter_interrupt(LocalInterruptSource(TIMER_IRQ_VECTOR as u32))
+        .expect("Shouldn't fail");
 }

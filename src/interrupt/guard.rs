@@ -1,44 +1,77 @@
-use crate::arch::cpu::current_cpu;
+use core::marker::PhantomData;
 use core::ops::{Deref, DerefMut};
 
 pub struct InterruptSafe<T>(T);
 
 impl<T> InterruptSafe<T> {
-    pub fn new(value: T) -> Self {
-        Self(value)
+    pub const fn new(v: T) -> Self {
+        Self(v)
     }
 
-    pub fn get(&mut self) -> InterruptGuard<'_, T> {
-        InterruptGuard(&mut self.0)
+    pub fn get(&self) -> InterruptSafeRef<'_, T> {
+        InterruptSafeRef {
+            inner: &self.0,
+            _irq_guard: IrqGuard::new(),
+        }
     }
-}
-
-pub struct InterruptGuard<'a, T>(&'a mut T);
-
-impl<'a, T> Deref for InterruptGuard<'a, T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        let cpu = current_cpu();
-        if cpu.interrupt_depth() == 0 { super::disable(); }
-        cpu.enter_interrupt();
+    pub fn get_mut(&mut self) -> InterruptSafeMut<'_, T> {
+        InterruptSafeMut {
+            inner: &mut self.0,
+            _irq_guard: IrqGuard::new(),
+        }
+    }
+    pub fn into_inner(self) -> T {
         self.0
     }
 }
 
-impl<'a, T> DerefMut for InterruptGuard<'a, T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        let cpu = current_cpu();
-        if cpu.interrupt_depth() == 0 { super::disable(); }
-        cpu.enter_interrupt();
-        self.0
+pub struct IrqGuard {
+    was_enabled: bool,
+    _ns: PhantomData<*const ()>,
+}
+
+impl IrqGuard {
+    fn new() -> Self {
+        let was_enabled = super::are_enabled();
+        Self {
+            was_enabled,
+            _ns: PhantomData,
+        }
     }
 }
 
-impl<'a, T> Drop for InterruptGuard<'a, T> {
+impl Drop for IrqGuard {
     fn drop(&mut self) {
-        let cpu = current_cpu();
-        cpu.leave_interrupt();
-        if cpu.interrupt_depth() == 0 { super::enable(); }
+        super::set(self.was_enabled);
+    }
+}
+
+pub struct InterruptSafeRef<'a, T> {
+    inner: &'a T,
+    _irq_guard: IrqGuard,
+}
+
+impl<T> Deref for InterruptSafeRef<'_, T> {
+    type Target = T;
+    fn deref(&self) -> &T {
+        self.inner
+    }
+}
+
+pub struct InterruptSafeMut<'a, T> {
+    inner: &'a mut T,
+    _irq_guard: IrqGuard,
+}
+
+impl<T> Deref for InterruptSafeMut<'_, T> {
+    type Target = T;
+    fn deref(&self) -> &T {
+        self.inner
+    }
+}
+
+impl<T> DerefMut for InterruptSafeMut<'_, T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.inner
     }
 }

@@ -79,11 +79,14 @@ macro_rules! define_registry {
     };
 }
 
+use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
+
 use super::traits::*;
 define_registry! {
     uptime_source: dyn UptimeSource,
     log_sink: dyn LogSink,
-    global_irq_controller: dyn GlobalIrqController,
+    global_interrupt_controller: dyn GlobalInterruptController,
+    local_interrupt_controller: dyn LocalInterruptController,
     char_out: dyn CharOut,
 }
 
