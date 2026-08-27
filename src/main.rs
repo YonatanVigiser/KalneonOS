@@ -27,8 +27,8 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
-    arch::init_cpu(0, CpuId(0));
     memory::heap::init();
+    arch::init_cpu(0, CpuId(0));
     drivers::init_early();
     common::log::init_logger();
     log::info!("Heap was initilized");

@@ -27,7 +27,8 @@ pub fn register_local(lapic: LocalApic) {
         .first()
         .expect("No GlobalInterruptController")
         .1
-        .add_local_interrupt_controller(lapic_dev);
+        .add_local_interrupt_controller(lapic_dev.clone());
+    DEVICE_REGISTRY.write().register::<dyn LocalInterruptController>(lapic_dev);
 }
 
 #[inline(always)]
@@ -53,7 +54,7 @@ pub fn are_enabled() -> bool {
 }
 
 use core::error::Error;
-use core::fmt::{Display};
+use core::fmt::Display;
 use core::future::poll_fn;
 use core::sync::atomic::{AtomicU32, AtomicUsize, Ordering};
 use core::task::{Context, Poll};
