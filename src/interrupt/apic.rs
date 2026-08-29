@@ -5,7 +5,7 @@ use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicUsize, Ordering};
 use pic8259::ChainedPics;
-use spin::Mutex;
+use spin::{Mutex, Once};
 use x2apic::ioapic::{IoApic, IrqFlags, IrqMode, RedirectionTableEntry};
 use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 use x86_64::structures::paging::PageSize;
@@ -324,6 +324,7 @@ pub fn init_global(info: Apic) {
     let lapic_ptr =
         map_mmio_ptr(info.local_apic_address as usize, LAPIC_MMIO_SIZE).expect("MMIO map failed");
     LAPIC_PTR.store(lapic_ptr, Ordering::Release);
+    ISO.call_once(|| info.interrupt_source_overrides.clone());
     let io_apic_dev = IoApicDevice {
         device: Mutex::new(ChainedIoApics::new(info)),
         local_interrupt_controllers: Mutex::new(Vec::new()),
@@ -334,7 +335,7 @@ pub fn init_global(info: Apic) {
         .register(Arc::new(io_apic_dev) as Arc<dyn GlobalInterruptController>);
 }
 
-const DURATION_PER_TIMER_INTERRUPT: KernelDuration = KernelDuration::from_nanos(10_000);
+const DURATION_PER_TIMER_INTERRUPT: KernelDuration = KernelDuration::from_nanos(10_000_000);
 
 pub fn init_lapic() -> LocalApic {
     let lapic_ptr = LAPIC_PTR.load(Ordering::Acquire);
@@ -547,4 +548,10 @@ fn flags_from(polarity: Polarity, trigger_mode: TriggerMode) -> IrqFlags {
         flags |= IrqFlags::LEVEL_TRIGGERED
     }
     flags
+}
+
+static ISO: Once<Vec<InterruptSourceOverride>> = Once::new();
+
+pub fn isa_irq_to_gsi(isa_irq: u8) -> GlobalInterruptSource {
+    ISO.get().expect("No ISO Vec registered").iter().find(|iso| iso.isa_source == isa_irq).map(|iso| GlobalInterruptSource(iso.global_system_interrupt)).unwrap_or(GlobalInterruptSource(isa_irq as u32))
 }

@@ -11,13 +11,13 @@ impl<T> InterruptSafe<T> {
     pub fn get(&self) -> InterruptSafeRef<'_, T> {
         InterruptSafeRef {
             inner: &self.0,
-            _irq_guard: IrqGuard::new(),
+            _irq_guard: InterruptGuard::new(),
         }
     }
     pub fn get_mut(&mut self) -> InterruptSafeMut<'_, T> {
         InterruptSafeMut {
             inner: &mut self.0,
-            _irq_guard: IrqGuard::new(),
+            _irq_guard: InterruptGuard::new(),
         }
     }
     pub fn into_inner(self) -> T {
@@ -25,13 +25,13 @@ impl<T> InterruptSafe<T> {
     }
 }
 
-pub struct IrqGuard {
+pub struct InterruptGuard {
     was_enabled: bool,
     _ns: PhantomData<*const ()>,
 }
 
-impl IrqGuard {
-    fn new() -> Self {
+impl InterruptGuard {
+    pub fn new() -> Self {
         let was_enabled = super::are_enabled();
         Self {
             was_enabled,
@@ -40,7 +40,7 @@ impl IrqGuard {
     }
 }
 
-impl Drop for IrqGuard {
+impl Drop for InterruptGuard {
     fn drop(&mut self) {
         super::set(self.was_enabled);
     }
@@ -48,7 +48,7 @@ impl Drop for IrqGuard {
 
 pub struct InterruptSafeRef<'a, T> {
     inner: &'a T,
-    _irq_guard: IrqGuard,
+    _irq_guard: InterruptGuard,
 }
 
 impl<T> Deref for InterruptSafeRef<'_, T> {
@@ -60,7 +60,7 @@ impl<T> Deref for InterruptSafeRef<'_, T> {
 
 pub struct InterruptSafeMut<'a, T> {
     inner: &'a mut T,
-    _irq_guard: IrqGuard,
+    _irq_guard: InterruptGuard,
 }
 
 impl<T> Deref for InterruptSafeMut<'_, T> {

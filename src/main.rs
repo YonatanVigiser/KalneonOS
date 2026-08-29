@@ -29,17 +29,18 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
     memory::heap::init();
     arch::init_cpu(0, CpuId(0));
-    drivers::init_early();
+    drivers::init_stage1();
     common::log::init_logger();
     log::info!("Heap was initilized");
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
     let acpi = platform::acpi::init_platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
-    drivers::init();
     interrupt::init_global(&acpi.interrupt_model);
+    drivers::init_stage2();
     let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
+    drivers::init_stage3();
     ap_main();
 }
 
@@ -59,8 +60,6 @@ use core::panic::PanicInfo;
 
 use x86_64::instructions::interrupts;
 
-
-//pub static PANIC_LOG_SINK: Once<Arc<dyn LogSink>> = Once::new();
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     unsafe { arch::halt_smp(); }

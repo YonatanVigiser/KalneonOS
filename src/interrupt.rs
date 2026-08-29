@@ -62,7 +62,7 @@ use core::task::{Context, Poll};
 use acpi::platform::InterruptModel;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
-use futures::task::AtomicWaker;
+use futures_util::task::AtomicWaker;
 use x2apic::lapic::LocalApic;
 
 use crate::arch::cpu::{CpuId, current_cpu};
@@ -251,9 +251,7 @@ pub trait GlobalInterruptController: Send + Sync {
     ) -> Result<(LocalInterruptTarget, Arc<InterruptSlot>), GlobalInterruptControllerError>;
     /// Routes `source` to `target`.
     ///
-    /// The line is left **masked**. Call [`unmask`] once a listener is
-    /// registered on the target's slot — otherwise the first interrupt
-    /// arrives before anyone is waiting for it.
+    /// The line is left **masked**
     ///
     /// Fails with [`NonMaskableInterrupt`] if the platform has configured
     /// this source as an NMI.
