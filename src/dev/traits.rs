@@ -13,5 +13,3 @@ pub trait CharOut: Send + Sync {
     fn out(&self, c: char);
 }
 
-pub trait KeyboardDevice: Send + Sync {
-}

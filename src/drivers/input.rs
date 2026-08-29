@@ -23,6 +23,10 @@ pub fn init() {
     ps2::init(isa_irq_to_gsi(PS2_KEYBOARD_ISA), isa_irq_to_gsi(PS2_MOUSE_ISA));
 }
 
+pub trait KeyboardDevice: Send + Sync {
+    fn connected(&self) -> bool;
+}
+
 #[derive(Debug, Clone)]
 pub struct KeyEvent { pub keycode: KeyCode, pub keystate: KeyState, pub modifiers: Modifiers, pub unicode: Option<char> }
 

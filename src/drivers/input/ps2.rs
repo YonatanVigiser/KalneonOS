@@ -1,21 +1,20 @@
 use core::pin;
-use core::sync::atomic::{AtomicU32, Ordering};
+use core::sync::atomic::{AtomicU8, AtomicU32, Ordering};
 
 use alloc::sync::Arc;
 use futures_util::future::select;
-use pc_keyboard::{DecodedKey, HandleControl, PS2Keyboard, ScancodeSet2};
+use pc_keyboard::{DecodedKey, HandleControl, KeyCode, KeyState, PS2Keyboard, ScancodeSet2};
 use pc_keyboard::layouts::{AnyLayout, Us104Key};
 use ps2::Controller;
-use ps2::flags::{ControllerConfigFlags, ControllerStatusFlags};
+use ps2::flags::{ControllerConfigFlags, ControllerStatusFlags, KeyboardLedFlags};
 use spin::Mutex;
 
 use crate::dev::registry::DEVICE_REGISTRY;
-use crate::dev::traits::KeyboardDevice;
 use crate::interrupt::{self, GlobalInterruptController, GlobalInterruptSource, InterruptListener};
 use crate::task::{Task, yield_now};
 use crate::task::executor::EXECUTOR;
 
-use super::{KeyEvent, InputEvent};
+use super::{InputEvent, KeyEvent, KeyboardDevice};
 
 struct I8042Ps2Driver {
     controller: Mutex<Controller>,
@@ -25,6 +24,7 @@ struct I8042Ps2Driver {
     mouse_connected: bool,
     keyboard_timeout_count: AtomicU32,
     mouse_timeout_count: AtomicU32,
+    keyboards_leds_state: AtomicU8,
 }
 
 impl I8042Ps2Driver {
@@ -87,6 +87,7 @@ impl I8042Ps2Driver {
             keyboard_connected, mouse_connected,
             keyboard_timeout_count: AtomicU32::new(0),
             mouse_timeout_count: AtomicU32::new(0),
+            keyboards_leds_state: AtomicU8::new(KeyboardLedFlags::empty().bits()),
         });
 
         let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").1.clone();
@@ -135,6 +136,20 @@ impl I8042Ps2Driver {
                                 modifiers: ps2_keyboard.get_modifiers().clone(),
                                 unicode,
                             };
+                            let prev = KeyboardLedFlags::from_bits_truncate(self.keyboards_leds_state.load(Ordering::Relaxed));
+                            let mut leds = prev;
+                            if let KeyCode::ScrollLock = event.keycode && let KeyState::Down = event.keystate {
+                                leds.toggle(KeyboardLedFlags::SCROLL_LOCK);
+                            }
+                            leds.set(KeyboardLedFlags::CAPS_LOCK, event.modifiers.capslock);
+                            leds.set(KeyboardLedFlags::NUM_LOCK, event.modifiers.numlock);
+                            if prev != leds {
+                                let scan_disable = controller.keyboard().disable_scanning().is_ok();
+                                let leds_written = controller.keyboard().set_leds(leds).is_ok();
+                                let scan_enable = controller.keyboard().enable_scanning().is_ok();
+                                if leds_written { self.keyboards_leds_state.store(leds.bits(), Ordering::Relaxed); }
+                                if !scan_enable && scan_disable { log::warn!("PS/2 Keyboard scan enable failed!") }
+                            }
                             keyboard_event_in.push(event);
                         }
                     } else {
@@ -158,7 +173,11 @@ impl I8042Ps2Driver {
     }
 }
 
-impl KeyboardDevice for I8042Ps2Driver {}
+impl KeyboardDevice for I8042Ps2Driver {
+    fn connected(&self) -> bool {
+        self.keyboard_connected
+    }
+}
 
 pub fn init(keyboard_interrupt: GlobalInterruptSource, mouse_interrupt: GlobalInterruptSource) {
     match I8042Ps2Driver::init(keyboard_interrupt, mouse_interrupt) {
