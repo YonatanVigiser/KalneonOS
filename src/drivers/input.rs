@@ -19,22 +19,22 @@ const PS2_KEYBOARD_ISA: u8 = 0x1;
 const PS2_MOUSE_ISA: u8 = 0xC;
 
 pub fn init() {
-    DEVICE_REGISTRY.write().register::<dyn KeyboardEventIn>(Arc::new(KeyboardHub::default()));
+    DEVICE_REGISTRY.write().register::<dyn InputEvent<KeyEvent>>(Arc::new(KeyboardHub::default()));
     ps2::init(isa_irq_to_gsi(PS2_KEYBOARD_ISA), isa_irq_to_gsi(PS2_MOUSE_ISA));
 }
 
 #[derive(Debug, Clone)]
 pub struct KeyEvent { pub keycode: KeyCode, pub keystate: KeyState, pub modifiers: Modifiers, pub unicode: Option<char> }
 
-pub struct Subscriber {
-    queue: ArrayQueue<KeyEvent>,
+pub struct SubscriberInner<T> {
+    queue: ArrayQueue<T>,
     waker: AtomicWaker,
     dropped: AtomicU32,
 }
 
 const KEY_EVENT_BUFFER_SIZE: usize = 32;
 
-impl Subscriber {
+impl<T> SubscriberInner<T> {
     fn new() -> Self {
         Self {
             queue: ArrayQueue::new(KEY_EVENT_BUFFER_SIZE),
@@ -43,7 +43,7 @@ impl Subscriber {
         }
     }
 
-    fn push(&self, event: KeyEvent) {
+    fn push(&self, event: T) {
         if self.queue.push(event).is_err() {
             self.dropped.fetch_add(1, Ordering::Relaxed);
         }
@@ -55,8 +55,8 @@ impl Subscriber {
     }
 }
 
-impl Subscriber {
-    pub fn poll_next(&self, cx: &mut Context<'_>) -> Poll<KeyEvent> {
+impl<T> SubscriberInner<T> {
+    fn poll_next(&self, cx: &mut Context<'_>) -> Poll<T> {
         if let Some(e) = self.queue.pop() { return Poll::Ready(e); }
         self.waker.register(cx.waker());
         match self.queue.pop() {
@@ -66,30 +66,30 @@ impl Subscriber {
     }
 }
 
-pub struct KeyboardReader(Arc<Subscriber>);
+pub struct Reader<T>(pub Arc<SubscriberInner<T>>);
 
-impl Stream for KeyboardReader {
-    type Item = KeyEvent;
+impl<T> Stream for Reader<T> {
+    type Item = T;
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         self.0.poll_next(cx).map(Some)
     }
 }
 
-pub trait KeyboardEventIn: Send + Sync {
-    fn subscribe(&self) -> KeyboardReader;
+pub trait InputEvent<T>: Send + Sync {
+    fn subscribe(&self) -> Reader<T>;
     fn push(&self, event: KeyEvent);
 }
 
 #[derive(Default)]
 pub struct KeyboardHub {
-    subs: Mutex<Vec<Weak<Subscriber>>>,
+    subs: Mutex<Vec<Weak<SubscriberInner<KeyEvent>>>>,
 }
 
-impl KeyboardEventIn for KeyboardHub {
-    fn subscribe(&self) -> KeyboardReader {
-        let sub = Arc::new(Subscriber::new());
+impl InputEvent<KeyEvent> for KeyboardHub {
+    fn subscribe(&self) -> Reader<KeyEvent> {
+        let sub = Arc::new(SubscriberInner::new());
         self.subs.lock().push(Arc::downgrade(&sub));
-        KeyboardReader(sub)
+        Reader(sub)
     }
 
     fn push(&self, event: KeyEvent) {

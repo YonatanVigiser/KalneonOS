@@ -15,7 +15,7 @@ use crate::interrupt::{self, GlobalInterruptController, GlobalInterruptSource, I
 use crate::task::{Task, yield_now};
 use crate::task::executor::EXECUTOR;
 
-use super::{KeyEvent, KeyboardEventIn};
+use super::{KeyEvent, InputEvent};
 
 struct I8042Ps2Driver {
     controller: Mutex<Controller>,
@@ -110,7 +110,7 @@ impl I8042Ps2Driver {
     async fn handle_task(self: Arc<Self>, mut keyboard_listener: Option<InterruptListener>, mut mouse_listener: Option<InterruptListener>) {
         const BYTES_READ_YIELD_CAP: usize = 100;
         let mut ps2_keyboard = PS2Keyboard::new(ScancodeSet2::new(), AnyLayout::Us104Key(Us104Key), HandleControl::MapLettersToUnicode);
-        let keyboard_event_in = DEVICE_REGISTRY.read().query::<dyn KeyboardEventIn>().get(0).expect("No KeyboardEventIn").1.clone();
+        let keyboard_event_in = DEVICE_REGISTRY.read().query::<dyn InputEvent<KeyEvent>>().get(0).expect("No KeyboardEventIn").1.clone();
         loop {
             let mut controller = self.controller.lock();
             let mut read_count = 0;
