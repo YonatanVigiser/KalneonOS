@@ -24,6 +24,7 @@ uart_16550 = "0.6"
 futures-util = { version = "0.3", default-features = false, features = ["alloc", "async-await", "async-await-macro"] }
 ps2 = "0.2"
 pc-keyboard = "0.9"
+embedded-graphics = "0.8"
 
 [dependencies.bitvec]
 version = "1"

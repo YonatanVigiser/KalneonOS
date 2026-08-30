@@ -1,16 +1,18 @@
-use crate::memory::{
+use crate::{drivers::display::{DisplayInfo, framebuffer::FramebufferInfo}, memory::{
     MemoryType,
     map::{MemoryMap, TypedPhysFrameRange},
-};
+}};
 use crate::common::traits::Indexable;
+use alloc::boxed::Box;
 use multiboot2::{
-    BootInformation, BootInformationHeader, MemoryArea, MemoryAreaType, MemoryAreaTypeId,
+    BootInformation, BootInformationHeader, FramebufferType, MemoryArea, MemoryAreaType, MemoryAreaTypeId
 };
 use x86_64::PhysAddr;
 use x86_64::structures::paging::frame::PhysFrame;
 
 pub struct BootInfo {
     pub mmap: MemoryMap,
+    pub framebuffer: Option<DisplayInfo>,
     pub rsdt_addr: PhysAddr,
     pub rsdt_revision: u8,
 }
@@ -60,8 +62,10 @@ pub fn load_boot_info(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
                 )
             }))
             .expect("No RSDP was passeed from bootloader!");
+        let framebuffer = boot_info.framebuffer_tag().and_then(|res| res.ok()).map(|tag| { DisplayInfo::from(tag) });
         return BootInfo {
             mmap,
+            framebuffer,
             rsdt_addr,
             rsdt_revision,
         };
