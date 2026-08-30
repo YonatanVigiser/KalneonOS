@@ -21,7 +21,9 @@ simple-psf = "0.1"
 heapless = "0.9"
 atomic_enum = "0.3"
 uart_16550 = "0.6"
-futures = { version = "0.3", default-features = false }
+futures-util = { version = "0.3", default-features = false, features = ["alloc", "async-await", "async-await-macro"] }
+ps2 = "0.2"
+pc-keyboard = "0.9"
 
 [dependencies.bitvec]
 version = "1"

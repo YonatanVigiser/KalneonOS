@@ -2,7 +2,7 @@ use x86_64::structures::idt::{InterruptStackFrame, PageFaultErrorCode};
 
 use crate::arch::cpu::current_cpu;
 
-use super::{LocalInterruptController, LocalInterruptSource, TIMER_IRQ_VECTOR};
+use super::{LocalInterruptController, LocalInterruptSource};
 
 macro_rules! _interrupt_handler {
     ($handler:ident) => {{
@@ -31,10 +31,15 @@ macro_rules! _interrupt_handler {
 }
 
 pub fn general_handler(stack_frame: InterruptStackFrame, index: u8, error_code: Option<u64>) {
-    panic!(
-        "Unhandled interrupt: {}\nStack frame:\n{:?}\nError Code: {:?}",
-        index, stack_frame, error_code
-    );
+    if let Some(error_code) = error_code {
+        panic!(
+            "Unhandled exception: {}\nStack frame:\n{:?}\nError Code: {:?}",
+            index, stack_frame, error_code
+        );
+    } else {
+        let lic = current_cpu().lapic.as_mut().expect("No local interrupt controller");
+        lic.enter_interrupt(LocalInterruptSource(index as u32)).expect("local interrupt controller handling failed");
+    }
 }
 
 pub extern "x86-interrupt" fn page_fault_handler(
@@ -67,12 +72,3 @@ pub extern "x86-interrupt" fn non_maskable_handler(_stack_frame: InterruptStackF
 }
 
 pub extern "x86-interrupt" fn debug_handler(_stack_frame: InterruptStackFrame) {}
-
-pub extern "x86-interrupt" fn timer_irq_handler(_stack_frame: InterruptStackFrame) {
-    current_cpu()
-        .lapic
-        .as_mut()
-        .expect("No local interrupt controller was configured!")
-        .enter_interrupt(LocalInterruptSource(TIMER_IRQ_VECTOR as u32))
-        .expect("Shouldn't fail");
-}

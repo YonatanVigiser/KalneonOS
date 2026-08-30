@@ -79,6 +79,7 @@ macro_rules! define_registry {
     };
 }
 
+use crate::drivers::input::{InputEvent, KeyEvent, KeyboardDevice};
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
 
 use super::traits::*;
@@ -88,6 +89,8 @@ define_registry! {
     global_interrupt_controller: dyn GlobalInterruptController,
     local_interrupt_controller: dyn LocalInterruptController,
     char_out: dyn CharOut,
+    keyboard: dyn KeyboardDevice,
+    keyboard_input_event: dyn InputEvent<KeyEvent>,
 }
 
 impl DeviceRegistry {

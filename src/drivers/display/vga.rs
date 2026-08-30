@@ -87,7 +87,7 @@ use alloc::sync::Arc;
 pub use spin::Mutex;
 
 use crate::dev::registry::DEVICE_REGISTRY;
-use crate::dev::traits::LogSink;
+use crate::dev::traits::{CharOut, LogSink};
 use crate::memory::map_mmio_ptr;
 
 pub struct Vga {
@@ -348,6 +348,13 @@ impl Vga {
 
 struct VgaDev(Mutex<Vga>);
 
+impl CharOut for VgaDev {
+    fn out(&self, c: char) {
+        let mut lock = self.0.lock();
+        let _ = (&mut *lock).write_char(c);
+    }
+}
+
 impl LogSink for VgaDev {
     fn log(&self, msg: &str) {
         let mut lock = self.0.lock();
@@ -356,7 +363,8 @@ impl LogSink for VgaDev {
 }
 
 pub fn init() {
-    let vga_dev = VgaDev(Mutex::new(Vga::init(80, 25)));
-    DEVICE_REGISTRY.write().register::<dyn LogSink>(Arc::new(vga_dev));
+    let vga_dev = Arc::new(VgaDev(Mutex::new(Vga::init(80, 25))));
+    let id = DEVICE_REGISTRY.write().register::<dyn CharOut>(vga_dev.clone());
+    DEVICE_REGISTRY.write().add_role::<dyn LogSink>(id, vga_dev);
 }
 
