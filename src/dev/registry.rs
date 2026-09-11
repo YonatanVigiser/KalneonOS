@@ -125,7 +125,7 @@ macro_rules! define_registry {
 use crate::drivers::input::{InputEvent, KeyEvent, KeyboardDevice};
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
 
-use super::lease::{Access, Acquire, Exclusive, Lease, LeaseState, OnReleaseRequest, Shared};
+use super::lease::{Access, Acquire, Exclusive, Lease, LeaseState, Shared};
 use super::traits::*;
 define_registry! {
     shared {
@@ -170,20 +170,24 @@ impl DeviceRegistry {
         R::slot(self).entries().iter().map(|dev| dev.dev.clone()).collect()
     }
 
-    pub fn try_acquire<R>(&self, id: DeviceId, callback: Option<OnReleaseRequest>) -> Option<Lease<R>>
+    pub fn try_acquire<R>(&self, id: DeviceId) -> Option<Lease<R>>
     where R: Role<Access = Exclusive> + ?Sized {
         let dev = R::slot(self).entries().iter().find(|dev| dev.info.id == id)?;
-        dev.info.lease_state.as_ref().unwrap().try_acquire(callback).then(|| Lease::<R>::new(dev.dev.clone(), dev.info.lease_state.clone().unwrap()))
+        dev.info.lease_state.as_ref().unwrap().try_acquire().then(|| Lease::<R>::new(dev.dev.clone(), dev.info.lease_state.clone().unwrap()))
     }
 
     pub fn try_acquire_all<R>(&self) -> Vec<Lease<R>>
     where R: Role<Access = Exclusive> + ?Sized {
+        R::slot(self).entries().iter()
+            .filter(|dev| dev.info.lease_state.as_ref().unwrap().try_acquire())
+            .map(|dev| Lease::new(dev.dev.clone(), dev.info.lease_state.as_ref().unwrap().clone()))
+            .collect()
     }
 
-    pub fn acquire<R>(&self, id: DeviceId, callback: Option<OnReleaseRequest>) -> Option<Acquire<R>>
+    pub fn acquire<R>(&self, id: DeviceId) -> Option<Acquire<R>>
     where R: Role<Access = Exclusive> + ?Sized {
         let dev = R::slot(self).entries().iter().find(|dev| dev.info.id == id)?;
-        Some(Acquire::new(dev.dev.clone(), dev.info.lease_state.as_ref().unwrap().clone(), callback))
+        Some(Acquire::new(dev.dev.clone(), dev.info.lease_state.as_ref().unwrap().clone()))
     }
 
     pub fn request_release<R>(&self, id: DeviceId)
