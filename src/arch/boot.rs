@@ -1,11 +1,10 @@
-use crate::{drivers::display::{DisplayInfo, framebuffer::FramebufferInfo}, memory::{
+use crate::{drivers::display::DisplayInfo, memory::{
     MemoryType,
     map::{MemoryMap, TypedPhysFrameRange},
 }};
 use crate::common::traits::Indexable;
-use alloc::boxed::Box;
 use multiboot2::{
-    BootInformation, BootInformationHeader, FramebufferType, MemoryArea, MemoryAreaType, MemoryAreaTypeId
+    BootInformation, BootInformationHeader, MemoryArea, MemoryAreaType, MemoryAreaTypeId
 };
 use x86_64::PhysAddr;
 use x86_64::structures::paging::frame::PhysFrame;
