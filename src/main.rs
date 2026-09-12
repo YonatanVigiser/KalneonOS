@@ -6,6 +6,7 @@
 #![feature(unsafe_cell_access)]
 #![feature(trait_alias)]
 #![feature(sync_unsafe_cell)]
+#![feature(never_type)]
 
 pub mod drivers;
 pub mod interrupt;

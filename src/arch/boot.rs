@@ -11,7 +11,7 @@ use x86_64::structures::paging::frame::PhysFrame;
 
 pub struct BootInfo {
     pub mmap: MemoryMap,
-    pub framebuffer: Option<DisplayInfo>,
+    pub display: Option<DisplayInfo>,
     pub rsdt_addr: PhysAddr,
     pub rsdt_revision: u8,
 }
@@ -64,7 +64,7 @@ pub fn load_boot_info(boot_magic: u32, boot_info_ptr: u32) -> BootInfo {
         let framebuffer = boot_info.framebuffer_tag().and_then(|res| res.ok()).map(|tag| { DisplayInfo::from(tag) });
         return BootInfo {
             mmap,
-            framebuffer,
+            display: framebuffer,
             rsdt_addr,
             rsdt_revision,
         };

@@ -122,6 +122,7 @@ macro_rules! define_registry {
     };
 }
 
+use crate::drivers::display::framebuffer::Framebuffer;
 use crate::drivers::input::{InputEvent, KeyEvent, KeyboardDevice};
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
 
@@ -138,6 +139,7 @@ define_registry! {
     exclusive {
         log_sink: dyn LogSink,
         char_out: dyn CharOut,
+        framebuffer: Framebuffer,
     }
 }
 
