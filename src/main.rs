@@ -74,7 +74,6 @@ fn panic(info: &PanicInfo) -> ! {
         let _ = writeln!(panic_log_sink, "{info}");
         let _ = writeln!(panic_log_sink, "--- log flush ---");
     }
-    log::error!("Kernel Panic!: {info}");
     LOGGER.flush();
     halt_loop()
 }

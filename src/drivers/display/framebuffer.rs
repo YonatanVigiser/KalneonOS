@@ -1,6 +1,6 @@
 use alloc::collections::btree_map::BTreeMap;
 use alloc::vec::Vec;
-use embedded_graphics::{Pixel, framebuffer};
+use embedded_graphics::Pixel;
 use embedded_graphics::pixelcolor::Rgb888;
 use embedded_graphics::prelude::{DrawTarget, OriginDimensions, Point, Primitive, RgbColor, Size};
 use multiboot2::{FramebufferColor, FramebufferField};
@@ -104,12 +104,14 @@ impl Framebuffer {
 
         let framebuffer_size = info.pitch as usize * info.heigth as usize;
 
-        map_mmio_ptr(info.address, framebuffer_size).expect("MMIO failed");
+        let mapped_address = map_mmio_ptr(info.address, framebuffer_size).expect("MMIO failed");
+        let mut info = info.clone();
+        info.address = mapped_address;
 
         let back = alloc::vec![0u8; framebuffer_size];
 
         Ok(Self {
-            info: info.clone(),
+            info,
             bytes_per_pixel,
             cache: BTreeMap::new(),
             back,
@@ -157,6 +159,8 @@ impl Framebuffer {
     pub fn flush(&mut self) {
         let dst = self.info.address as *mut u8;
         let len = self.back.len();
+
+        log::info!("Dst: {:x}, Len: {len}", dst as usize);
 
         const WORD: usize = size_of::<usize>();
         let words = len / WORD;
