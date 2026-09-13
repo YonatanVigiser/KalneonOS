@@ -67,6 +67,7 @@ fn build_mutliboot_header() {
                     MbiTagType::End.into(),
                 ],
             ))
+            .framebuffer_tag(FramebufferHeaderTag::new(HeaderTagFlag::Optional, 0, 0, 0))
             .build();
 
         // Write the header to a binary file

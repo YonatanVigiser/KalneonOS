@@ -99,7 +99,7 @@ impl I8042Ps2Driver {
             mouse_timeout_count: AtomicU32::new(0),
         });
 
-        let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").1.clone();
+        let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").clone();
         let keyboard_listener = if driver.has_keyboard && let Ok((keyboard_target, keyboard_slot)) = global_interrupt_controller.allocate_target() {
             global_interrupt_controller.route(keyboard_interrupt, keyboard_target).expect("GlobalInterruptController routeing failed!");
             global_interrupt_controller.unmask(keyboard_interrupt).expect("GlobalInterruptController unmasing error!");

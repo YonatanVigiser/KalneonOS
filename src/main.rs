@@ -6,6 +6,7 @@
 #![feature(unsafe_cell_access)]
 #![feature(trait_alias)]
 #![feature(sync_unsafe_cell)]
+#![feature(never_type)]
 
 pub mod drivers;
 pub mod interrupt;
@@ -40,6 +41,8 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
+    LOGGER.auto_flush.store(false, Ordering::Release);
+    EXECUTOR.get().unwrap().spawn(Task::new(LOGGER.log_task()));
     drivers::init_stage3();
     ap_main();
 }
@@ -57,21 +60,29 @@ pub async fn kernel_init_task() {
 
 use core::fmt::Write;
 use core::panic::PanicInfo;
+use core::sync::atomic::{AtomicBool, Ordering};
 
+use log::Log;
 use x86_64::instructions::interrupts;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    static PANICKING: AtomicBool = AtomicBool::new(false);
+    if PANICKING.swap(true, Ordering::AcqRel) { halt_loop() }
     unsafe { arch::halt_smp(); }
     if let Some(mut panic_log_sink) = drivers::panic_log_sink() {
         let _ = writeln!(panic_log_sink, "{info}");
+        let _ = writeln!(panic_log_sink, "--- log flush ---");
     }
+    LOGGER.flush();
     halt_loop()
 }
 
 use crate::task::Task;
 
 use self::arch::cpu::{CpuId, current_cpu};
+use self::common::log::LOGGER;
+use self::task::executor::EXECUTOR;
 
 pub fn halt_loop() -> ! {
     interrupts::disable();

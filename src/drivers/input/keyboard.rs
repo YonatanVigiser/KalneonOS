@@ -68,7 +68,7 @@ impl KeyboardState {
             };
             let keyboards = DEVICE_REGISTRY.read().query::<dyn KeyboardDevice>();
             for keyboard in keyboards {
-                keyboard.1.set_leds(leds);
+                keyboard.set_leds(leds);
             }
         }
         self.state_update_input_hub.push(event);

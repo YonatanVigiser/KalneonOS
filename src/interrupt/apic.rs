@@ -332,7 +332,7 @@ pub fn init_global(info: Apic) {
     };
     DEVICE_REGISTRY
         .write()
-        .register(Arc::new(io_apic_dev) as Arc<dyn GlobalInterruptController>);
+        .register::<dyn GlobalInterruptController>(Arc::new(io_apic_dev));
 }
 
 const DURATION_PER_TIMER_INTERRUPT: KernelDuration = KernelDuration::from_nanos(10_000_000);

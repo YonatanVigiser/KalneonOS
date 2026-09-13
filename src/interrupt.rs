@@ -26,7 +26,6 @@ pub fn register_local(lapic: LocalApic) {
         .query::<dyn GlobalInterruptController>()
         .first()
         .expect("No GlobalInterruptController")
-        .1
         .add_local_interrupt_controller(lapic_dev.clone());
     DEVICE_REGISTRY.write().register::<dyn LocalInterruptController>(lapic_dev);
 }
