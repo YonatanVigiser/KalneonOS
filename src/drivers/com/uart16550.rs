@@ -5,7 +5,8 @@ use spin::Mutex;
 use uart_16550::backend::{Backend, PioBackend};
 use uart_16550::{Config, Uart16550, Uart16550Tty};
 
-use crate::dev::registry::{DEVICE_REGISTRY, Device};
+use crate::dev::lease::LeaseCell;
+use crate::dev::registry::DEVICE_REGISTRY;
 use crate::dev::traits::{CharOut, LogSink};
 
 pub const COM1_IO_PORT: u16 = 0x3F8;
@@ -20,14 +21,14 @@ fn try_init_port(port: u16) -> Result<Uart16550<PioBackend>, ()> {
 
 pub fn init() {
     if let Ok(com1_dev) = try_init_port(COM1_IO_PORT) {
-        let dev = Arc::new(UartDev(Mutex::new(com1_dev)));
+        let dev = Arc::new(LeaseCell::new(UartDev(Mutex::new(com1_dev))));
         let dev_info = DEVICE_REGISTRY.write().register::<dyn CharOut>(dev.clone());
-        DEVICE_REGISTRY.write().add_role::<dyn LogSink>(Device::new(dev_info, dev));
+        DEVICE_REGISTRY.write().add_role::<dyn LogSink>(dev_info, dev);
     }
     if let Ok(com2_dev) = try_init_port(COM2_IO_PORT) {
-        let dev = Arc::new(UartDev(Mutex::new(com2_dev)));
+        let dev = Arc::new(LeaseCell::new(UartDev(Mutex::new(com2_dev))));
         let dev_info = DEVICE_REGISTRY.write().register::<dyn CharOut>(dev.clone());
-        DEVICE_REGISTRY.write().add_role::<dyn LogSink>(Device::new(dev_info, dev));
+        DEVICE_REGISTRY.write().add_role::<dyn LogSink>(dev_info, dev);
     }
 }
 

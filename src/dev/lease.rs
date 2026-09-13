@@ -1,5 +1,6 @@
+use core::cell::UnsafeCell;
 use core::future::poll_fn;
-use core::ops::Deref;
+use core::ops::{Deref, DerefMut};
 use core::pin::Pin;
 use core::sync::atomic::Ordering;
 use core::task::{Context, Poll, Waker};
@@ -10,12 +11,35 @@ use atomic_enum::atomic_enum;
 use futures_util::task::AtomicWaker;
 use spin::Mutex;
 
+use super::registry::Role;
+
 pub struct Shared;
 pub struct Exclusive;
 
-pub trait Access: 'static { const EXLUSIVE: bool; }
-impl Access for Shared    { const EXLUSIVE: bool = false; }
-impl Access for Exclusive { const EXLUSIVE: bool = true; }
+#[repr(transparent)]
+pub struct LeaseCell<R: ?Sized>(UnsafeCell<R>);
+
+impl<R> LeaseCell<R> {
+    pub fn new(dev: R) -> Self {
+        Self(UnsafeCell::new(dev))
+    }
+}
+
+unsafe impl<R: ?Sized> Send for LeaseCell<R> {}
+unsafe impl<R: ?Sized> Sync for LeaseCell<R> {}
+
+pub trait Access: 'static {
+    const EXLUSIVE: bool;
+    type Store<R: ?Sized + 'static>: ?Sized + 'static;
+}
+impl Access for Shared    {
+    const EXLUSIVE: bool = false;
+    type Store<R: ?Sized + 'static> = R;
+}
+impl Access for Exclusive {
+    const EXLUSIVE: bool = true;
+    type Store<R: ?Sized + 'static> = LeaseCell<R>;
+}
 
 #[atomic_enum]
 pub enum LeaseStatus {
@@ -89,13 +113,13 @@ impl LeaseState {
     }
 }
 
-pub struct Lease<R: ?Sized> {
-    dev: Arc<R>,
+pub struct Lease<R: ?Sized + Role> {
+    dev: Arc<LeaseCell<R>>,
     state: Arc<LeaseState>,
 }
 
-impl<R: ?Sized> Lease<R> {
-    pub(super) fn new(dev: Arc<R>, state: Arc<LeaseState>) -> Self {
+impl<R: ?Sized + Role> Lease<R> {
+    pub(super) fn new(dev: Arc<LeaseCell<R>>, state: Arc<LeaseState>) -> Self {
         Self { dev, state }
     }
 
@@ -104,27 +128,31 @@ impl<R: ?Sized> Lease<R> {
     }
 }
 
-impl<R: ?Sized> Deref for Lease<R> {
+impl<R: ?Sized + Role> Deref for Lease<R> {
     type Target = R;
-    fn deref(&self) -> &R { &self.dev }
+    fn deref(&self) -> &R { unsafe { &*self.dev.0.get() } }
 }
 
-impl<R: ?Sized> Drop for Lease<R> {
+impl<R: ?Sized + Role> DerefMut for Lease<R> {
+    fn deref_mut(&mut self) -> &mut R { unsafe { &mut *self.dev.0.get() } }
+}
+
+impl<R: ?Sized + Role> Drop for Lease<R> {
     fn drop(&mut self) { self.state.release(); }
 }
 
-pub struct Acquire<R: ?Sized> {
-    dev: Arc<R>,
+pub struct Acquire<R: ?Sized + Role> {
+    dev: Arc<LeaseCell<R>>,
     state: Arc<LeaseState>,
 }
 
-impl<R: ?Sized> Acquire<R> {
-    pub(super) fn new(dev: Arc<R>, state: Arc<LeaseState>) -> Self {
+impl<R: ?Sized + Role> Acquire<R> {
+    pub(super) fn new(dev: Arc<LeaseCell<R>>, state: Arc<LeaseState>) -> Self {
         Self { dev, state }
     }
 }
 
-impl<R: ?Sized> Future for Acquire<R> {
+impl<R: ?Sized + Role> Future for Acquire<R> {
     type Output = Lease<R>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Lease<R>> {

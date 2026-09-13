@@ -26,14 +26,8 @@ pub fn init_stage2() {
     let boot_info = BOOT_INFO.get().unwrap();
     if let Some(display_info) = boot_info.display.as_ref() {
         match display_info {
-            DisplayInfo::Graphics { info } => framebuffer::init(info),
-            DisplayInfo::Text {
-                address,
-                cols,
-                rows,
-                pitch,
-                bpp,
-            } => vga::init(),
+            DisplayInfo::Graphics(info) => framebuffer::init(info),
+            DisplayInfo::Text(info) => vga::init(),
         }
     }
     log::info!("Stage2 Drivers were init!");

@@ -1,20 +1,22 @@
 use alloc::collections::btree_map::BTreeMap;
+use alloc::sync::Arc;
 use alloc::vec::Vec;
 use embedded_graphics::Pixel;
 use embedded_graphics::pixelcolor::Rgb888;
 use embedded_graphics::prelude::{DrawTarget, OriginDimensions, Point, Primitive, RgbColor, Size};
 use multiboot2::{FramebufferColor, FramebufferField};
-use spin::Mutex;
 
+use crate::dev::lease::LeaseCell;
+use crate::dev::registry::DEVICE_REGISTRY;
 use crate::memory::map_mmio_ptr;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum PixelEncoding {
     RGB { red: FramebufferField, green: FramebufferField, blue: FramebufferField },
     Indexed { palette: Vec<FramebufferColor> },
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct FramebufferInfo {
     pub address: usize,
     pub width: u32,
@@ -226,13 +228,10 @@ impl DrawTarget for Framebuffer {
     }
 }
 
-pub struct FramebufferDevice(Mutex<Framebuffer>);
-
 pub fn init(info: &FramebufferInfo) {
     let mut framebuffer = unsafe { Framebuffer::new(info) }.expect("Given framebuffer info has errors");
-    smoke_test(&mut framebuffer);
     framebuffer.flush();
-    let frambuffer_dev = FramebufferDevice(Mutex::new(framebuffer));
+    DEVICE_REGISTRY.write().register::<Framebuffer>(Arc::new(LeaseCell::new(framebuffer)));
 }
 
 use embedded_graphics::{
@@ -242,7 +241,8 @@ use embedded_graphics::{
     text::Text,
 };
 
-pub fn smoke_test<D>(fb: &mut D) -> Result<(), D::Error>
+#[allow(unused)]
+pub fn test_framebuffer<D>(fb: &mut D) -> Result<(), D::Error>
 where
     D: DrawTarget<Color = Rgb888>,
 {

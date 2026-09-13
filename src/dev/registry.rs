@@ -28,14 +28,16 @@ impl DeviceInfo {
     }
 }
 
+pub type Stored<R> = <<R as Role>::Access as Access>::Store<R>;
+
 #[derive(Clone)]
-pub struct Device<R: Role + ?Sized> {
+struct Device<R: Role + ?Sized> {
     info: DeviceInfo,
-    dev: Arc<R>,
+    dev: Arc<Stored<R>>,
 }
 
 impl<R: Role + ?Sized> Device<R> {
-    pub fn new(info: DeviceInfo, dev: Arc<R>) -> Self {
+    pub fn new(info: DeviceInfo, dev: Arc<Stored<R>>) -> Self {
         Self { info, dev }
     }
 }
@@ -144,7 +146,7 @@ define_registry! {
 }
 
 impl DeviceRegistry {
-    pub fn register<R: Role + ?Sized>(&mut self, dev: Arc<R>) -> DeviceInfo {
+    pub fn register<R: Role + ?Sized>(&mut self, dev: Arc<Stored<R>>) -> DeviceInfo {
         let dev = Device::new(DeviceInfo::new(R::Access::EXLUSIVE), dev);
         let info = dev.info.clone();
         R::slot_mut(self).push(dev);
@@ -152,9 +154,9 @@ impl DeviceRegistry {
         info
     }
 
-    pub fn add_role<R: Role + ?Sized>(&mut self, dev: Device<R>) {
-        assert_eq!(dev.info.lease_state.is_some(), R::Access::EXLUSIVE, "Added Role doesn't match internal lease state");
-        R::slot_mut(self).push(dev);
+    pub fn add_role<R: Role + ?Sized>(&mut self, info: DeviceInfo, dev: Arc<Stored<R>>) {
+        assert_eq!(info.lease_state.is_some(), R::Access::EXLUSIVE, "Added Role doesn't match internal lease state");
+        R::slot_mut(self).push(Device::new(info, dev));
         self.generation += 1;
     }
 
