@@ -7,28 +7,13 @@ use alloc::vec::Vec;
 use crossbeam_queue::ArrayQueue;
 use futures_util::Stream;
 use futures_util::task::AtomicWaker;
-use pc_keyboard::{KeyCode, KeyState, Modifiers};
 use spin::Mutex;
 
-use crate::dev::registry::DEVICE_REGISTRY;
-use crate::interrupt::apic::isa_irq_to_gsi;
-
-pub mod ps2;
-
-const PS2_KEYBOARD_ISA: u8 = 0x1;
-const PS2_MOUSE_ISA: u8 = 0xC;
+pub mod keyboard;
 
 pub fn init() {
-    DEVICE_REGISTRY.write().register::<dyn InputEvent<KeyEvent>>(Arc::new(KeyboardHub::default()));
-    ps2::init(isa_irq_to_gsi(PS2_KEYBOARD_ISA), isa_irq_to_gsi(PS2_MOUSE_ISA));
+    keyboard::init();
 }
-
-pub trait KeyboardDevice: Send + Sync {
-    fn connected(&self) -> bool;
-}
-
-#[derive(Debug, Clone)]
-pub struct KeyEvent { pub keycode: KeyCode, pub keystate: KeyState, pub modifiers: Modifiers, pub unicode: Option<char> }
 
 pub struct SubscriberInner<T> {
     queue: ArrayQueue<T>,
@@ -36,12 +21,12 @@ pub struct SubscriberInner<T> {
     dropped: AtomicU32,
 }
 
-const KEY_EVENT_BUFFER_SIZE: usize = 32;
+const SUBSCRIBER_BUFFER_SIZE: usize = 32;
 
 impl<T> SubscriberInner<T> {
     fn new() -> Self {
         Self {
-            queue: ArrayQueue::new(KEY_EVENT_BUFFER_SIZE),
+            queue: ArrayQueue::new(SUBSCRIBER_BUFFER_SIZE),
             waker: AtomicWaker::new(),
             dropped: AtomicU32::new(0),
         }
@@ -79,24 +64,30 @@ impl<T> Stream for Reader<T> {
     }
 }
 
-pub trait InputEvent<T>: Send + Sync {
-    fn subscribe(&self) -> Reader<T>;
-    fn push(&self, event: KeyEvent);
+pub struct InputHub<T> {
+    subs: Mutex<Vec<Weak<SubscriberInner<T>>>>,
 }
 
-#[derive(Default)]
-pub struct KeyboardHub {
-    subs: Mutex<Vec<Weak<SubscriberInner<KeyEvent>>>>,
+impl<T> InputHub<T> {
+    pub const fn new() -> Self {
+        Self { subs: Mutex::new(Vec::new()) }
+    }
 }
 
-impl InputEvent<KeyEvent> for KeyboardHub {
-    fn subscribe(&self) -> Reader<KeyEvent> {
+impl<T> Default for InputHub<T> {
+    fn default() -> Self {
+        Self { subs: Mutex::new(Vec::new()) }
+    }
+}
+
+impl<T: Clone + Send + Sync> InputHub<T> {
+    pub fn subscribe(&self) -> Reader<T> {
         let sub = Arc::new(SubscriberInner::new());
         self.subs.lock().push(Arc::downgrade(&sub));
         Reader(sub)
     }
 
-    fn push(&self, event: KeyEvent) {
+    fn push(&self, event: T) {
         let mut guard = self.subs.lock();
         guard.retain(|sub| {
             if let Some(sub) = sub.upgrade() {
