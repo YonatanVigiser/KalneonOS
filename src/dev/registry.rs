@@ -124,8 +124,8 @@ macro_rules! define_registry {
     };
 }
 
+use crate::drivers::input::keyboard::KeyboardDevice;
 use crate::drivers::display::framebuffer::Framebuffer;
-use crate::drivers::input::{InputEvent, KeyEvent, KeyboardDevice};
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
 
 use super::lease::{Access, Acquire, Exclusive, Lease, LeaseState, Shared};
@@ -136,7 +136,6 @@ define_registry! {
         global_interrupt_controller: dyn GlobalInterruptController,
         local_interrupt_controller: dyn LocalInterruptController,
         keyboard: dyn KeyboardDevice,
-        keyboard_input_event: dyn InputEvent<KeyEvent>,
     }
     exclusive {
         log_sink: dyn LogSink,

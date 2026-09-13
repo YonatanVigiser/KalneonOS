@@ -1,30 +1,39 @@
 use core::pin;
-use core::sync::atomic::{AtomicU8, AtomicU32, Ordering};
+use core::sync::atomic::{AtomicU32, Ordering};
 
 use alloc::sync::Arc;
 use futures_util::future::select;
-use pc_keyboard::{DecodedKey, HandleControl, KeyCode, KeyState, PS2Keyboard, ScancodeSet2};
-use pc_keyboard::layouts::{AnyLayout, Us104Key};
+use pc_keyboard::{ScancodeSet, ScancodeSet2};
 use ps2::Controller;
 use ps2::flags::{ControllerConfigFlags, ControllerStatusFlags, KeyboardLedFlags};
 use spin::Mutex;
 
 use crate::dev::registry::DEVICE_REGISTRY;
+use crate::drivers::input::keyboard::{KEYBOARD_GLOBAL_STATE, KEYBOARD_INPUT_HUB};
 use crate::interrupt::{self, GlobalInterruptController, GlobalInterruptSource, InterruptListener};
 use crate::task::{Task, yield_now};
 use crate::task::executor::EXECUTOR;
 
-use super::{InputEvent, KeyEvent, KeyboardDevice};
+use super::{KeyboardDevice, LedState};
+
+impl From<LedState> for KeyboardLedFlags {
+    fn from(value: LedState) -> Self {
+        let mut result = KeyboardLedFlags::empty();
+        result.set(KeyboardLedFlags::CAPS_LOCK, value.contains(LedState::CAPS_LOCK));
+        result.set(KeyboardLedFlags::NUM_LOCK, value.contains(LedState::NUM_LOCK));
+        result.set(KeyboardLedFlags::SCROLL_LOCK, value.contains(LedState::SCROLL_LOCK));
+        result
+    }
+}
 
 struct I8042Ps2Driver {
     controller: Mutex<Controller>,
     has_keyboard: bool,
     has_mouse: bool,
     keyboard_connected: bool,
-    mouse_connected: bool,
+    _mouse_connected: bool,
     keyboard_timeout_count: AtomicU32,
     mouse_timeout_count: AtomicU32,
-    keyboards_leds_state: AtomicU8,
 }
 
 impl I8042Ps2Driver {
@@ -62,7 +71,7 @@ impl I8042Ps2Driver {
 
         if !has_keyboard && !has_mouse { return None; }
         
-        let _interrupt_guard = interrupt::guard::InterruptGuard::new();
+        let interrupt_guard = interrupt::guard::InterruptGuard::new();
         config = controller.read_config().ok()?;
         let keyboard_connected = if has_keyboard {
             controller.enable_keyboard().ok()?;
@@ -71,7 +80,7 @@ impl I8042Ps2Driver {
             let test_passed = controller.keyboard().reset_and_self_test().is_ok();
             test_passed && controller.keyboard().enable_scanning().is_ok()
         } else { false };
-        let mouse_connected = if has_mouse {
+        let _mouse_connected = if has_mouse {
             controller.enable_mouse().ok()?;
             config.set(ControllerConfigFlags::DISABLE_MOUSE, false);
             config.set(ControllerConfigFlags::ENABLE_MOUSE_INTERRUPT, true);
@@ -80,14 +89,14 @@ impl I8042Ps2Driver {
         } else { false };
 
         controller.write_config(config).ok()?;
+        drop(interrupt_guard);
 
         let driver = Arc::new(Self {
             controller: Mutex::new(controller),
             has_keyboard, has_mouse,
-            keyboard_connected, mouse_connected,
+            keyboard_connected, _mouse_connected,
             keyboard_timeout_count: AtomicU32::new(0),
             mouse_timeout_count: AtomicU32::new(0),
-            keyboards_leds_state: AtomicU8::new(KeyboardLedFlags::empty().bits()),
         });
 
         let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").clone();
@@ -110,59 +119,39 @@ impl I8042Ps2Driver {
 
     async fn handle_task(self: Arc<Self>, mut keyboard_listener: Option<InterruptListener>, mut mouse_listener: Option<InterruptListener>) {
         const BYTES_READ_YIELD_CAP: usize = 100;
-        let mut ps2_keyboard = PS2Keyboard::new(ScancodeSet2::new(), AnyLayout::Us104Key(Us104Key), HandleControl::MapLettersToUnicode);
-        let keyboard_event_in = DEVICE_REGISTRY.read().query::<dyn InputEvent<KeyEvent>>().get(0).expect("No KeyboardEventIn").clone();
+        let mut scancode_set = ScancodeSet2::new();
+        let mut keyboard_buff = [0; BYTES_READ_YIELD_CAP];
+        let mut mouse_buff = [0; BYTES_READ_YIELD_CAP];
         loop {
-            let mut controller = self.controller.lock();
-            let mut read_count = 0;
-            while controller.read_status().contains(ControllerStatusFlags::OUTPUT_FULL) {
-                let from_keyboard = !controller.read_status().contains(ControllerStatusFlags::MOUSE_OUTPUT_FULL);
-                read_count += 1;
-                if read_count >= BYTES_READ_YIELD_CAP {
-                    log::warn!("PS/2 Device input buffer is stuck at full!");
-                    read_count = 0;
-                    yield_now().await;
-                }
-                if let Ok(byte) = controller.read_data() {
-                    if from_keyboard {
-                        if let Ok(key_event) = ps2_keyboard.add_byte(byte) && let Some(key_event) = key_event {
-                            let unicode = ps2_keyboard.process_keyevent(key_event.clone()).and_then(|decoded_key| match decoded_key {
-                                DecodedKey::Unicode(c) => Some(c),
-                                DecodedKey::RawKey(_) => None,
-                            });
-                            let event = KeyEvent {
-                                keycode: key_event.code,
-                                keystate: key_event.state,
-                                modifiers: ps2_keyboard.get_modifiers().clone(),
-                                unicode,
-                            };
-                            let prev = KeyboardLedFlags::from_bits_truncate(self.keyboards_leds_state.load(Ordering::Relaxed));
-                            let mut leds = prev;
-                            if let KeyCode::ScrollLock = event.keycode && let KeyState::Down = event.keystate {
-                                leds.toggle(KeyboardLedFlags::SCROLL_LOCK);
-                            }
-                            leds.set(KeyboardLedFlags::CAPS_LOCK, event.modifiers.capslock);
-                            leds.set(KeyboardLedFlags::NUM_LOCK, event.modifiers.numlock);
-                            if prev != leds {
-                                let scan_disable = controller.keyboard().disable_scanning().is_ok();
-                                let leds_written = controller.keyboard().set_leds(leds).is_ok();
-                                let scan_enable = controller.keyboard().enable_scanning().is_ok();
-                                if leds_written { self.keyboards_leds_state.store(leds.bits(), Ordering::Relaxed); }
-                                if !scan_enable && scan_disable { log::warn!("PS/2 Keyboard scan enable failed!") }
-                            }
-                            keyboard_event_in.push(event);
-                        }
-                    } else {
-                    }
-                } else {
-                    if from_keyboard {
-                        self.keyboard_timeout_count.fetch_add(1, Ordering::Relaxed);
-                    } else {
-                        self.mouse_timeout_count.fetch_add(1, Ordering::Relaxed);
+            let mut total_read = 0;
+            let mut keyboard_count = 0;
+            let mut mouse_count = 0;
+            {
+                let mut controller = self.controller.lock();
+                while total_read < BYTES_READ_YIELD_CAP && controller.read_status().contains(ControllerStatusFlags::OUTPUT_FULL) {
+                    let from_keyboard = !controller.read_status().contains(ControllerStatusFlags::MOUSE_OUTPUT_FULL);
+                    total_read += 1;
+                    match controller.read_data() {
+                        Ok(byte) if from_keyboard => { keyboard_buff[keyboard_count] = byte; keyboard_count += 1; }
+                        Ok(byte) => { mouse_buff[mouse_count] = byte; mouse_count += 1 }
+                        Err(_) if from_keyboard => { self.keyboard_timeout_count.fetch_add(1, Ordering::Relaxed); }
+                        Err(_) => { self.mouse_timeout_count.fetch_add(1, Ordering::Relaxed); }
                     }
                 }
             }
-            drop(controller);
+
+            for &byte in &keyboard_buff[..keyboard_count] {
+                if let Ok(Some(event)) = scancode_set.advance_state(byte) {
+                    KEYBOARD_GLOBAL_STATE.update(event.clone());
+                    KEYBOARD_INPUT_HUB.push(event);
+                }
+            }
+
+            if total_read == BYTES_READ_YIELD_CAP {
+                log::warn!("PS/2 Device input buffer is stuck at full!");
+                yield_now().await;
+                continue;
+            }
 
             match (keyboard_listener.as_mut(), mouse_listener.as_mut()) {
                 (Some(x), Some(y)) => { select(pin::pin!(x.wait()), pin::pin!(y.wait())).await; }
@@ -176,6 +165,15 @@ impl I8042Ps2Driver {
 impl KeyboardDevice for I8042Ps2Driver {
     fn connected(&self) -> bool {
         self.keyboard_connected
+    }
+
+    fn set_leds(&self, state: LedState) -> bool {
+        let mut controller = self.controller.lock();
+        let _ = controller.keyboard().disable_scanning().is_ok();
+        let leds_written = controller.keyboard().set_leds(state.into()).is_ok();
+        let scan_enable = controller.keyboard().enable_scanning().is_ok();
+        if !scan_enable { log::warn!("PS/2 Keyboard scan enable failed!") }
+        leds_written
     }
 }
 
