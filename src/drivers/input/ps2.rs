@@ -90,7 +90,7 @@ impl I8042Ps2Driver {
             keyboards_leds_state: AtomicU8::new(KeyboardLedFlags::empty().bits()),
         });
 
-        let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").1.clone();
+        let global_interrupt_controller = DEVICE_REGISTRY.read().query::<dyn GlobalInterruptController>().get(0).expect("No GlobalInterruptController").clone();
         let keyboard_listener = if driver.has_keyboard && let Ok((keyboard_target, keyboard_slot)) = global_interrupt_controller.allocate_target() {
             global_interrupt_controller.route(keyboard_interrupt, keyboard_target).expect("GlobalInterruptController routeing failed!");
             global_interrupt_controller.unmask(keyboard_interrupt).expect("GlobalInterruptController unmasing error!");
@@ -111,7 +111,7 @@ impl I8042Ps2Driver {
     async fn handle_task(self: Arc<Self>, mut keyboard_listener: Option<InterruptListener>, mut mouse_listener: Option<InterruptListener>) {
         const BYTES_READ_YIELD_CAP: usize = 100;
         let mut ps2_keyboard = PS2Keyboard::new(ScancodeSet2::new(), AnyLayout::Us104Key(Us104Key), HandleControl::MapLettersToUnicode);
-        let keyboard_event_in = DEVICE_REGISTRY.read().query::<dyn InputEvent<KeyEvent>>().get(0).expect("No KeyboardEventIn").1.clone();
+        let keyboard_event_in = DEVICE_REGISTRY.read().query::<dyn InputEvent<KeyEvent>>().get(0).expect("No KeyboardEventIn").clone();
         loop {
             let mut controller = self.controller.lock();
             let mut read_count = 0;

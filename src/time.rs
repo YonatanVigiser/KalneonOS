@@ -14,7 +14,7 @@ pub fn uptime() -> KernelInstant {
         static ref UPTIME_DEVICE: Arc<dyn UptimeSource> = {
             let registry = DEVICE_REGISTRY.read();
             let devs = registry.query::<dyn UptimeSource>();
-            devs.iter().map(|(_, dev)| dev).min_by_key(|dev| dev.resolution()).expect("No uptime source registered!").clone()
+            devs.iter().min_by_key(|dev| dev.resolution()).expect("No uptime source registered!").clone()
         };
     }
     UPTIME_DEVICE.uptime()

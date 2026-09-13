@@ -86,6 +86,7 @@ impl From<VgaCell> for u16 {
 use alloc::sync::Arc;
 pub use spin::Mutex;
 
+use crate::dev::lease::LeaseCell;
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::dev::traits::{CharOut, LogSink};
 use crate::memory::map_mmio_ptr;
@@ -363,8 +364,9 @@ impl LogSink for VgaDev {
 }
 
 pub fn init() {
-    let vga_dev = Arc::new(VgaDev(Mutex::new(Vga::init(80, 25))));
-    let id = DEVICE_REGISTRY.write().register::<dyn CharOut>(vga_dev.clone());
-    DEVICE_REGISTRY.write().add_role::<dyn LogSink>(id, vga_dev);
+    let vga_dev = Arc::new(LeaseCell::new(VgaDev(Mutex::new(Vga::init(80, 25)))));
+    let mut reg = DEVICE_REGISTRY.write();
+    let dev_info = reg.register::<dyn CharOut>(vga_dev.clone());
+    reg.add_role::<dyn LogSink>(dev_info, vga_dev);
 }
 
