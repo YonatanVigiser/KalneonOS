@@ -5,10 +5,11 @@ use embedded_graphics::Pixel;
 use embedded_graphics::pixelcolor::Rgb888;
 use embedded_graphics::prelude::{DrawTarget, OriginDimensions, Point, Primitive, RgbColor, Size};
 use multiboot2::{FramebufferColor, FramebufferField};
+use x86_64::structures::paging::PageTableFlags;
 
 use crate::dev::lease::LeaseCell;
 use crate::dev::registry::DEVICE_REGISTRY;
-use crate::memory::map_mmio_ptr;
+use crate::memory::map_ptr;
 
 #[derive(Debug, Clone)]
 pub enum PixelEncoding {
@@ -20,10 +21,10 @@ pub enum PixelEncoding {
 pub struct FramebufferInfo {
     pub address: usize,
     pub width: u32,
-    pub heigth: u32,
+    pub height: u32,
     pub pitch: u32,
     pub bpp: u8,
-    pub pixel_econding: PixelEncoding,
+    pub pixel_encoding: PixelEncoding,
 }
 
 fn nearest_palette_entry(palette: &[FramebufferColor], r: u8, g: u8, b: u8) -> usize {
@@ -70,7 +71,7 @@ impl Framebuffer {
         if info.address == 0 {
             return Err(FramebufferError::NullAddress);
         }
-        if info.width == 0 || info.heigth == 0 {
+        if info.width == 0 || info.height == 0 {
             return Err(FramebufferError::ZeroSized);
         }
         let bytes_per_pixel = match info.bpp {
@@ -89,7 +90,7 @@ impl Framebuffer {
             });
         }
  
-        match &info.pixel_econding {
+        match &info.pixel_encoding {
             PixelEncoding::RGB { red, green, blue } => {
                 for field in [red, green, blue] {
                     if field.position as u32 + field.size as u32 > 32 {
@@ -104,9 +105,10 @@ impl Framebuffer {
             }
         }
 
-        let framebuffer_size = info.pitch as usize * info.heigth as usize;
+        let framebuffer_size = info.pitch as usize * info.height as usize;
 
-        let mapped_address = map_mmio_ptr(info.address, framebuffer_size).expect("MMIO failed");
+        let mapping_flags = PageTableFlags::PRESENT | PageTableFlags::GLOBAL | PageTableFlags::WRITABLE | PageTableFlags::WRITE_THROUGH;
+        let mapped_address = map_ptr(info.address, framebuffer_size, mapping_flags).expect("Mapping failed failed");
         let mut info = info.clone();
         info.address = mapped_address;
 
@@ -125,7 +127,7 @@ impl Framebuffer {
     }
  
     pub fn height(&self) -> u32 {
-        self.info.heigth
+        self.info.height
     }
  
     pub fn pitch(&self) -> usize {
@@ -139,7 +141,7 @@ impl Framebuffer {
     fn encode(&mut self, color: Rgb888) -> u32 {
         let (r, g, b) = (color.r(), color.g(), color.b());
  
-        match &self.info.pixel_econding {
+        match &self.info.pixel_encoding {
             PixelEncoding::RGB { red, green, blue } => {
                     encode_field(red, r) | encode_field(green, g) | encode_field(blue, b)
             }
@@ -160,23 +162,9 @@ impl Framebuffer {
 
     pub fn flush(&mut self) {
         let dst = self.info.address as *mut u8;
-        let len = self.back.len();
-
-        log::info!("Dst: {:x}, Len: {len}", dst as usize);
-
-        const WORD: usize = size_of::<usize>();
-        let words = len / WORD;
-        let src = self.back.as_ptr() as *const usize;
-
         unsafe {
-            for i in 0..words {
-                (dst as *mut usize)
-                    .add(i)
-                    .write_volatile(src.add(i).read_unaligned());
-            }
-            for i in (words * WORD)..len {
-                dst.add(i).write_volatile(self.back[i]);
-            }
+            core::ptr::copy_nonoverlapping(self.back.as_ptr(), dst, self.back.len());
+            core::arch::x86_64::_mm_sfence();
         }
     }
 }
@@ -202,7 +190,7 @@ fn encode_field(field: &FramebufferField, value: u8) -> u32 {
 
 impl OriginDimensions for Framebuffer {
     fn size(&self) -> Size {
-        Size::new(self.info.width, self.info.heigth)
+        Size::new(self.info.width, self.info.height)
     }
 }
 
@@ -217,7 +205,7 @@ impl DrawTarget for Framebuffer {
                 continue;
             }
             let (x, y) = (point.x as u32, point.y as u32);
-            if x >= self.info.width || y >= self.info.heigth {
+            if x >= self.info.width || y >= self.info.height {
                 continue;
             }
 
@@ -226,10 +214,35 @@ impl DrawTarget for Framebuffer {
         }
         Ok(())
     }
+
+    fn fill_solid(&mut self, area: &Rectangle, color: Self::Color) -> Result<(), Self::Error> {
+        let area = area.intersection(&self.bounding_box());
+        if area.size.width == 0 || area.size.height == 0 {
+            return Ok(());
+        }
+
+        let raw = self.encode(color);
+        let bytes = raw.to_le_bytes();
+        let bpp = self.bytes_per_pixel as usize;
+        let pitch = self.pitch();
+
+        let x0 = area.top_left.x as usize;
+        let y0 = area.top_left.y as usize;
+        let w = area.size.width as usize;
+
+        for y in y0..y0 + area.size.height as usize {
+            let start = y * pitch + x0 * bpp;
+            for px in self.back[start..start + w * bpp].chunks_exact_mut(bpp) {
+                px.copy_from_slice(&bytes[..bpp]);
+            }
+        }
+        Ok(())
+    }
 }
 
 pub fn init(info: &FramebufferInfo) {
     let mut framebuffer = unsafe { Framebuffer::new(info) }.expect("Given framebuffer info has errors");
+    test_framebuffer(&mut framebuffer);
     framebuffer.flush();
     DEVICE_REGISTRY.write().register::<Framebuffer>(Arc::new(LeaseCell::new(framebuffer)));
 }

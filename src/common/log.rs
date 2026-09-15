@@ -10,6 +10,7 @@ use log::{Level, LevelFilter, Log, Metadata, Record};
 
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::dev::traits::LogSink;
+use crate::task::yield_now;
 
 pub fn init_logger() {
     LOGGER.queue.call_once(|| ArrayQueue::new(LOGS_QUEUE_SIZE));
@@ -105,6 +106,7 @@ impl Logger {
         loop {
             self.wait_for_messages().await;
             self.flush();
+            yield_now().await;
         }
     }
 }

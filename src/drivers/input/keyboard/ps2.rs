@@ -123,6 +123,7 @@ impl I8042Ps2Driver {
         let mut keyboard_buff = [0; BYTES_READ_YIELD_CAP];
         let mut mouse_buff = [0; BYTES_READ_YIELD_CAP];
         loop {
+            log::info!("PS/2");
             let mut total_read = 0;
             let mut keyboard_count = 0;
             let mut mouse_count = 0;

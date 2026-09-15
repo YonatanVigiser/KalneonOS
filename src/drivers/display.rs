@@ -24,18 +24,18 @@ impl From<&FramebufferTag> for DisplayInfo {
             FramebufferType::RGB { red, green, blue } => Self::Graphics(FramebufferInfo {
                 address: value.address() as usize,
                 width: value.width(),
-                heigth: value.height(),
+                height: value.height(),
                 pitch: value.pitch(),
                 bpp: value.bpp(),
-                pixel_econding: PixelEncoding::RGB { red, green, blue },
+                pixel_encoding: PixelEncoding::RGB { red, green, blue },
             }),
             FramebufferType::Indexed { palette } => Self::Graphics(FramebufferInfo {
                 address: value.address() as usize,
                 width: value.width(),
-                heigth: value.height(),
+                height: value.height(),
                 pitch: value.pitch(),
                 bpp: value.bpp(),
-                pixel_econding: PixelEncoding::Indexed { palette: palette.iter().copied().collect() },
+                pixel_encoding: PixelEncoding::Indexed { palette: palette.iter().copied().collect() },
             }),
             FramebufferType::Text => Self::Text(TextInfo { address: value.address() as usize, cols: value.width(), rows: value.height(), pitch: value.pitch(), bpp: value.bpp() }),
         }

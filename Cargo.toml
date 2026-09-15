@@ -26,6 +26,7 @@ ps2 = "0.2"
 pc-keyboard = "0.9"
 bitflags = "2.13"
 embedded-graphics = "0.8"
+neurodoom = "0.6"
 
 [dependencies.bitvec]
 version = "1"

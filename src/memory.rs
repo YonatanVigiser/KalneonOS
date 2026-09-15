@@ -144,25 +144,30 @@ pub fn map_phys_range(phys_range: PhysFrameRange, flags: PageTableFlags) -> Opti
     Some(virt_range)
 }
 
+pub const MMIO_FLAGS: PageTableFlags = PageTableFlags::PRESENT
+    .union(PageTableFlags::GLOBAL)
+    .union(PageTableFlags::WRITABLE)
+    .union(PageTableFlags::NO_EXECUTE)
+    .union(PageTableFlags::NO_CACHE)
+    .union(PageTableFlags::WRITE_THROUGH);
+
 pub fn map_mmio_range(phys_mmio_range: PhysFrameRange) -> Option<PageRange> {
-    let flags = PageTableFlags::PRESENT
-        | PageTableFlags::GLOBAL
-        | PageTableFlags::WRITABLE
-        | PageTableFlags::NO_EXECUTE
-        | PageTableFlags::NO_CACHE
-        | PageTableFlags::WRITE_THROUGH;
-    map_phys_range(phys_mmio_range, flags)
+    map_phys_range(phys_mmio_range, MMIO_FLAGS)
 }
 
-pub fn map_mmio_ptr(ptr: usize, size: usize) -> Option<usize> {
+pub fn map_ptr(ptr: usize, size: usize, flags: PageTableFlags) -> Option<usize> {
     let ptr = ptr as u64;
     let size = size as u64;
     let offset = ptr % FrameSize::SIZE;
     let phys_start_frame = PhysFrame::containing_address(PhysAddr::new(ptr));
     let phys_end_frame = PhysFrame::containing_address(PhysAddr::new(ptr + size - 1));
     let range = PhysFrame::range(phys_start_frame, phys_end_frame.next());
-    map_mmio_range(range)
+    map_phys_range(range, flags)
         .map(|range| range.start.start_address().as_u64() as usize + offset as usize)
+}
+
+pub fn map_mmio_ptr(ptr: usize, size: usize) -> Option<usize> {
+    map_ptr(ptr, size, MMIO_FLAGS)
 }
 
 pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
