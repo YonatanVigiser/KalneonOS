@@ -14,7 +14,8 @@ static WAD: &[u8] = include_bytes!("../assets/doom/DOOM.WAD");
 static LAST_KEY: Mutex<u8> = Mutex::new(0);
 
 pub async fn run_doom() {
-    //EXECUTOR.get().unwrap().spawn(Task::new(doom_buttons_update()));
+    log::info!("TEST");
+    EXECUTOR.get().unwrap().spawn(Task::new(doom_buttons_update()));
     let mut guard = DEVICE_REGISTRY.read().try_acquire_all::<Framebuffer>();
     let framebuffer = guard.get_mut(0).expect("No framebuffer");
     let mut engine = ClassicEngine::new(WAD, "E1M1").expect("doom engine init failed");

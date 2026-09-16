@@ -42,6 +42,6 @@ run firmware="bios" arch=target_arch vnc="false": (iso arch)
         -m 1024M -smp 4 \
         -serial file:logs/serial.log \
         -device VGA,xres=1280,yres=800,vgamem_mb=32 \
-        -gdb tcp::26000 -S -d cpu_reset -D logs/qemu.log \
+        -gdb tcp::26000 -d cpu_reset -D logs/qemu.log \
         {{ if vnc == "true" { "-vnc :1"} else { "" } }} &
-    gdb build/iso-{{arch}}/boot/kernel
+    #gdb-multiarch build/iso-{{arch}}/boot/kernel
