@@ -42,10 +42,12 @@ impl<T> SubscriberInner<T> {
     pub fn take_dropped(&self) -> u32 {
         self.dropped.swap(0, Ordering::Relaxed)
     }
-}
 
-impl<T> SubscriberInner<T> {
-    fn poll_next(&self, cx: &mut Context<'_>) -> Poll<T> {
+    pub fn pop(&self) -> Option<T> {
+        self.queue.pop()
+    }
+
+    pub fn poll_next(&self, cx: &mut Context<'_>) -> Poll<T> {
         if let Some(e) = self.queue.pop() { return Poll::Ready(e); }
         self.waker.register(cx.waker());
         match self.queue.pop() {

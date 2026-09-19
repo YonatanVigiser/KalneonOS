@@ -15,7 +15,7 @@ use crate::task::yield_now;
 pub fn init_logger() {
     LOGGER.queue.call_once(|| ArrayQueue::new(LOGS_QUEUE_SIZE));
     log::set_logger(&LOGGER).expect("Logger init failed!");
-    log::set_max_level(LevelFilter::Info);
+    log::set_max_level(LevelFilter::Trace);
 }
 
 const MAX_LOG_LEN: usize = 256;

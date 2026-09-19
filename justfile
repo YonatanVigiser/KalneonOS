@@ -1,4 +1,4 @@
-build_mode  := "debug"
+build_mode  := "release"
 target_arch := "x86_64"
 limine_ver  := "v11.x-binary"
 

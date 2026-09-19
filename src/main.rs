@@ -45,7 +45,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     LOGGER.auto_flush.store(false, Ordering::Release);
     EXECUTOR.get().unwrap().spawn(Task::new(LOGGER.log_task()));
     drivers::init_stage3();
-    EXECUTOR.get().unwrap().spawn(Task::new(doom::run_doom()));
+    doom::init_app();
     ap_main();
 }
 
