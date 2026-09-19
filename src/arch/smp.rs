@@ -1,4 +1,5 @@
 use crate::memory;
+use crate::memory::frame_allocator::LOW_MEMORY_LIMIT;
 use crate::time::{KernelDuration, stall};
 use acpi::platform::{ProcessorInfo, ProcessorState};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
@@ -17,7 +18,7 @@ struct ApCoreData {
 }
 
 pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
-    let code_frame = memory::allocate_frame().expect("Frame allocation failed");
+    let code_frame = memory::allocate_frame_below(LOW_MEMORY_LIMIT).expect("Frame allocation failed");
     memory::identity_map_frame(code_frame, PageTableFlags::PRESENT | PageTableFlags::GLOBAL);
     let dest = (code_frame.start_address().as_u64() + memory::HHDM_START) as *mut u8;
     let copy_start = &raw const ap_init;

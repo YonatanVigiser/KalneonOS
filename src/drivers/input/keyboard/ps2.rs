@@ -78,7 +78,7 @@ impl I8042Ps2Driver {
             config.set(ControllerConfigFlags::DISABLE_KEYBOARD, false);
             config.set(ControllerConfigFlags::ENABLE_KEYBOARD_INTERRUPT, true);
             let test_passed = controller.keyboard().reset_and_self_test().is_ok();
-            test_passed && controller.keyboard().enable_scanning().is_ok()
+            test_passed && controller.keyboard().set_scancode_set(0x2).is_ok() && controller.keyboard().enable_scanning().is_ok()
         } else { false };
         let _mouse_connected = if has_mouse {
             controller.enable_mouse().ok()?;
@@ -128,8 +128,15 @@ impl I8042Ps2Driver {
             let mut mouse_count = 0;
             {
                 let mut controller = self.controller.lock();
-                while total_read < BYTES_READ_YIELD_CAP && controller.read_status().contains(ControllerStatusFlags::OUTPUT_FULL) {
-                    let from_keyboard = !controller.read_status().contains(ControllerStatusFlags::MOUSE_OUTPUT_FULL);
+                loop {
+                    if total_read >= BYTES_READ_YIELD_CAP {
+                        break;
+                    }
+                    let status = controller.read_status();
+                    if !status.contains(ControllerStatusFlags::OUTPUT_FULL) {
+                        break;
+                    }
+                    let from_keyboard = !status.contains(ControllerStatusFlags::MOUSE_OUTPUT_FULL);
                     total_read += 1;
                     match controller.read_data() {
                         Ok(byte) if from_keyboard => { keyboard_buff[keyboard_count] = byte; keyboard_count += 1; }
@@ -139,11 +146,16 @@ impl I8042Ps2Driver {
                     }
                 }
             }
+            
 
             for &byte in &keyboard_buff[..keyboard_count] {
-                if let Ok(Some(event)) = scancode_set.advance_state(byte) {
-                    KEYBOARD_GLOBAL_STATE.update(event.clone());
-                    KEYBOARD_INPUT_HUB.push(event);
+                match scancode_set.advance_state(byte) {
+                    Ok(Some(event)) => {
+                        KEYBOARD_GLOBAL_STATE.update(event.clone());
+                        KEYBOARD_INPUT_HUB.push(event);
+                    },
+                    Err(err) => log::warn!("Error is the PS/2 scancode translation: {:?}", err),
+                    Ok(None) => {},
                 }
             }
 
@@ -169,10 +181,7 @@ impl KeyboardDevice for I8042Ps2Driver {
 
     fn set_leds(&self, state: LedState) -> bool {
         let mut controller = self.controller.lock();
-        let _ = controller.keyboard().disable_scanning().is_ok();
         let leds_written = controller.keyboard().set_leds(state.into()).is_ok();
-        let scan_enable = controller.keyboard().enable_scanning().is_ok();
-        if !scan_enable { log::warn!("PS/2 Keyboard scan enable failed!") }
         leds_written
     }
 }

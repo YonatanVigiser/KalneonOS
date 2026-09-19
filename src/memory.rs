@@ -5,7 +5,6 @@ pub mod vmm;
 pub mod paging;
 
 use map::MemoryMap;
-use spin::Mutex;
 use x86_64::structures::paging::{
     FrameAllocator, Mapper, OffsetPageTable, Page, PageSize, PageTableFlags, PhysFrame, Size1GiB,
     Size4KiB, frame::PhysFrameRange, page::PageRange,
@@ -144,25 +143,30 @@ pub fn map_phys_range(phys_range: PhysFrameRange, flags: PageTableFlags) -> Opti
     Some(virt_range)
 }
 
+pub const MMIO_FLAGS: PageTableFlags = PageTableFlags::PRESENT
+    .union(PageTableFlags::GLOBAL)
+    .union(PageTableFlags::WRITABLE)
+    .union(PageTableFlags::NO_EXECUTE)
+    .union(PageTableFlags::NO_CACHE)
+    .union(PageTableFlags::WRITE_THROUGH);
+
 pub fn map_mmio_range(phys_mmio_range: PhysFrameRange) -> Option<PageRange> {
-    let flags = PageTableFlags::PRESENT
-        | PageTableFlags::GLOBAL
-        | PageTableFlags::WRITABLE
-        | PageTableFlags::NO_EXECUTE
-        | PageTableFlags::NO_CACHE
-        | PageTableFlags::WRITE_THROUGH;
-    map_phys_range(phys_mmio_range, flags)
+    map_phys_range(phys_mmio_range, MMIO_FLAGS)
 }
 
-pub fn map_mmio_ptr(ptr: usize, size: usize) -> Option<usize> {
+pub fn map_ptr(ptr: usize, size: usize, flags: PageTableFlags) -> Option<usize> {
     let ptr = ptr as u64;
     let size = size as u64;
     let offset = ptr % FrameSize::SIZE;
     let phys_start_frame = PhysFrame::containing_address(PhysAddr::new(ptr));
     let phys_end_frame = PhysFrame::containing_address(PhysAddr::new(ptr + size - 1));
     let range = PhysFrame::range(phys_start_frame, phys_end_frame.next());
-    map_mmio_range(range)
+    map_phys_range(range, flags)
         .map(|range| range.start.start_address().as_u64() as usize + offset as usize)
+}
+
+pub fn map_mmio_ptr(ptr: usize, size: usize) -> Option<usize> {
+    map_ptr(ptr, size, MMIO_FLAGS)
 }
 
 pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
@@ -187,12 +191,20 @@ pub fn allocate(pages_size: usize, flags: PageTableFlags) -> Option<PageRange> {
     Some(pages)
 }
 
-pub static FRAME_ALLOCATOR: Mutex<Option<frame_allocator::BitmapAllocator>> = Mutex::new(None);
-pub static VMM: Mutex<Option<vmm::VirtualMemoryManager>> = Mutex::new(None);
-pub static MAPPER: Mutex<Option<OffsetPageTable>> = Mutex::new(None);
+pub static FRAME_ALLOCATOR: InterruptSafeMutex<Option<frame_allocator::BitmapAllocator>> = InterruptSafeMutex::new(None);
+pub static VMM: InterruptSafeMutex<Option<vmm::VirtualMemoryManager>> = InterruptSafeMutex::new(None);
+pub static MAPPER: InterruptSafeMutex<Option<OffsetPageTable>> = InterruptSafeMutex::new(None);
 
 pub fn allocate_frame() -> Option<PhysFrame<FrameSize>> {
     FRAME_ALLOCATOR.lock().as_mut()?.allocate_frame()
+}
+
+pub fn allocate_frame_below(limit: PhysFrame) -> Option<PhysFrame<FrameSize>> {
+    FRAME_ALLOCATOR.lock().as_mut()?.allocate_frame_below(limit)
+}
+
+pub fn allocate_frame_in(range: PhysFrameRange) -> Option<PhysFrame<FrameSize>> {
+    FRAME_ALLOCATOR.lock().as_mut()?.allocate_frame_in(range)
 }
 
 pub fn identity_map_frame(frame: PhysFrame<FrameSize>, flags: PageTableFlags) {
@@ -246,6 +258,7 @@ pub enum MemoryType {
 }
 
 use crate::common::traits::Indexable;
+use crate::interrupt::mutex::InterruptSafeMutex;
 impl<S: PageSize> Indexable for PhysFrame<S> {
     fn as_index(&self) -> usize {
         (self.start_address().as_u64() / S::SIZE) as usize
