@@ -47,7 +47,7 @@ impl DoomApp {
     }
 
     pub async fn run_doom(mut self) {
-        const DOOM_ENGINE_TICK: KernelDuration = HertzU64::Hz(25).to_duration();
+        const DOOM_ENGINE_TICK: KernelDuration = HertzU64::Hz(35).to_duration();
         self.framebuffer.clear(Rgb888::BLACK);
         loop {
             if self.keyevent_reader.0.take_dropped() > 0 {
