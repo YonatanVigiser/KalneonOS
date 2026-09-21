@@ -29,10 +29,10 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
     memory::heap::init();
-    arch::init_cpu(0, CpuId(0));
-    drivers::init_stage1();
     common::log::init_logger();
     log::info!("Heap was initilized");
+    arch::init_cpu(0, CpuId(0));
+    drivers::init_stage1();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
     let acpi = platform::acpi::init_platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
