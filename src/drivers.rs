@@ -4,8 +4,6 @@ use crate::arch::BOOT_INFO;
 use crate::platform::acpi::ACPI;
 use acpi::HpetInfo;
 
-use self::display::{DisplayInfo, framebuffer, vga};
-
 pub mod com;
 pub mod display;
 pub mod input;
@@ -24,11 +22,8 @@ pub fn init_stage2() {
     let acpi = ACPI.poll().unwrap();
     time::hpet::init(HpetInfo::new(&acpi.tables).expect("No HPET info in ACPI tables!"));
     let boot_info = BOOT_INFO.get().unwrap();
-    if let Some(display_info) = boot_info.display.as_ref() {
-        match display_info {
-            DisplayInfo::Graphics(info) => framebuffer::init(info),
-            DisplayInfo::Text(_info) => vga::init(),
-        }
+    if let Some(display_info) = &boot_info.display {
+        display::init(display_info);
     }
     log::info!("Stage2 Drivers were init!");
 }

@@ -52,6 +52,7 @@ fn build_mutliboot_header() {
     };
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
+            .framebuffer_tag(FramebufferHeaderTag::new(HeaderTagFlag::Optional, 0, 0, 0))
             .information_request_tag(InformationRequestHeaderTag::new(
                 HeaderTagFlag::Optional,
                 &[
@@ -62,12 +63,9 @@ fn build_mutliboot_header() {
                     MbiTagType::Framebuffer.into(),
                     MbiTagType::AcpiV1.into(),
                     MbiTagType::AcpiV2.into(),
-                    MbiTagType::EfiMmap.into(),
                     MbiTagType::LoadBaseAddr.into(),
-                    MbiTagType::End.into(),
                 ],
             ))
-            .framebuffer_tag(FramebufferHeaderTag::new(HeaderTagFlag::Optional, 0, 0, 0))
             .build();
 
         // Write the header to a binary file

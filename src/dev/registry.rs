@@ -124,12 +124,14 @@ macro_rules! define_registry {
     };
 }
 
+use crate::common::log::LogSink;
+use crate::drivers::display::TextSurface;
 use crate::drivers::input::keyboard::KeyboardDevice;
 use crate::drivers::display::framebuffer::Framebuffer;
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
+use crate::time::UptimeSource;
 
 use super::lease::{Access, Acquire, Exclusive, Lease, LeaseState, Shared};
-use super::traits::*;
 define_registry! {
     shared {
         uptime_source: dyn UptimeSource,
@@ -138,8 +140,8 @@ define_registry! {
         keyboard: dyn KeyboardDevice,
     }
     exclusive {
-        log_sink: dyn LogSink,
-        char_out: dyn CharOut,
+        write: dyn LogSink,
+        text_surface: dyn TextSurface,
         framebuffer: Framebuffer,
     }
 }

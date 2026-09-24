@@ -4,9 +4,12 @@ use alloc::vec::Vec;
 use embedded_graphics::Pixel;
 use embedded_graphics::pixelcolor::Rgb888;
 use embedded_graphics::prelude::{DrawTarget, OriginDimensions, Point, Primitive, RgbColor, Size};
-use multiboot2::{FramebufferColor, FramebufferField};
+use multiboot2::{FramebufferField};
+use simple_psf::{ParseError, Psf};
 use x86_64::structures::paging::PageTableFlags;
 
+use crate::common::color::nearest_color;
+use crate::common::font::FONT;
 use crate::dev::lease::LeaseCell;
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::memory::map_ptr;
@@ -14,7 +17,7 @@ use crate::memory::map_ptr;
 #[derive(Debug, Clone)]
 pub enum PixelEncoding {
     RGB { red: FramebufferField, green: FramebufferField, blue: FramebufferField },
-    Indexed { palette: Vec<FramebufferColor> },
+    Indexed { palette: Vec<Rgb888> },
 }
 
 #[derive(Debug, Clone)]
@@ -27,28 +30,6 @@ pub struct FramebufferInfo {
     pub pixel_encoding: PixelEncoding,
 }
 
-fn nearest_palette_entry(palette: &[FramebufferColor], r: u8, g: u8, b: u8) -> usize {
-    let mut best = 0;
-    let mut best_dist = i32::MAX;
- 
-    // Indices are stored as u16; a longer palette cannot be addressed anyway.
-    for (i, entry) in palette.iter().enumerate().take(u16::MAX as usize) {
-        let dr = entry.red as i32 - r as i32;
-        let dg = entry.green as i32 - g as i32;
-        let db = entry.blue as i32 - b as i32;
-        let dist = dr * dr + dg * dg + db * db;
-        if dist < best_dist {
-            best_dist = dist;
-            best = i;
-            if dist == 0 {
-                break;
-            }
-        }
-    }
- 
-    best
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FramebufferError {
     NullAddress,
@@ -57,6 +38,7 @@ pub enum FramebufferError {
     PitchTooSmall { pitch: u32, required: u32 },
     EmptyPalette,
     InvalidColorField(FramebufferField),
+    InvalidFont(ParseError),
 }
 
 pub struct Framebuffer {
@@ -64,6 +46,7 @@ pub struct Framebuffer {
     bytes_per_pixel: u8,
     cache: BTreeMap<Rgb888, usize>,
     back: Vec<u8>,
+    font: &'static Psf<'static>,
 }
 
 impl Framebuffer {
@@ -74,6 +57,7 @@ impl Framebuffer {
         if info.width == 0 || info.height == 0 {
             return Err(FramebufferError::ZeroSized);
         }
+        let font = FONT.as_ref().map_err(|err| FramebufferError::InvalidFont(*err))?;
         let bytes_per_pixel = match info.bpp {
             8 => 1,
             15 | 16 => 2,
@@ -119,23 +103,12 @@ impl Framebuffer {
             bytes_per_pixel,
             cache: BTreeMap::new(),
             back,
+            font,
         })
     }
 
-    pub fn width(&self) -> u32 {
-        self.info.width
-    }
- 
-    pub fn height(&self) -> u32 {
-        self.info.height
-    }
- 
-    pub fn pitch(&self) -> usize {
-        self.info.pitch as usize
-    }
- 
-    pub fn bpp(&self) -> u8 {
-        self.info.bpp
+    pub fn info(&self) -> &FramebufferInfo {
+        &self.info
     }
  
     fn encode(&mut self, color: Rgb888) -> u32 {
@@ -147,7 +120,7 @@ impl Framebuffer {
             }
             PixelEncoding::Indexed { palette } => {
                 *self.cache.entry(color).or_insert_with(|| {
-                    nearest_palette_entry(palette, r, g, b)
+                    nearest_color(palette, color)
                 }) as u32
             }
         }
@@ -155,7 +128,7 @@ impl Framebuffer {
 
     fn write_raw(&mut self, x: u32, y: u32, raw: u32) {
         let bpp = self.bytes_per_pixel as usize;
-        let offset = y as usize * self.pitch() + x as usize * bpp;
+        let offset = y as usize * self.info.pitch as usize + x as usize * bpp;
         let bytes = raw.to_le_bytes();
         self.back[offset..offset + bpp].copy_from_slice(&bytes[..bpp]);
     }
@@ -224,7 +197,7 @@ impl DrawTarget for Framebuffer {
         let raw = self.encode(color);
         let bytes = raw.to_le_bytes();
         let bpp = self.bytes_per_pixel as usize;
-        let pitch = self.pitch();
+        let pitch = self.info.pitch as usize;
 
         let x0 = area.top_left.x as usize;
         let y0 = area.top_left.y as usize;
@@ -240,11 +213,59 @@ impl DrawTarget for Framebuffer {
     }
 }
 
+impl TextSurface for Framebuffer {
+    fn width(&self) -> u32 {
+        self.info.width / self.font.glyph_width as u32
+    }
+
+    fn height(&self) -> u32 {
+        self.info.height / self.font.glyph_height as u32
+    }
+
+    fn put(&mut self, x: u32, y: u32, cell: super::Cell) -> Result<(), super::TextSurfaceError> {
+        if x >= self.width() || y >= self.height() {
+            return Err(TextSurfaceError::OutOfBounds { x, y, width: self.width(), height: self.height() });
+        }
+        let pixels = self.font.get_glyph_pixels(cell.c as usize)
+            .ok_or(TextSurfaceError::UnsupportedChar { ch: cell.c })?;
+        let fg = self.encode(cell.fg);
+        let bg = self.encode(cell.bg);
+
+        let x0 = x * self.font.glyph_width as u32;
+        let y0 = y * self.font.glyph_height as u32;
+
+        for (i, on) in pixels.enumerate() {
+            let i = i as u32;
+            self.write_raw(x0 + i % self.font.glyph_width as u32, y0 + i / self.font.glyph_width as u32, if on { fg } else { bg });
+        }
+        Ok(())
+    }
+
+    fn scroll_up(&mut self, rows: u32) {
+        if rows == 0 {
+            return;
+        }
+        if rows >= self.height() {
+            self.back.fill(0);
+            return;
+        }
+
+        let shift = rows as usize * self.font.glyph_height as usize * self.info.pitch as usize;
+        let len = self.back.len();
+        self.back.copy_within(shift..len, 0);
+        self.back[len - shift..].fill(0);
+    }
+
+    fn present(&mut self) {
+        self.flush();
+    }
+}
+
 pub fn init(info: &FramebufferInfo) {
-    let mut framebuffer = unsafe { Framebuffer::new(info) }.expect("Given framebuffer info has errors");
-    test_framebuffer(&mut framebuffer);
-    framebuffer.flush();
-    DEVICE_REGISTRY.write().register::<Framebuffer>(Arc::new(LeaseCell::new(framebuffer)));
+    let framebuffer = unsafe { Framebuffer::new(info) }.expect("Given framebuffer info has errors");
+    let framebuffer_dev = Arc::new(LeaseCell::new(framebuffer));
+    let info = DEVICE_REGISTRY.write().register::<Framebuffer>(framebuffer_dev.clone());
+    DEVICE_REGISTRY.write().add_role::<dyn TextSurface>(info, framebuffer_dev);
 }
 
 use embedded_graphics::{
@@ -253,6 +274,8 @@ use embedded_graphics::{
     primitives::{Line, PrimitiveStyle, Rectangle},
     text::Text,
 };
+
+use super::{TextSurface, TextSurfaceError};
 
 #[allow(unused)]
 pub fn test_framebuffer<D>(fb: &mut D) -> Result<(), D::Error>

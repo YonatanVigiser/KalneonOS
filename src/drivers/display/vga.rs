@@ -1,20 +1,3 @@
-#[derive(Debug, Copy, Clone)]
-pub enum VideoType {
-    Color,
-    Monochrome,
-    None,
-}
-
-impl From<u8> for VideoType {
-    fn from(value: u8) -> Self {
-        match value & 0x30 {
-            0x20 => VideoType::Color,
-            0x30 => VideoType::Monochrome,
-            _ => VideoType::None,
-        }
-    }
-}
-
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum VgaColor {
@@ -59,10 +42,28 @@ impl From<u8> for VgaColor {
         }
     }
 }
+const VGA_RGB_PALLETE: [Rgb888; 16] = [
+    Rgb888::new(0, 0, 0),
+    Rgb888::new(0, 0, 170),
+    Rgb888::new(0, 170, 0),
+    Rgb888::new(0, 170, 170),
+    Rgb888::new(170, 0, 0),
+    Rgb888::new(170, 0, 170),
+    Rgb888::new(170, 85, 0),
+    Rgb888::new(170, 170, 170),
+    Rgb888::new(85, 85, 85),
+    Rgb888::new(85, 85, 255),
+    Rgb888::new(85, 255, 85),
+    Rgb888::new(85, 255, 255),
+    Rgb888::new(255, 85, 85),
+    Rgb888::new(255, 85, 255),
+    Rgb888::new(255, 255, 85),
+    Rgb888::new(255, 255, 255),
+];
 
 #[derive(Debug, Copy, Clone)]
 pub struct VgaCell {
-    pub ascii: char,
+    pub ascii: u8,
     pub bg: VgaColor,
     pub fg: VgaColor,
 }
@@ -70,7 +71,7 @@ pub struct VgaCell {
 impl From<u16> for VgaCell {
     fn from(value: u16) -> Self {
         VgaCell {
-            ascii: char::from((value & 0x00FF) as u8),
+            ascii: (value & 0x00FF) as u8,
             bg: VgaColor::from(((value & 0xF000) >> 12) as u8),
             fg: VgaColor::from(((value & 0x0F00) >> 8) as u8),
         }
@@ -83,290 +84,135 @@ impl From<VgaCell> for u16 {
     }
 }
 
-use alloc::sync::Arc;
-pub use spin::Mutex;
-
-use crate::dev::lease::LeaseCell;
-use crate::dev::registry::DEVICE_REGISTRY;
-use crate::dev::traits::{CharOut, LogSink};
-use crate::memory::map_mmio_ptr;
-
-pub struct Vga {
-    vmem_ptr: *mut u16,
-    cx: u8,
-    cy: u8,
-    height: u8,
-    width: u8,
-    auto_scroll: bool,
-    bg: VgaColor,
-    fg: VgaColor,
-    cursor_visible: bool,
-    cursor_cell: VgaCell,
-    cell_under_cursor: VgaCell,
+impl TryFrom<Cell> for VgaCell {
+    type Error = TextSurfaceError;
+    fn try_from(value: Cell) -> Result<Self, Self::Error> {
+        let ascii = value.c.as_ascii().ok_or(TextSurfaceError::UnsupportedChar { ch: value.c })?.into();
+        let fg = (nearest_color(&VGA_RGB_PALLETE, value.fg) as u8).into();
+        let bg = (nearest_color(&VGA_RGB_PALLETE, value.bg) as u8).into();
+        Ok(VgaCell {
+            ascii,
+            fg,
+            bg,
+        })
+    }
 }
 
-unsafe impl Send for Vga {}
+use alloc::sync::Arc;
+use embedded_graphics::pixelcolor::Rgb888;
+pub use spin::Mutex;
+
+use crate::common::color::nearest_color;
+use crate::dev::lease::LeaseCell;
+use crate::dev::registry::DEVICE_REGISTRY;
+use crate::memory::map_mmio_ptr;
+
+use super::{Cell, TextSurface, TextSurfaceError};
+
+#[derive(Debug, Clone)]
+pub struct VgaTextInfo {
+    pub address: usize,
+    pub width: u32,
+    pub height: u32,
+    pub pitch: u32,
+    pub bpp: u8,
+}
+
+#[derive(Debug, Clone)]
+pub struct Vga {
+    info: VgaTextInfo,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum VgaError {
+    NullAddress,
+    ZeroSized,
+    UnsupportedBpp(u8),
+    PitchTooSmall { pitch: u32, required: u32 },
+    OutOfBounds { x: u32, y: u32, width: u32, height: u32 }
+}
 
 impl Vga {
-    pub fn init(width: u8, height: u8) -> Self {
-        let video_type = Self::get_video_type_bda();
-        let vmem_ptr = Self::get_vmem_ptr(&video_type);
-        let vmem_ptr = map_mmio_ptr(vmem_ptr as usize, width as usize * height as usize * size_of::<u16>() as usize).expect("MMIO failed") as *mut u16;
-        let mut vga = Self {
-            vmem_ptr,
-            cx: 0,
-            cy: 0,
-            bg: VgaColor::Black,
-            fg: VgaColor::White,
-            height,
-            width,
-            auto_scroll: true,
-            cursor_visible: true,
-            cursor_cell: VgaCell {
-                ascii: '_',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
-            cell_under_cursor: VgaCell {
-                ascii: ' ',
-                bg: VgaColor::Black,
-                fg: VgaColor::White,
-            },
-        };
-        vga.clear();
-        vga
+    pub fn new(info: &VgaTextInfo) -> Result<Self, VgaError> {
+        if info.address == 0 {
+            return Err(VgaError::NullAddress);
+        }
+        if info.width == 0 || info.height == 0 {
+            return Err(VgaError::ZeroSized);
+        }
+        if info.bpp != 16 {
+            return Err(VgaError::UnsupportedBpp(info.bpp));
+        }
+        let required = info.width * 2 as u32;
+        if info.pitch < required {
+            return Err(VgaError::PitchTooSmall {
+                pitch: info.pitch,
+                required,
+            });
+        }
+        let framebuffer_size = info.pitch as usize * info.height as usize;
+
+        let mapped_address = map_mmio_ptr(info.address, framebuffer_size).expect("Mapping failed failed");
+        let mut info = info.clone();
+        info.address = mapped_address;
+        Ok(Self {
+            info,
+        })
     }
 
-    fn put_cell(&self, x: u8, y: u8, cell: VgaCell) -> Result<(), ()> {
-        if x >= self.width || y >= self.height {
-            return Err(());
+    fn put_cell(&self, x: u32, y: u32, cell: VgaCell) -> Result<(), VgaError> {
+        if x >= self.info.width || y >= self.info.height {
+            return Err(VgaError::OutOfBounds { x, y, width: self.width(), height: self.height() });
         }
         let value: u16 = cell.into();
-        let index = (x as usize) + (y as usize) * (self.width as usize);
-        let ptr = unsafe { self.vmem_ptr.add(index) };
+        let index = (x as usize) + (y as usize) * (self.info.width as usize);
+        let ptr = unsafe { (self.info.address as *mut u16).add(index) };
         unsafe { ptr.write_volatile(value) };
         Ok(())
     }
 
-    fn get_cell(&self, x: u8, y: u8) -> Result<VgaCell, ()> {
-        if x >= self.width || y >= self.height {
-            return Err(());
+    fn get_cell(&self, x: u32, y: u32) -> Result<VgaCell, VgaError> {
+        if x >= self.info.width || y >= self.info.height {
+            return Err(VgaError::OutOfBounds { x, y, width: self.width(), height: self.height() });
         }
-        let index = (x as usize) + (y as usize) * (self.width as usize);
-        let ptr = unsafe { self.vmem_ptr.add(index) };
+        let index = (x as usize) + (y as usize) * (self.info.width as usize);
+        let ptr = unsafe { (self.info.address as *mut u16).add(index) };
         let value: u16 = unsafe { ptr.read_volatile() };
         Ok(value.into())
     }
 
-    fn write_char(&mut self, c: char) -> Result<&mut Self, ()> {
-        if self.cx >= self.width || self.cy >= self.height {
-            return Err(());
-        }
-        let mut new_cx = self.cx;
-        let mut new_cy = self.cy;
-        match c {
-            '\0' => return Ok(self),
-            '\n' => {
-                new_cy += 1;
-                new_cx = 0;
-            }
-            '\t' => {
-                new_cx = (self.cx + 4) & !3;
-            }
-            _ => {
-                self.cell_under_cursor = VgaCell {
-                    ascii: c,
-                    bg: self.bg,
-                    fg: self.fg,
-                };
-                new_cx += 1;
-            }
-        };
-        if new_cx >= self.width {
-            new_cy += 1;
-            new_cx = 0;
-        }
-        if new_cy == self.height && self.auto_scroll {
-            let _ = self.scroll_down(1);
-            let _ = self.move_cursor(0, self.height - 1);
-        } else {
-            self.move_cursor(new_cx, new_cy)?;
-        }
-        Ok(self)
-    }
-
-    fn write_string(&mut self, string: &str) -> Result<&mut Self, ()> {
-        for b in string.bytes() {
-            let _ = self.write_char(b as char)?;
-        }
-        Ok(self)
-    }
-
-    pub fn set_colors(&mut self, bg: VgaColor, fg: VgaColor) -> &mut Self {
-        self.bg = bg;
-        self.fg = fg;
-        self.cursor_cell.bg = bg;
-        self.cursor_cell.fg = fg;
-        self.update_cursor();
-        self
-    }
-
-    fn copy_line(&mut self, from: u8, to: u8) -> Result<(), ()> {
-        for index in 0..self.width {
-            let cell = self.get_cell(index, from)?;
-            self.put_cell(index, to, cell)?;
-        }
-        Ok(())
-    }
-
-    fn clear_line(&mut self, line: u8) -> Result<(), ()> {
-        for index in 0..self.width {
-            self.put_cell(
-                index,
-                line,
-                VgaCell {
-                    ascii: ' ',
-                    bg: self.bg,
-                    fg: self.fg,
-                },
-            )?;
-        }
-        let _ = self.move_cursor(0, 0);
-        Ok(())
-    }
-
-    pub fn move_cursor(&mut self, x: u8, y: u8) -> Result<&mut Self, ()> {
-        if x >= self.width || y >= self.height {
-            return Err(());
-        }
-        self.put_cell(self.cx, self.cy, self.cell_under_cursor)?;
-        self.cell_under_cursor = self.get_cell(x, y)?;
-        if self.cursor_visible {
-            self.put_cell(x, y, self.cursor_cell)?;
-        }
-        self.cx = x;
-        self.cy = y;
-        Ok(self)
-    }
-
-    pub fn update_cursor(&mut self) -> &mut Self {
-        let _ = self.move_cursor(self.cx, self.cy);
-        self
-    }
-
-    fn get_video_type_bda() -> VideoType {
-        let bda_detected_hardware_ptr = 0x410;
-        let bda_detected_hardware_ptr = map_mmio_ptr(bda_detected_hardware_ptr as usize, size_of::<*const u8>() as usize).expect("MMIO failed") as *const u8;
-        unsafe { bda_detected_hardware_ptr.read_volatile() }.into()
-    }
-
-    fn get_vmem_ptr(video_type: &VideoType) -> *mut u16 {
-        match video_type {
-            VideoType::Color => 0xB8000 as *mut u16,
-            VideoType::Monochrome => 0xB0000 as *mut u16,
-            VideoType::None => 0xB8000 as *mut u16,
-        }
-    }
-
-    pub fn clear(&mut self) -> &mut Self {
-        let empty_cell = VgaCell {
-            ascii: ' ',
-            bg: self.bg,
-            fg: self.fg,
-        };
-        for index in 0..(self.height as usize * self.width as usize) {
-            unsafe {
-                self.vmem_ptr.add(index).write_volatile(empty_cell.into());
-            }
-        }
-        self.cell_under_cursor = empty_cell;
-        let _ = self.move_cursor(0, 0);
-        self
-    }
-
-    pub fn get_cursor_pos(&self) -> (usize, usize) {
-        (self.cx as usize, self.cy as usize)
-    }
-
-    pub fn set_bg(&mut self, color: VgaColor) -> &mut Self {
-        self.set_colors(color, self.fg);
-        self
-    }
-
-    pub fn set_fg(&mut self, color: VgaColor) -> &mut Self {
-        self.set_colors(self.bg, color);
-        self
-    }
-
-    pub fn scroll_down(&mut self, amount: usize) -> &mut Self {
-        if amount == 0 {
-            return self;
-        }
-        if amount > self.height.into() {
-            self.clear();
-        } else {
-            for line_num in (amount as u8)..self.height {
-                let _ = self.copy_line(line_num, line_num - 1);
-            }
-        }
-        let _ = self.clear_line(self.height - 1);
-        if self.cy == 0 {
-            let _ = self.move_cursor(0, 0);
-        } else {
-            self.cy -= 1;
-        }
-        self
-    }
-
-    pub fn scroll_up(&mut self, amount: usize) -> &mut Self {
-        if amount == 0 {
-            return self;
-        }
-        if amount > self.height.into() {
-            self.clear();
-            let _ = self.move_cursor(0, 0);
-        } else {
-            for line_num in 0..(self.height - amount as u8) {
-                let _ = self.copy_line(line_num, line_num + 1);
-            }
-        }
-        let _ = self.clear_line(0);
-        self.cy += 1;
-        if self.cy == self.height {
-            let _ = self.move_cursor(0, self.height - 1);
-        }
-        self
-    }
-
-    pub fn get_ptr(&self) -> *mut u16 {
-        self.vmem_ptr
-    }
-
-    pub fn get_buffer_size(&self) -> usize {
-        self.width as usize * self.height as usize * size_of::<u16>() as usize
+    pub fn info(&self) -> &VgaTextInfo {
+        &self.info
     }
 }
 
-struct VgaDev(Mutex<Vga>);
+impl TextSurface for Vga {
+    fn width(&self) -> u32 {
+        self.info.width
+    }
 
-impl CharOut for VgaDev {
-    fn out(&self, c: char) {
-        let mut lock = self.0.lock();
-        let _ = (&mut *lock).write_char(c);
+    fn height(&self) -> u32 {
+        self.info.height
+    }
+
+    fn put(&mut self, x: u32, y: u32, cell: Cell) -> Result<(), TextSurfaceError> {
+        self.put_cell(x, y, cell.try_into()?).map_err(|_| TextSurfaceError::OutOfBounds { x, y, width: self.width(), height: self.height() })
+    }
+
+    fn scroll_up(&mut self, rows: u32) {
+        for y in rows..self.height() {
+            for x in 0..self.width() {
+                self.put_cell(x, y - rows, self.get_cell(x, y).unwrap()).unwrap();
+            }
+        }
+    }
+
+    fn present(&mut self) {
     }
 }
 
-impl LogSink for VgaDev {
-    fn log(&self, msg: &str) {
-        let mut lock = self.0.lock();
-        let _ = (&mut *lock).write_string(msg);
-    }
+pub fn init(info: &VgaTextInfo) {
+    let vga = Vga::new(info).expect("Vga init failed");
+    let vga_dev = Arc::new(LeaseCell::new(vga));
+    DEVICE_REGISTRY.write().register::<dyn TextSurface>(vga_dev);
 }
-
-pub fn init() {
-    let vga_dev = Arc::new(LeaseCell::new(VgaDev(Mutex::new(Vga::init(80, 25)))));
-    let mut reg = DEVICE_REGISTRY.write();
-    let dev_info = reg.register::<dyn CharOut>(vga_dev.clone());
-    reg.add_role::<dyn LogSink>(dev_info, vga_dev);
-}
-

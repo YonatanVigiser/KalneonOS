@@ -25,8 +25,8 @@ impl<R> LeaseCell<R> {
     }
 }
 
-unsafe impl<R: ?Sized> Send for LeaseCell<R> {}
-unsafe impl<R: ?Sized> Sync for LeaseCell<R> {}
+unsafe impl<R: ?Sized + Send> Send for LeaseCell<R> {}
+unsafe impl<R: ?Sized + Send + Sync> Sync for LeaseCell<R> {}
 
 pub trait Access: 'static {
     const EXLUSIVE: bool;

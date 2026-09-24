@@ -1,5 +1,5 @@
 use alloc::sync::Arc;
-use crate::dev::{registry::DEVICE_REGISTRY, traits::UptimeSource};
+use crate::dev::registry::DEVICE_REGISTRY;
 use fugit::{NanosDurationU64, TimerInstant};
 use lazy_static::lazy_static;
 
@@ -8,6 +8,11 @@ pub mod timer;
 pub type KernelInstant = TimerInstant<u64, 1_000_000_000>;
 pub type KernelDuration = NanosDurationU64;
 pub type TimerResolution = KernelDuration;
+
+pub trait UptimeSource: Send + Sync {
+    fn uptime(&self) -> KernelInstant;
+    fn resolution(&self) -> TimerResolution;
+}
 
 pub fn uptime() -> KernelInstant {
     lazy_static! {
