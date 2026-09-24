@@ -59,4 +59,4 @@ run firmware="bios" arch=target_arch vnc="false": (iso arch)
         -device VGA,xres=1280,yres=800,vgamem_mb=32 \
         -gdb tcp::26000 -S \
         {{ if vnc == "true" { "-vnc :1"} else { "" } }} &
-    gdb build/iso-{{arch}}-{{loader}}/boot/kernel
+    rust-gdb build/iso-{{arch}}-{{loader}}/boot/kernel

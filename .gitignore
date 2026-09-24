@@ -2,4 +2,5 @@ build/
 logs/
 *.swp
 *.bacon-locations
+.gdb_history
 targets/current-kalneon_os.json
