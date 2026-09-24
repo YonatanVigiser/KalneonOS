@@ -9,8 +9,10 @@ use heapless::String;
 use log::{Level, LevelFilter, Log, Metadata, Record};
 
 use crate::dev::registry::DEVICE_REGISTRY;
-use crate::dev::traits::LogSink;
 use crate::task::yield_now;
+
+pub trait LogSink: Write + Send + Sync {}
+impl<T: Write + Send + Sync> LogSink for T {}
 
 pub fn init_logger() {
     LOGGER.queue.call_once(|| ArrayQueue::new(LOGS_QUEUE_SIZE));
@@ -66,14 +68,14 @@ impl Log for Logger {
     fn flush(&self) {
         let queue = self.queue.get().unwrap();
         if !queue.is_empty() && self.flushing.compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed).is_ok() {
-            let log_sinks = DEVICE_REGISTRY.read().try_acquire_all::<dyn LogSink>();
-            let has_sinks = !log_sinks.is_empty();
+            let mut log_devs = DEVICE_REGISTRY.read().try_acquire_all::<dyn LogSink>();
+            let has_sinks = !log_devs.is_empty();
             while has_sinks && let Some(message) = queue.pop() {
-                for log_sink in &log_sinks {
-                    log_sink.log(&message);
+                for log_dev in &mut log_devs {
+                    let _ = log_dev.write_str(&message);
                 }
             }
-            drop(log_sinks);
+            drop(log_devs);
             self.flushing.store(false, Ordering::Release);
        }
    }

@@ -7,6 +7,7 @@
 #![feature(trait_alias)]
 #![feature(sync_unsafe_cell)]
 #![feature(never_type)]
+#![feature(ascii_char)]
 
 pub mod drivers;
 pub mod interrupt;

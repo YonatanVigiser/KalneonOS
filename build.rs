@@ -52,9 +52,9 @@ fn build_mutliboot_header() {
     };
     if let Some(arch_tag) = arch_header_tag {
         let header = Builder::new(arch_tag)
-            .framebuffer_tag(FramebufferHeaderTag::new(HeaderTagFlag::Required, 0, 0, 8))
+            .framebuffer_tag(FramebufferHeaderTag::new(HeaderTagFlag::Optional, 0, 0, 0))
             .information_request_tag(InformationRequestHeaderTag::new(
-                HeaderTagFlag::Required,
+                HeaderTagFlag::Optional,
                 &[
                     MbiTagType::Cmdline.into(),
                     MbiTagType::BootLoaderName.into(),

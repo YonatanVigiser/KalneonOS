@@ -1,4 +1,4 @@
-use crate::{dev::{registry::DEVICE_REGISTRY, traits::UptimeSource}, memory::map_mmio_ptr, time::{KernelInstant, TimerResolution}};
+use crate::{dev::registry::DEVICE_REGISTRY, memory::map_mmio_ptr, time::{KernelInstant, TimerResolution, UptimeSource}};
 use core::{num::NonZero, sync::atomic::{AtomicU64, Ordering}, u32};
 use acpi::HpetInfo;
 use alloc::sync::Arc;
