@@ -1,22 +1,29 @@
+use crate::arch::cpu::CpuId;
 use crate::memory;
 use crate::memory::frame_allocator::LOW_MEMORY_LIMIT;
 use crate::time::{KernelDuration, stall};
 use acpi::platform::{ProcessorInfo, ProcessorState};
+use alloc::boxed::Box;
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use x2apic::lapic::{IpiAllShorthand, LocalApic};
 use x86_64::registers::control::Cr3;
 use x86_64::structures::paging::{PageSize, PageTableFlags};
+
+use super::cpu::CpuLocal;
 
 pub static ACTIVE_PROCESSORS_COUNTER: AtomicUsize = AtomicUsize::new(1);
 static BSP_FINISH: AtomicBool = AtomicBool::new(false);
 
 #[repr(C)]
 struct ApCoreData {
+    cpu_local: *mut CpuLocal,
     stack_top_ptr: u64,
     l4_table: u32,
-    acpi_processor_uid: u32,
+    _padding: u32
 }
 
+
+// TODO: Add waking ACK so parrallel waking cores won't mix ApCoreData
 pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
     let code_frame = memory::allocate_frame_below(LOW_MEMORY_LIMIT).expect("Frame allocation failed");
     memory::identity_map_frame(code_frame, PageTableFlags::PRESENT | PageTableFlags::GLOBAL);
@@ -44,7 +51,7 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
         .filter(|p| matches!(p.state, ProcessorState::WaitingForSipi))
     {
         log::info!("Trying to wake core {}", core.processor_uid);
-        ap_core_data.acpi_processor_uid = core.processor_uid;
+        ap_core_data.cpu_local = Box::leak(Box::new(CpuLocal::new(core.processor_uid, CpuId(0))));
         let stack = memory::allocate(
             memory::bsp_stack_range().count() + 1,
             PageTableFlags::PRESENT
@@ -73,13 +80,13 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
 
 #[unsafe(no_mangle)]
 #[inline(never)]
-pub extern "C" fn ap_start(processor_uid: u32) -> ! {
+pub extern "C" fn ap_start(cpu_local: *mut CpuLocal) -> ! {
     crate::interrupts::disable();
     while !BSP_FINISH.load(Ordering::Acquire) {
         core::hint::spin_loop()
     }
-    let logical_id = super::cpu::CpuId(ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed));
-    super::init_cpu(processor_uid, logical_id);
+    unsafe { (&mut *cpu_local).logical_id = super::cpu::CpuId(ACTIVE_PROCESSORS_COUNTER.fetch_add(1, Ordering::Relaxed)); } 
+    super::init_cpu(cpu_local);
     crate::ap_main()
 }
 

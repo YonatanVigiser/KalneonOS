@@ -21,6 +21,7 @@ pub fn panic_log_sink() -> Option<impl Write> {
 pub fn init_stage2() {
     let acpi = ACPI.poll().unwrap();
     time::hpet::init(HpetInfo::new(&acpi.tables).expect("No HPET info in ACPI tables!"));
+    crate::time::init();
     let boot_info = BOOT_INFO.get().unwrap();
     if let Some(display_info) = &boot_info.display {
         display::init(display_info);

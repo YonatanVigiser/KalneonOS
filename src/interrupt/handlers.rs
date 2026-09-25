@@ -37,7 +37,7 @@ pub fn general_handler(stack_frame: InterruptStackFrame, index: u8, error_code: 
             index, stack_frame, error_code
         );
     } else {
-        let lic = current_cpu().lapic.as_mut().expect("No local interrupt controller");
+        let lic = current_cpu().lapic.get().expect("No local interrupt controller");
         lic.enter_interrupt(LocalInterruptSource(index as u32)).expect("local interrupt controller handling failed");
     }
 }
@@ -71,4 +71,6 @@ pub extern "x86-interrupt" fn non_maskable_handler(_stack_frame: InterruptStackF
     crate::halt_loop()
 }
 
-pub extern "x86-interrupt" fn debug_handler(_stack_frame: InterruptStackFrame) {}
+pub extern "x86-interrupt" fn debug_handler(stack_frame: InterruptStackFrame) {
+    log::info!("Debug trap: {:?}", stack_frame);
+}

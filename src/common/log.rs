@@ -8,8 +8,10 @@ use core::task::{Context, Poll};
 use heapless::String;
 use log::{Level, LevelFilter, Log, Metadata, Record};
 
+use crate::arch::cpu::current_cpu;
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::task::yield_now;
+use crate::time::uptime;
 
 pub trait LogSink: Write + Send + Sync {}
 impl<T: Write + Send + Sync> LogSink for T {}
@@ -26,7 +28,7 @@ const LOGS_QUEUE_SIZE: usize = 256;
 pub struct Logger {
     queue: Once<ArrayQueue<String<MAX_LOG_LEN>>>,
     pub auto_flush: AtomicBool,
-    flushing: AtomicBool,
+    pub flushing: AtomicBool,
     log_task_waker: AtomicWaker,
     dropped_logs_count: AtomicUsize,
 }
@@ -53,7 +55,8 @@ impl Log for Logger {
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
             let mut message: String<MAX_LOG_LEN> = String::new();
-            let _ = writeln!(message, "{} - {}", record.level(), record.args());
+            let _ = writeln!(message, "[{}: {}] {}: {}",
+                record.level(), uptime(), current_cpu().logical_id, record.args());
             if self.queue.get().unwrap().force_push(message).is_some() {
                 self.dropped_logs_count.fetch_add(1, Ordering::Release);
             }
@@ -64,26 +67,43 @@ impl Log for Logger {
             }
         }
     }
-
     fn flush(&self) {
         let queue = self.queue.get().unwrap();
-        if !queue.is_empty() && self.flushing.compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed).is_ok() {
+        while !queue.is_empty() && self.flushing.compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed).is_ok() {
             let mut log_devs = DEVICE_REGISTRY.read().try_acquire_all::<dyn LogSink>();
-            let has_sinks = !log_devs.is_empty();
-            while has_sinks && let Some(message) = queue.pop() {
+            if log_devs.is_empty() {
+                self.flushing.store(false, Ordering::Release);
+                return;
+            }
+            while let Some(message) = queue.pop() {
                 for log_dev in &mut log_devs {
                     let _ = log_dev.write_str(&message);
                 }
             }
             drop(log_devs);
             self.flushing.store(false, Ordering::Release);
-       }
-   }
+        }
+    }
 }
 
 impl Logger {
     pub fn dropped_logs_count(&self) -> usize {
         self.dropped_logs_count.load(Ordering::Acquire)
+    }
+
+    pub unsafe fn force_flush(&self) {
+        let queue = self.queue.get().unwrap();
+        while !queue.is_empty() {
+            let mut log_devs = DEVICE_REGISTRY.read().try_acquire_all::<dyn LogSink>();
+            if log_devs.is_empty() {
+                return;
+            }
+            while let Some(message) = queue.pop() {
+                for log_dev in &mut log_devs {
+                    let _ = log_dev.write_str(&message);
+                }
+            }
+        }
     }
 
     pub fn poll_new_messages(&self, cx: &Context<'_>) -> Poll<()> {

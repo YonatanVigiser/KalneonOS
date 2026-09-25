@@ -100,7 +100,6 @@ impl TryFrom<Cell> for VgaCell {
 
 use alloc::sync::Arc;
 use embedded_graphics::pixelcolor::Rgb888;
-pub use spin::Mutex;
 
 use crate::common::color::nearest_color;
 use crate::dev::lease::LeaseCell;

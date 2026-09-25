@@ -6,7 +6,7 @@ use boot::BootInfo;
 
 use crate::interrupt::LocalInterruptController;
 
-use self::cpu::CpuId;
+use self::cpu::CpuLocal;
 
 mod boot;
 pub mod cpu;
@@ -20,10 +20,10 @@ pub fn init_boot(boot_magic: u32, boot_info_ptr: u32) -> &'static BootInfo {
     BOOT_INFO.call_once(|| boot::load_boot_info(boot_magic, boot_info_ptr))
 }
 
-pub fn init_cpu(uid: u32, logical_id: CpuId) {
+pub fn init_cpu(cpu_local: *mut CpuLocal) {
     unsafe { gdt::load() };
     unsafe { idt::load() };
-    cpu::init(uid, logical_id);
+    unsafe { cpu::install(cpu_local) };
 }
 
 pub fn init_smp(processor_info: &ProcessorInfo) {
@@ -36,7 +36,7 @@ pub fn init_smp(processor_info: &ProcessorInfo) {
 pub unsafe fn halt_smp() {
     static HALTING_SMP: AtomicBool = AtomicBool::new(false);
     if cores_count() > 1 && !HALTING_SMP.swap(true, Ordering::Release) {
-        if let Some(lapic_dev) = cpu::current_cpu().lapic.as_ref() {
+        if let Some(lapic_dev) = cpu::current_cpu().lapic.get() {
             let mut guard = unsafe { lapic_dev.get_lapic_mutex().make_guard_unchecked() };
             let lapic = guard.get(lapic_dev.cpu_id());
             unsafe { smp::halt(lapic) }

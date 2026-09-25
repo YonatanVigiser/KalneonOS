@@ -9,7 +9,8 @@ use alloc::sync::Arc;
 use alloc::vec::Vec;
 use atomic_enum::atomic_enum;
 use futures_util::task::AtomicWaker;
-use spin::Mutex;
+
+use crate::common::mutex::debug_mutex::Mutex;
 
 use super::registry::Role;
 

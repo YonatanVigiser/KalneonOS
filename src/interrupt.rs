@@ -1,7 +1,6 @@
 pub mod apic;
 pub mod guard;
 pub mod handlers;
-pub mod mutex;
 
 pub const SPURIOUS_VECTOR: u8 = 0xFF;
 pub const CONTROLLER_ERROR_VECTOR: u8 = 0xFE;
@@ -20,7 +19,8 @@ pub fn init_local() -> LocalApic {
 
 pub fn register_local(lapic: LocalApic) {
     let lapic_dev = Arc::new(LocalApicDevice::new(lapic, current_cpu().logical_id));
-    current_cpu().lapic = Some(lapic_dev.clone());
+    let lapic_already_set = current_cpu().lapic.set(lapic_dev.clone()).is_err();
+    debug_assert!(!lapic_already_set, "LAPIC device already set for: {}", current_cpu().logical_id);
     DEVICE_REGISTRY
         .read()
         .query::<dyn GlobalInterruptController>()
@@ -65,10 +65,10 @@ use futures_util::task::AtomicWaker;
 use x2apic::lapic::LocalApic;
 
 use crate::arch::cpu::{CpuId, current_cpu};
+use crate::common::mutex::interrupt_safe_mutex::InterruptSafeMutex;
 use crate::dev::registry::DEVICE_REGISTRY;
 
 use self::apic::LocalApicDevice;
-use self::mutex::InterruptSafeMutex;
 
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

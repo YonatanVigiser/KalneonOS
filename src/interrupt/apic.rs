@@ -11,12 +11,12 @@ use x2apic::lapic::{LocalApic, LocalApicBuilder, TimerDivide, TimerMode};
 use x86_64::structures::paging::PageSize;
 
 use crate::arch::cpu::{CpuId, current_cpu};
+use crate::common::mutex::interrupt_safe_mutex::InterruptSafeMutex;
 use crate::dev::registry::{DEVICE_REGISTRY};
 use crate::interrupt::{CONTROLLER_ERROR_VECTOR, InterruptSlot, InterruptSourceState, SPURIOUS_VECTOR, TIMER_IRQ_VECTOR};
 use crate::memory::FrameSize;
 use crate::{memory::map_mmio_ptr, time::KernelDuration};
 
-use super::mutex::InterruptSafeMutex;
 use super::{
     GlobalInterruptController, GlobalInterruptControllerError, GlobalInterruptSource,
     LocalInterruptController, LocalInterruptControllerError, LocalInterruptSource,

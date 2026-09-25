@@ -4,7 +4,7 @@ use alloc::{collections::btree_map::BTreeMap, sync::{Arc, Weak}, vec::Vec};
 use crossbeam_queue::ArrayQueue;
 use spin::{Mutex, Once};
 
-use crate::{arch::cpu::current_cpu, task::{Task, TaskId, TaskState::*, waker::TaskWaker}, time::uptime};
+use crate::{arch::cpu::{CpuId, current_cpu}, task::{Task, TaskId, TaskState::*, waker::TaskWaker}, time::uptime};
 
 const TASKS_QUEUE_SIZE: usize = 100;
 const DEFAULT_AVRAGE: u64 = 50_000;
@@ -51,8 +51,8 @@ impl Executor {
             .expect("All task queues are full");
     }
 
-    pub fn spawn_in(&self, task: Task, core: usize) {
-        let queue = self.tasks_queues.get(core).expect("Given core ID is out of bounds!");
+    pub fn spawn_in(&self, task: Task, core: CpuId) {
+        let queue = self.tasks_queues.get(core.0).expect("Given core ID is out of bounds!");
         let task = Arc::new(task);
         if self.tasks.lock().insert(task.id, task.clone()).is_some() {
             panic!("Task with the same ID was already in tasks!");
@@ -81,7 +81,7 @@ impl Executor {
     fn execute_task(&self, task: &Arc<Task>) {
         task.state.store(Running, Ordering::Release);
         let core_id = current_cpu().logical_id;
-        current_cpu().current_task_id = Some(task.id);
+        current_cpu().current_task_id.set(Some(task.id));
         let waker: Waker = TaskWaker::new_waker(Arc::downgrade(task), core_id.0);
         let mut context = Context::from_waker(&waker);
         loop {
@@ -100,7 +100,7 @@ impl Executor {
                 },
             }
         }
-        current_cpu().current_task_id = None;
+        current_cpu().current_task_id.set(None);
     }
 
     fn enqueue(&self, task: &Arc<Task>, prev_core: usize) {

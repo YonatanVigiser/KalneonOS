@@ -1,7 +1,8 @@
 use alloc::sync::Arc;
-use crate::dev::registry::DEVICE_REGISTRY;
 use fugit::{NanosDurationU64, TimerInstant};
-use lazy_static::lazy_static;
+use spin::Once;
+
+use crate::dev::registry::DEVICE_REGISTRY;
 
 pub mod timer;
 
@@ -14,15 +15,22 @@ pub trait UptimeSource: Send + Sync {
     fn resolution(&self) -> TimerResolution;
 }
 
-pub fn uptime() -> KernelInstant {
-    lazy_static! {
-        static ref UPTIME_DEVICE: Arc<dyn UptimeSource> = {
-            let registry = DEVICE_REGISTRY.read();
-            let devs = registry.query::<dyn UptimeSource>();
-            devs.iter().min_by_key(|dev| dev.resolution()).expect("No uptime source registered!").clone()
-        };
+static UPTIME_DEV: Once<Arc<dyn UptimeSource>> = Once::new();
+
+pub fn init() {
+    if let Some(dev) = DEVICE_REGISTRY.read().query::<dyn UptimeSource>().iter().min_by_key(|dev| dev.resolution()) {
+        UPTIME_DEV.call_once(|| dev.clone());
+    } else {
+        panic!("No uptime device!")
     }
-    UPTIME_DEVICE.uptime()
+}
+
+pub fn uptime() -> KernelInstant {
+    if let Some(dev) = UPTIME_DEV.get() {
+        dev.uptime()
+    } else {
+        KernelInstant::from_ticks(0)
+    }
 }
 
 pub fn stall(duration: KernelDuration) {

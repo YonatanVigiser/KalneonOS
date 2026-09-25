@@ -28,7 +28,7 @@ impl TaskId {
     }
 
     pub fn current() -> Option<Self> {
-        Some(current_cpu().current_task_id?)
+        current_cpu().current_task_id.get()
     }
 
     pub const fn as_u64(&self) -> u64 {

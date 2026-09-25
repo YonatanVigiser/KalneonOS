@@ -1,8 +1,8 @@
 use core::{cmp::Reverse, task::Waker};
 
 use alloc::collections::binary_heap::BinaryHeap;
-use spin::Mutex;
 
+use crate::common::mutex::debug_mutex::Mutex;
 use crate::time::{KernelDuration, KernelInstant, uptime};
 
 static TIMERS: Mutex<BinaryHeap<Reverse<Timer>>> = Mutex::new(BinaryHeap::new());

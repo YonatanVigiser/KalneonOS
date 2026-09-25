@@ -65,7 +65,7 @@ long_mode_start:
 
   ; Pass the cpu id
   xor rdi, rdi
-  mov edi, dword [rel cpu_id]
+  mov rdi, [rel cpu_local_ptr]
 
   mov rax, ap_start
   call rax
@@ -98,8 +98,9 @@ temp_stack: dq 0
 
 align 8
 ; Params (refer to the ApCoreData struct defined in smp.rs):
+cpu_local_ptr: dq 0
 stack_top_ptr: dq 0
 l4_table: dd 0
-cpu_id: dd 0
+_padding: dd 0
 
 ap_init_end:

@@ -29,10 +29,10 @@ static MULTIBOOT_HEADER: [u8; include_bytes!(concat!(env!("OUT_DIR"), "/multiboo
 #[inline(never)]
 pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     interrupt::disable();
+    arch::init_cpu(&raw mut BSP_CPU_LOCAL);
     memory::heap::init();
     common::log::init_logger();
     log::info!("Heap was initilized");
-    arch::init_cpu(0, CpuId(0));
     drivers::init_stage1();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
@@ -55,15 +55,10 @@ pub fn ap_main() -> ! {
     task::executor::EXECUTOR.wait().run()
 }
 
-pub async fn kernel_init_task() {
-    task::executor::EXECUTOR.wait().spawn(Task::new(time::timer::Timer::wake_timers()));
-}
-
 use core::fmt::Write;
 use core::panic::PanicInfo;
 use core::sync::atomic::{AtomicBool, Ordering};
 
-use log::Log;
 use x86_64::instructions::interrupts;
 
 #[panic_handler]
@@ -75,13 +70,15 @@ fn panic(info: &PanicInfo) -> ! {
         let _ = writeln!(panic_log_sink, "{info}");
         let _ = writeln!(panic_log_sink, "--- log flush ---");
     }
-    LOGGER.flush();
+    // Flush the Logger to get pre-panic info to all LogSinks
+    log::error!("{info}");
+    unsafe { LOGGER.force_flush(); }
     halt_loop()
 }
 
 use crate::task::Task;
 
-use self::arch::cpu::{CpuId, current_cpu};
+use self::arch::cpu::{BSP_CPU_LOCAL, current_cpu};
 use self::common::log::LOGGER;
 use self::task::executor::EXECUTOR;
 

@@ -257,8 +257,8 @@ pub enum MemoryType {
     Other,
 }
 
+use crate::common::mutex::interrupt_safe_mutex::InterruptSafeMutex;
 use crate::common::traits::Indexable;
-use crate::interrupt::mutex::InterruptSafeMutex;
 impl<S: PageSize> Indexable for PhysFrame<S> {
     fn as_index(&self) -> usize {
         (self.start_address().as_u64() / S::SIZE) as usize

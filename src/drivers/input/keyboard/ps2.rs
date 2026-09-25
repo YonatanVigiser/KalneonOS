@@ -6,8 +6,8 @@ use futures_util::future::select;
 use pc_keyboard::{ScancodeSet, ScancodeSet2};
 use ps2::Controller;
 use ps2::flags::{ControllerConfigFlags, ControllerStatusFlags, KeyboardLedFlags};
-use spin::Mutex;
 
+use crate::common::mutex::debug_mutex::Mutex;
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::drivers::input::keyboard::{KEYBOARD_GLOBAL_STATE, KEYBOARD_INPUT_HUB};
 use crate::interrupt::{self, GlobalInterruptController, GlobalInterruptSource, InterruptListener};

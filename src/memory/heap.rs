@@ -2,7 +2,8 @@ use spin::mutex::SpinMutex;
 use talc::{OomHandler, Span, Talc, Talck};
 use x86_64::structures::paging::{PageSize, PageTableFlags};
 
-use crate::interrupt::mutex::RawInterruptSafeMutex;
+use crate::common::mutex::debug_mutex::RawDebugMutex;
+use crate::common::mutex::interrupt_safe_mutex::RawInterruptSafeMutex;
 
 use super::{FrameSize, allocate};
 
@@ -27,7 +28,7 @@ impl OomHandler for KernelOomHandler {
 }
 
 #[global_allocator]
-static ALLOCATOR: Talck<RawInterruptSafeMutex<SpinMutex<()>>, KernelOomHandler> = Talc::new(KernelOomHandler).lock();
+static ALLOCATOR: Talck<RawInterruptSafeMutex<RawDebugMutex<SpinMutex<()>>>, KernelOomHandler> = Talc::new(KernelOomHandler).lock();
 
 pub fn init() {
     unsafe {

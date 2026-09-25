@@ -1,7 +1,7 @@
 use bitflags::bitflags;
-use spin::Mutex;
 use pc_keyboard::{KeyCode, KeyEvent, KeyState};
 
+use crate::common::mutex::debug_mutex::Mutex;
 use crate::dev::registry::DEVICE_REGISTRY;
 use crate::interrupt::apic::isa_irq_to_gsi;
 

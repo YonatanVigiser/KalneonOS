@@ -5,6 +5,8 @@ use spin::mutex::SpinMutex;
 
 use crate::interrupt;
 
+use super::debug_mutex::RawDebugMutex;
+
 pub struct RawInterruptSafeMutex<R: RawMutex> {
     inner: R,
     was_enabled: AtomicBool,
@@ -25,20 +27,20 @@ unsafe impl<R: RawMutex> RawMutex for RawInterruptSafeMutex<R> {
 
     fn lock(&self) {
         let was_enabled = interrupt::are_enabled();
-        super::disable();
+        crate::interrupt::disable();
         self.inner.lock();
         self.was_enabled.store(was_enabled, Ordering::Relaxed);
     }
 
     fn try_lock(&self) -> bool {
-        let was = super::are_enabled();
-        super::disable();
+        let was = crate::interrupt::are_enabled();
+        crate::interrupt::disable();
         if self.inner.try_lock() {
             self.was_enabled.store(was, Ordering::Relaxed);
             true
         } else {
             if was {
-                super::enable();
+                crate::interrupt::enable();
             }
             false
         }
@@ -48,7 +50,7 @@ unsafe impl<R: RawMutex> RawMutex for RawInterruptSafeMutex<R> {
         let was = self.was_enabled.load(Ordering::Relaxed);
         unsafe { self.inner.unlock() };
         if was {
-            super::enable();
+            crate::interrupt::enable();
         }
     }
 
@@ -57,6 +59,6 @@ unsafe impl<R: RawMutex> RawMutex for RawInterruptSafeMutex<R> {
     }
 }
 
-pub type InterruptSafeMutex<T> = lock_api::Mutex<RawInterruptSafeMutex<SpinMutex<()>>, T>;
+pub type InterruptSafeMutex<T> = lock_api::Mutex<RawInterruptSafeMutex<RawDebugMutex<SpinMutex<()>>>, T>;
 pub type InterruptSafeMutexGuard<'a, T> =
-    lock_api::MutexGuard<'a, RawInterruptSafeMutex<SpinMutex<()>>, T>;
+    lock_api::MutexGuard<'a, RawInterruptSafeMutex<RawDebugMutex<SpinMutex<()>>>, T>;

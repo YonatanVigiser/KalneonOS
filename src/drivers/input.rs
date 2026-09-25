@@ -7,7 +7,8 @@ use alloc::vec::Vec;
 use crossbeam_queue::ArrayQueue;
 use futures_util::Stream;
 use futures_util::task::AtomicWaker;
-use spin::Mutex;
+
+use crate::common::mutex::debug_mutex::Mutex;
 
 pub mod keyboard;
 
