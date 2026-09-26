@@ -6,11 +6,7 @@ pub mod waker;
 use alloc::{boxed::Box, sync::Arc};
 use atomic_enum::atomic_enum;
 use core::{
-    cell::UnsafeCell,
-    future::Future,
-    pin::Pin,
-    sync::atomic::{AtomicU64, Ordering},
-    task::{Context, Poll},
+    any::type_name_of_val, cell::UnsafeCell, future::Future, pin::Pin, sync::atomic::{AtomicU64, Ordering}, task::{Context, Poll}
 };
 
 use crate::{arch::cpu::current_cpu, task::executor::EXECUTOR};
@@ -49,6 +45,7 @@ pub enum TaskState {
 
 pub struct Task {
     id: TaskId,
+    name: &'static str,
     state: AtomicTaskState,
     future: UnsafeCell<Pin<Box<dyn Future<Output = ()>>>>,
     pinned: bool,
@@ -59,6 +56,7 @@ impl Task {
     pub fn new(future: impl Future<Output = ()> + Send + 'static) -> Self {
         Self {
             id: TaskId::new(),
+            name: type_name_of_val(&future),
             state: AtomicTaskState::new(TaskState::Idle),
             future: UnsafeCell::new(Box::pin(future)),
             pinned: false,
@@ -80,12 +78,21 @@ impl Task {
         self
     }
 
+    pub fn with_name(mut self, name: &'static str) -> Self {
+        self.name = name;
+        self
+    }
+
     pub fn is_pinned(&self) -> bool {
         self.pinned
     }
 
     pub fn affinity_threshold(&self) -> f64 {
         self.affinity_threshold
+    }
+
+    pub fn name(&self) -> &'static str {
+        self.name
     }
 
     fn poll(&self, context: &mut Context) -> Poll<()> {

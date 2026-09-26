@@ -43,7 +43,7 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
     LOGGER.auto_flush.store(false, Ordering::Release);
-    EXECUTOR.get().unwrap().spawn(Task::new(LOGGER.log_task()));
+    EXECUTOR.get().unwrap().spawn(Task::new(LOGGER.log_task()).with_name("Log task"));
     drivers::init_stage3();
     ap_main();
 }

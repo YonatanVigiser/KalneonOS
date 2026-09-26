@@ -111,7 +111,7 @@ impl I8042Ps2Driver {
             Some(mouse_slot)
         } else { None }.map(|slot| slot.listen());
 
-        EXECUTOR.get().expect("No Executor!").spawn(Task::new(driver.clone().handle_task(keyboard_listener, mouse_listener)));
+        EXECUTOR.get().expect("No Executor!").spawn(Task::new(driver.clone().handle_task(keyboard_listener, mouse_listener)).with_name("PS/2 Driver task"));
 
         Some(driver)
     }

@@ -4,11 +4,12 @@ use alloc::{collections::btree_map::BTreeMap, sync::{Arc, Weak}, vec::Vec};
 use crossbeam_queue::ArrayQueue;
 use spin::{Mutex, Once};
 
-use crate::{arch::cpu::{CpuId, current_cpu}, task::{Task, TaskId, TaskState::*, waker::TaskWaker}, time::uptime};
+use crate::{arch::cpu::{CpuId, current_cpu}, task::{Task, TaskId, TaskState::*, waker::TaskWaker}, time::{KernelDuration, uptime}};
 
 const TASKS_QUEUE_SIZE: usize = 100;
 const DEFAULT_AVRAGE: u64 = 50_000;
 const EWMA_CONSTANT: f64 = 0.05;
+const LONG_POLL_DURATION: KernelDuration = KernelDuration::from_millis(10);
 
 pub static EXECUTOR: Once<Executor> = Once::new();
 
@@ -57,6 +58,7 @@ impl Executor {
         if self.tasks.lock().insert(task.id, task.clone()).is_some() {
             panic!("Task with the same ID was already in tasks!");
         }
+        task.state.store(Scheduled, Ordering::Release);
         queue.push(Arc::downgrade(&task)).expect("Queue task is full");
     }
 
@@ -69,10 +71,12 @@ impl Executor {
                 let start_time = uptime();
                 self.execute_task(&task);
                 let end_time = uptime();
-
-                let delta_time = (end_time - start_time).as_nanos() as f64;
+                let delta_time = end_time - start_time;
+                if delta_time > LONG_POLL_DURATION {
+                    log::warn!("Long task poll: {} took {}", task.name(), delta_time);
+                }
                 let old_time = avg.load(Ordering::Relaxed) as f64;
-                let new_avg = old_time * (1.0 - EWMA_CONSTANT) + delta_time * EWMA_CONSTANT;
+                let new_avg = old_time * (1.0 - EWMA_CONSTANT) + delta_time.as_nanos() as f64 * EWMA_CONSTANT;
                 avg.store(new_avg as u64, Ordering::Relaxed);
             }
         }
