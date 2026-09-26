@@ -7,7 +7,7 @@ use crate::common::mutex::interrupt_safe_mutex::RawInterruptSafeMutex;
 
 use super::{FrameSize, allocate};
 
-const BOOT_HEAP_SIZE: usize = 1024 * 1024;
+const BOOT_HEAP_SIZE: usize = 1024 * 1024 * 10;
 static mut BOOT_HEAP: [u8; BOOT_HEAP_SIZE] = [0; BOOT_HEAP_SIZE];
 
 struct KernelOomHandler;

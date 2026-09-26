@@ -11,6 +11,8 @@ pub const LOW_MEMORY_LIMIT: PhysFrame = unsafe {
     PhysFrame::from_start_address_unchecked(PhysAddr::new(0x100_000))
 };
 
+// TODO: Store the bitmap inside a runtime allocated memory region from the mmap and NOT
+// by using a Heap allocated data structure, to support machines with diffrent RAM sizes
 #[derive(Debug)]
 pub struct BitmapAllocator {
     frames_bitmap: BitVec<usize, Lsb0>, // 0 is free, 1 is allocated / reserved
