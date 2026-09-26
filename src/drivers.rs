@@ -9,16 +9,11 @@ pub mod display;
 pub mod input;
 pub mod time;
 
-pub fn init_stage1() {
-    com::uart16550::init();
-    log::info!("Stage1 Drivers were init!");
-}
-
 pub fn panic_log_sink() -> Option<impl Write> {
     com::uart16550::emergency_tty()
 }
 
-pub fn init_stage2() {
+pub fn init_stage1() {
     let acpi = ACPI.poll().unwrap();
     time::hpet::init(HpetInfo::new(&acpi.tables).expect("No HPET info in ACPI tables!"));
     crate::time::init();
@@ -26,10 +21,11 @@ pub fn init_stage2() {
     if let Some(display_info) = &boot_info.display {
         display::init(display_info);
     }
-    log::info!("Stage2 Drivers were init!");
+    log::info!("Stage1 Drivers were init!");
 }
 
-pub fn init_stage3() {
+pub fn init_stage2() {
     input::init();
-    log::info!("Stage3 Drivers were init!");
+    com::uart16550::init();
+    log::info!("Stage2 Drivers were init!");
 }

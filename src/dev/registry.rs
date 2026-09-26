@@ -126,6 +126,7 @@ macro_rules! define_registry {
 
 use crate::common::log::LogSink;
 use crate::drivers::display::TextSurface;
+use crate::drivers::input::InputHub;
 use crate::drivers::input::keyboard::KeyboardDevice;
 use crate::drivers::display::framebuffer::Framebuffer;
 use crate::interrupt::{GlobalInterruptController, LocalInterruptController};
@@ -138,6 +139,7 @@ define_registry! {
         global_interrupt_controller: dyn GlobalInterruptController,
         local_interrupt_controller: dyn LocalInterruptController,
         keyboard: dyn KeyboardDevice,
+        byte_input: InputHub<u8>,
     }
     exclusive {
         write: dyn LogSink,

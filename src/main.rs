@@ -33,18 +33,17 @@ pub extern "C" fn main(boot_magic: u32, boot_info_ptr: u32) -> ! {
     memory::heap::init();
     common::log::init_logger();
     log::info!("Heap was initilized");
-    drivers::init_stage1();
     let boot_info = arch::init_boot(boot_magic, boot_info_ptr);
     memory::init(&boot_info.mmap);
     let acpi = platform::acpi::init_platform_info(boot_info.rsdt_addr, boot_info.rsdt_revision);
     interrupt::init_global(&acpi.interrupt_model);
-    drivers::init_stage2();
+    drivers::init_stage1();
     let processor_info = acpi.processor_info.as_ref().expect("No processor info!");
     arch::init_smp(processor_info);
     task::executor::Executor::init(arch::cores_count());
     LOGGER.auto_flush.store(false, Ordering::Release);
     EXECUTOR.get().unwrap().spawn(Task::new(LOGGER.log_task()).with_name("Log task"));
-    drivers::init_stage3();
+    drivers::init_stage2();
     ap_main();
 }
 

@@ -43,7 +43,9 @@ pub fn disable() {
 #[inline(always)]
 pub fn set(enabled: bool) {
     if enabled {
-        enable()
+        enable();
+    } else {
+        disable();
     }
 }
 

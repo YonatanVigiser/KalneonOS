@@ -90,7 +90,7 @@ impl<T: Clone + Send + Sync> InputHub<T> {
         Reader(sub)
     }
 
-    fn push(&self, event: T) {
+    pub fn push(&self, event: T) {
         let mut guard = self.subs.lock();
         guard.retain(|sub| {
             if let Some(sub) = sub.upgrade() {
