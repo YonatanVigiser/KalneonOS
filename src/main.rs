@@ -58,20 +58,22 @@ use core::fmt::Write;
 use core::panic::PanicInfo;
 use core::sync::atomic::{AtomicBool, Ordering};
 
-use x86_64::instructions::interrupts;
-
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    interrupt::disable();
     static PANICKING: AtomicBool = AtomicBool::new(false);
     if PANICKING.swap(true, Ordering::AcqRel) { halt_loop() }
     unsafe { arch::halt_smp(); }
-    if let Some(mut panic_log_sink) = drivers::panic_log_sink() {
-        let _ = writeln!(panic_log_sink, "{info}");
-        let _ = writeln!(panic_log_sink, "--- log flush ---");
+    if let Some(mut tty) = drivers::panic_log_sink() {
+        let _ = writeln!(tty, "{info}");
+        if let Some(genesis) = LOGGER.genesis_receiver.get() {
+            let _ = writeln!(tty, "--- log replay ---");
+            let mut cursor = genesis.clone();
+            while let Some(record) = cursor.recv() {
+                let _ = tty.write_str(&record);
+            }
+        }
     }
-    // Flush the Logger to get pre-panic info to all LogSinks
-    log::error!("{info}");
-    unsafe { LOGGER.force_flush(); }
     halt_loop()
 }
 
@@ -82,7 +84,7 @@ use self::common::log::LOGGER;
 use self::task::executor::EXECUTOR;
 
 pub fn halt_loop() -> ! {
-    interrupts::disable();
+    interrupt::disable();
     loop {
         x86_64::instructions::hlt();
     }

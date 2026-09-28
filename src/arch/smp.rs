@@ -81,7 +81,7 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
 #[unsafe(no_mangle)]
 #[inline(never)]
 pub extern "C" fn ap_start(cpu_local: *mut CpuLocal) -> ! {
-    crate::interrupts::disable();
+    crate::interrupt::disable();
     while !BSP_FINISH.load(Ordering::Acquire) {
         core::hint::spin_loop()
     }

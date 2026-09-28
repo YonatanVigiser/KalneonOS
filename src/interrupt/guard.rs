@@ -33,6 +33,7 @@ pub struct InterruptGuard {
 impl InterruptGuard {
     pub fn new() -> Self {
         let was_enabled = super::are_enabled();
+        super::disable();
         Self {
             was_enabled,
             _ns: PhantomData,
