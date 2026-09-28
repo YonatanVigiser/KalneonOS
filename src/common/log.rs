@@ -124,8 +124,7 @@ impl Log for Logger {
     }
     fn flush(&self) {
         while self.pending.load(Ordering::Acquire) {
-            // Never block here: during boot this runs from IRQ context.
-            // Whoever holds the lock re-checks `pending` after unlocking.
+            // Never block here, during boot this runs from IRQ context
             let Some(mut sinks) = self.sinks.try_lock() else { return };
             self.pending.swap(false, Ordering::AcqRel);
             if !sinks.drain() {

@@ -29,17 +29,19 @@ unsafe impl<R: RawMutex> RawMutex for RawDebugMutex<R> {
     type GuardMarker = GuardNoSend;
 
     fn lock(&self) {
+        if self.try_lock() { return }
         let current_id = current_cpu().logical_id;
         if self.holder.load(Ordering::Relaxed) == current_id.0 {
             panic!("{} tried locking the same Mutex twice! Deadlock!", current_id);
         }
-        let start_uptime = uptime();
+        let mut start_uptime = None;
         let mut count = 0;
         while !self.try_lock() {
             while self.inner.is_locked() {
                 count += 1;
                 if count % UPTIME_CHECK_ITERATIONS == 0 {
-                    debug_assert!(uptime() - start_uptime < MAX_LOCK_DURATION, "Mutex Deadlock! Holder: {}, Deadlocked: {}",
+                    let start = *start_uptime.get_or_insert_with(uptime);
+                    debug_assert!(uptime() - start < MAX_LOCK_DURATION, "Mutex Deadlock! Holder: {}, Deadlocked: {}",
                         CpuId(self.holder.load(Ordering::Relaxed)), current_id);
                 }
                 core::hint::spin_loop();

@@ -9,7 +9,7 @@ use crate::{arch::cpu::{CpuId, current_cpu}, task::{Task, TaskId, TaskState::*, 
 const TASKS_QUEUE_SIZE: usize = 100;
 const DEFAULT_AVRAGE: u64 = 50_000;
 const EWMA_CONSTANT: f64 = 0.05;
-const LONG_POLL_DURATION: KernelDuration = KernelDuration::from_millis(10);
+const LONG_POLL_DURATION: KernelDuration = KernelDuration::from_micros(500);
 
 pub static EXECUTOR: Once<Executor> = Once::new();
 

@@ -142,13 +142,14 @@ struct UartOutput<B: Backend>(Arc<UartPort<B>>);
 
 impl<B: Backend> Write for UartOutput<B> {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        self.0.send_waker.wake();
         for byte in s.bytes() {
             if let Err(_) = self.0.send_queue.push(byte) {
                 self.0.send_dropped.fetch_add(1, Ordering::Relaxed);
+                self.0.send_waker.wake();
                 return Err(Error);
             }
         }
+        self.0.send_waker.wake();
         Ok(())
     }
 }
