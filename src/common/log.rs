@@ -66,7 +66,6 @@ impl LogSinks {
                 sink.cursor.recv()
             } {
                 let _ = dev.write_str(&record);
-                let _ = dev.write_char('\n');
                 count += 1;
             }
             if count == LOGS_RING_SIZE { done = false }
@@ -111,7 +110,7 @@ impl Log for Logger {
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
             let mut message = LogRecord::new();
-            let _ = write!(message, "[{}: {}] {}: {}",
+            let _ = writeln!(message, "[{}: {}] {}: {}",
                 record.level(), uptime(), current_cpu().logical_id, record.args());
             self.sender.send(message);
             self.pending.store(true, Ordering::Release);

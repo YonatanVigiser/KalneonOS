@@ -50,7 +50,7 @@ pub unsafe fn start(lapic: &mut LocalApic, processor_info: &ProcessorInfo) {
         .iter()
         .filter(|p| matches!(p.state, ProcessorState::WaitingForSipi))
     {
-        log::info!("Trying to wake core {}", core.processor_uid);
+        log::info!("Waking core UID: {}", core.processor_uid);
         ap_core_data.cpu_local = Box::leak(Box::new(CpuLocal::new(core.processor_uid, CpuId(0))));
         let stack = memory::allocate(
             memory::bsp_stack_range().count() + 1,
